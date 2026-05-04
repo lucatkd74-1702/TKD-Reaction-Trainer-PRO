@@ -622,6 +622,151 @@ body{
   .stage{padding-left:8px!important;padding-right:8px!important;}
 }
 
+
+
+/* =========================================================
+   TKD Reaction Trainer PRO 5.6 - Header senza badge TKD
+   Miglioria SOLO grafica/responsive: logica JS invariata.
+   ========================================================= */
+.badge{
+  display:none!important;
+}
+.brand{
+  gap:0!important;
+  flex:1 1 auto!important;
+  min-width:0!important;
+}
+.topbar{
+  width:100%!important;
+  align-items:center!important;
+}
+.topbar .actions{
+  flex:0 0 auto!important;
+}
+h1{
+  letter-spacing:-.35px!important;
+}
+
+@media (orientation: portrait) and (max-width: 760px){
+  .topbar{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) auto!important;
+    column-gap:10px!important;
+    row-gap:4px!important;
+    min-height:68px!important;
+    padding-top:2px!important;
+  }
+  .brand{
+    min-width:0!important;
+    width:100%!important;
+  }
+  .brand > div:last-child{
+    min-width:0!important;
+    width:100%!important;
+  }
+  h1{
+    font-size:clamp(20px,5.1vw,23px)!important;
+    line-height:1.02!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    max-width:100%!important;
+  }
+  .sub{
+    font-size:clamp(11px,3.15vw,13px)!important;
+    line-height:1.18!important;
+    margin-top:3px!important;
+    white-space:normal!important;
+    overflow:hidden!important;
+    display:-webkit-box!important;
+    -webkit-line-clamp:2!important;
+    -webkit-box-orient:vertical!important;
+    max-width:100%!important;
+  }
+  .actions{
+    gap:8px!important;
+    flex-wrap:nowrap!important;
+    align-self:center!important;
+  }
+  .actions .btn{
+    width:54px!important;
+    height:54px!important;
+    min-height:54px!important;
+    padding:0!important;
+    border-radius:18px!important;
+    font-size:24px!important;
+  }
+  .hud{
+    margin-top:2px!important;
+  }
+}
+
+@media (orientation: portrait) and (max-width: 430px){
+  .topbar{
+    grid-template-columns:minmax(0,1fr) auto!important;
+    column-gap:8px!important;
+    min-height:64px!important;
+  }
+  h1{
+    font-size:clamp(19px,5.3vw,22px)!important;
+    letter-spacing:-.55px!important;
+  }
+  .sub{
+    font-size:clamp(10.5px,3.05vw,12.5px)!important;
+    line-height:1.14!important;
+  }
+  .actions .btn{
+    width:50px!important;
+    height:50px!important;
+    min-height:50px!important;
+    border-radius:16px!important;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 560px){
+  .topbar{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) auto!important;
+    column-gap:10px!important;
+    min-height:32px!important;
+  }
+  h1{
+    font-size:clamp(17px,2.55vw,24px)!important;
+    line-height:1!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+  .sub{
+    font-size:clamp(10px,1.55vw,13px)!important;
+    line-height:1.05!important;
+    margin-top:1px!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+  .actions .btn{
+    width:42px!important;
+    height:42px!important;
+    min-height:42px!important;
+    padding:0!important;
+    border-radius:14px!important;
+    font-size:20px!important;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 430px){
+  .topbar{min-height:28px!important;}
+  h1{font-size:clamp(16px,2.35vw,22px)!important;}
+  .sub{font-size:clamp(9px,1.35vw,12px)!important;}
+  .actions .btn{
+    width:38px!important;
+    height:38px!important;
+    min-height:38px!important;
+    font-size:18px!important;
+  }
+}
+
 </style>
 </head>
 <body>
