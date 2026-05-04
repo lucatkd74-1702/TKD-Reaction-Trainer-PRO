@@ -6,330 +6,897 @@
 <meta name="theme-color" content="#050608">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>TKD Situation Reaction Trainer PRO 7.0</title>
+<title>TKD Reaction Trainer PRO 5.5</title>
 <style>
 :root{
   --bg0:#050608;--bg1:#0b0d11;--text:#f3f6ff;--muted:#a7b1c3;
-  --border:#243044;--panel:#101722;--panel2:#0b111b;
-  --good:#38d996;--warn:#ffd34d;--bad:#ff4d6d;--accent:#59a7ff;--flow:#45f0b0;
-  --shadow:0 14px 44px rgba(0,0,0,.55);--radius:18px;
+  --border:#243044;--border2:#33435e;--panel:#111722;--panel2:#0d131d;
+  --good:#38d996;--warn:#ffd34d;--bad:#ff4d6d;--accent:#59a7ff;
+  --flow:#45f0b0;--shadow:0 14px 44px rgba(0,0,0,.55);
+  --radius:18px;--vh:100dvh;
   --safeTop:env(safe-area-inset-top,0px);--safeBottom:env(safe-area-inset-bottom,0px);
   --safeLeft:env(safe-area-inset-left,0px);--safeRight:env(safe-area-inset-right,0px);
 }
+@supports not (height:100dvh){:root{--vh:100vh}}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{width:100%;height:100%;margin:0;color:var(--text);background:#000;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;-webkit-text-size-adjust:100%;text-size-adjust:100%;overscroll-behavior:none}
+html,body{width:100%;height:100%;margin:0;overflow:hidden;color:var(--text);background:#000;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;-webkit-text-size-adjust:100%;text-size-adjust:100%;overscroll-behavior:none}
 body{
-  min-height:100svh;overflow:hidden;touch-action:manipulation;
+  position:relative;min-height:100svh;touch-action:manipulation;
   background:
-    radial-gradient(1050px 700px at 12% -8%,rgba(89,167,255,.14),transparent 55%),
-    radial-gradient(800px 560px at 98% 8%,rgba(69,240,176,.08),transparent 58%),
+    radial-gradient(1200px 780px at 18% -10%,rgba(89,167,255,.13),transparent 55%),
+    radial-gradient(900px 620px at 96% 14%,rgba(69,240,176,.08),transparent 58%),
     linear-gradient(180deg,var(--bg0),var(--bg1));
 }
-button,input,select,textarea{font:inherit}
-input,select,textarea{color:var(--text)}
+button,input,select{font:inherit}
+input,select{color:var(--text)}
 button{-webkit-user-select:none;user-select:none}
-.hidden{display:none!important}
-
-.app{
-  height:100svh;
-  padding:calc(9px + var(--safeTop)) calc(9px + var(--safeRight)) calc(9px + var(--safeBottom)) calc(9px + var(--safeLeft));
-  display:grid;
-  grid-template-rows:auto auto minmax(0,1fr) auto auto;
-  gap:8px;
-  overflow:hidden;
-}
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:0}
-.brand{min-width:0;display:flex;flex-direction:column;gap:2px}
-h1{font-size:clamp(17px,3.6vw,25px);line-height:1.03;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:1000}
-.sub{display:block;color:var(--muted);font-size:clamp(10px,2.3vw,13px);font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.actions,.btnRow{display:flex;gap:7px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
-.btn{
-  appearance:none;-webkit-appearance:none;border:1px solid var(--border);
-  background:linear-gradient(180deg,rgba(255,255,255,.058),rgba(255,255,255,.018));
-  color:var(--text);border-radius:14px;min-height:43px;padding:9px 12px;font-weight:900;
-  display:inline-flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;
-  box-shadow:0 10px 18px rgba(0,0,0,.22)
-}
+.app{height:100svh;max-height:100svh;padding:calc(12px + var(--safeTop)) calc(12px + var(--safeRight)) calc(12px + var(--safeBottom)) calc(12px + var(--safeLeft));display:flex;flex-direction:column;gap:10px;overflow:hidden}
+.topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;min-height:0}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.badge{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,rgba(89,167,255,.25),rgba(69,240,176,.12));border:1px solid rgba(89,167,255,.30);box-shadow:0 12px 28px rgba(0,0,0,.36);display:grid;place-items:center;font-weight:1000}
+h1{font-size:clamp(16px,2.2vw,24px);line-height:1.05;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sub{display:block;color:var(--muted);font-size:clamp(11px,1.45vw,13px);font-weight:650;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.actions,.btnRow{display:flex;gap:9px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
+.btn{appearance:none;-webkit-appearance:none;border:1px solid var(--border);background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018));color:var(--text);border-radius:14px;min-height:48px;padding:11px 14px;font-weight:850;letter-spacing:.2px;display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;box-shadow:0 10px 18px rgba(0,0,0,.22)}
 .btn:active{transform:translateY(1px)}.btn[disabled]{opacity:.45;cursor:not-allowed;transform:none}
-.btnPrimary{border-color:rgba(89,167,255,.50);background:linear-gradient(180deg,rgba(89,167,255,.32),rgba(89,167,255,.08))}
-.btnWarn{border-color:rgba(255,211,77,.45);background:linear-gradient(180deg,rgba(255,211,77,.22),rgba(255,211,77,.06))}
-.btnDanger{border-color:rgba(255,77,109,.45);background:linear-gradient(180deg,rgba(255,77,109,.24),rgba(255,77,109,.06))}
-.btnGood{border-color:rgba(56,217,150,.45);background:linear-gradient(180deg,rgba(56,217,150,.22),rgba(56,217,150,.06))}
+.btnPrimary{border-color:rgba(89,167,255,.45);background:linear-gradient(180deg,rgba(89,167,255,.30),rgba(89,167,255,.08))}
+.btnWarn{border-color:rgba(255,211,77,.42);background:linear-gradient(180deg,rgba(255,211,77,.20),rgba(255,211,77,.055))}
+.btnDanger{border-color:rgba(255,77,109,.42);background:linear-gradient(180deg,rgba(255,77,109,.22),rgba(255,77,109,.06))}
+.btnFlow{border-color:rgba(69,240,176,.40);background:linear-gradient(180deg,rgba(69,240,176,.20),rgba(69,240,176,.05))}
 .card{border:1px solid var(--border);border-radius:var(--radius);background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.018));box-shadow:var(--shadow);overflow:hidden}
-.hud{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;padding:8px 10px}
-.hudGroup{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.hudGroup.center{justify-content:center}.hudGroup.right{justify-content:flex-end}
-.key{font-size:10px;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.35px}
-.val{font-size:clamp(14px,2vw,20px);font-weight:1000;font-variant-numeric:tabular-nums}
-.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);background:rgba(16,23,34,.65);border-radius:999px;padding:5px 8px;font-size:11.5px;font-weight:900;white-space:nowrap}
+.hud{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;padding:10px 12px}
+.hudGroup{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.hudGroup.center{justify-content:center}.hudGroup.right{justify-content:flex-end}
+.key{font-size:11px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.35px}
+.val{font-size:clamp(14px,2vw,19px);font-weight:950;font-variant-numeric:tabular-nums}
+.chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--border);background:rgba(16,23,34,.65);border-radius:999px;padding:6px 10px;font-size:12px;font-weight:850;white-space:nowrap}
 .dot{width:8px;height:8px;border-radius:999px;background:var(--muted);box-shadow:0 0 0 3px rgba(167,177,195,.12)}
 .dot.live{background:var(--good);box-shadow:0 0 0 3px rgba(56,217,150,.18)}
 .dot.rest{background:var(--warn);box-shadow:0 0 0 3px rgba(255,211,77,.18)}
 .dot.pause{background:var(--accent);box-shadow:0 0 0 3px rgba(89,167,255,.18)}
 .dot.stop{background:var(--bad);box-shadow:0 0 0 3px rgba(255,77,109,.18)}
-
-.stage{
-  position:relative;min-height:0;padding:10px;display:flex;align-items:center;justify-content:center;
-  background:radial-gradient(900px 460px at 50% 28%,rgba(255,255,255,.045),transparent 62%),linear-gradient(180deg,rgba(15,20,30,.56),rgba(8,11,17,.36));
-}
-.stimWrap{width:100%;height:100%;display:grid;grid-template-rows:minmax(0,1fr) auto;gap:8px;text-align:center;min-height:0}
-.stimulus{
-  width:100%;height:100%;min-height:0;border-radius:clamp(22px,4vw,38px);
-  border:2px solid rgba(255,255,255,.15);background:rgba(5,7,11,.45);
-  box-shadow:inset 0 2px 0 rgba(255,255,255,.08),0 24px 70px rgba(0,0,0,.55);
-  padding:clamp(10px,2vw,22px);display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;position:relative;
-}
+.stage{position:relative;flex:1 1 auto;min-height:0;padding:14px;display:flex;align-items:center;justify-content:center;background:radial-gradient(900px 460px at 50% 28%,rgba(255,255,255,.045),transparent 62%),linear-gradient(180deg,rgba(15,20,30,.56),rgba(8,11,17,.36))}
+.stimWrap{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;min-height:0}
+.stimulus{width:min(1160px,100%);height:min(66dvh,720px);min-height:260px;border-radius:clamp(24px,3vw,38px);border:2px solid rgba(255,255,255,.15);background:rgba(5,7,11,.45);box-shadow:inset 0 2px 0 rgba(255,255,255,.08),0 24px 70px rgba(0,0,0,.55);padding:clamp(14px,2vw,24px);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
 .stimulus:before{content:"";position:absolute;inset:-2px;background:radial-gradient(720px 430px at 50% 15%,rgba(89,167,255,.20),transparent 60%);opacity:.30;pointer-events:none}
-.mainStim{position:relative;z-index:1;font-weight:1000;letter-spacing:.5px;line-height:.95;text-transform:uppercase;text-shadow:0 24px 70px rgba(0,0,0,.82);font-size:clamp(46px,12vw,200px);max-width:100%;word-break:break-word}
-.colorBlock{position:relative;z-index:1;width:min(92%,980px);height:min(72%,480px);min-height:135px;border-radius:clamp(24px,4vw,46px);border:3px solid rgba(255,255,255,.30);box-shadow:inset 0 4px 0 rgba(255,255,255,.18),0 28px 80px rgba(0,0,0,.55)}
-.stimName{position:relative;z-index:1;margin-top:10px;font-size:clamp(18px,4vw,38px);font-weight:1000;color:#f4f8ff;text-shadow:0 12px 40px rgba(0,0,0,.8)}
-.infoLine{position:relative;z-index:1;margin-top:8px;color:#d8e8ff;font-size:clamp(15px,3.2vw,28px);font-weight:950;max-width:96%}
-.infoLine.small{font-size:clamp(13px,2.5vw,22px);color:#b8c6d8}
-.badgeLine{position:relative;z-index:2;display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:center;margin-top:8px}
-.decisionBadge{display:inline-flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:8px 12px;background:rgba(0,0,0,.38);font-size:clamp(13px,2.8vw,23px);font-weight:1000}
-.cue{min-height:42px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:clamp(15px,3vw,28px);font-weight:950;padding:8px 14px;border-radius:999px;border:1px solid rgba(39,50,70,.9);background:rgba(16,23,34,.56);box-shadow:0 12px 24px rgba(0,0,0,.24)}
+.stimText{position:relative;z-index:1;font-weight:1000;letter-spacing:1.5px;line-height:.96;text-transform:uppercase;text-shadow:0 24px 70px rgba(0,0,0,.82);font-size:clamp(68px,15vw,260px);max-width:100%;word-break:break-word}
+.numText{font-size:clamp(160px,36vw,560px);line-height:.82;letter-spacing:0}
+.arrowText{font-size:clamp(130px,30vw,430px);line-height:.85}
+.colorBlock{position:relative;z-index:1;width:min(96%,1080px);height:min(92%,650px);min-height:230px;border-radius:clamp(28px,4vw,48px);border:3px solid rgba(255,255,255,.28);box-shadow:inset 0 4px 0 rgba(255,255,255,.18),0 28px 80px rgba(0,0,0,.55)}
+.cue{min-height:56px;max-width:min(1120px,100%);display:flex;align-items:center;justify-content:center;font-size:clamp(19px,3.5vw,38px);font-weight:900;letter-spacing:.2px;padding:10px 18px;border-radius:999px;border:1px solid rgba(39,50,70,.9);background:rgba(16,23,34,.56);box-shadow:0 12px 24px rgba(0,0,0,.24)}
 .cue.flow{border-color:rgba(69,240,176,.38);background:rgba(69,240,176,.10)}
 .overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;padding:18px}
-.countdown{font-size:clamp(80px,17vw,190px);font-weight:1000;text-shadow:0 20px 60px rgba(0,0,0,.8);opacity:0;transform:scale(.96);transition:opacity .12s ease,transform .12s ease;border:1px solid rgba(89,167,255,.24);border-radius:28px;padding:18px 40px;background:radial-gradient(400px 280px at 50% 50%,rgba(89,167,255,.16),transparent 62%)}
+.countdown{font-size:clamp(90px,17vw,200px);font-weight:1000;text-shadow:0 20px 60px rgba(0,0,0,.8);opacity:0;transform:scale(.96);transition:opacity .12s ease,transform .12s ease;border:1px solid rgba(89,167,255,.24);border-radius:28px;padding:18px 40px;background:radial-gradient(400px 280px at 50% 50%,rgba(89,167,255,.16),transparent 62%)}
 .countdown.show{opacity:1;transform:scale(1)}
-
-.controls{padding:8px 10px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
-.stats{padding:7px 9px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;justify-content:center}
-.stat{display:flex;gap:6px;align-items:baseline;border:1px solid rgba(39,50,70,.9);background:rgba(16,23,34,.45);border-radius:14px;padding:6px 8px;font-variant-numeric:tabular-nums}
-.stat .k{font-size:10px;color:var(--muted);font-weight:850}.stat .v{font-size:15px;font-weight:1000}
-.feedback{display:none;padding:6px 9px;gap:6px;justify-content:center;flex-wrap:wrap}
-.feedback .btn{min-height:35px;padding:6px 9px;font-size:12px}
-
-.tiny{font-size:12px;color:var(--muted);font-weight:650}.sectionTitle{font-size:14px;font-weight:1000;margin:0 0 10px;color:#fff}
-.settings{display:none;position:fixed;inset:0;z-index:50;padding:calc(9px + var(--safeTop)) calc(9px + var(--safeRight)) calc(9px + var(--safeBottom)) calc(9px + var(--safeLeft));background:rgba(5,6,8,.985);overflow:hidden}
+.bottom{display:grid;grid-template-columns:1fr;gap:10px}
+.controls{padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.stats{padding:10px 12px;display:flex;gap:9px;flex-wrap:wrap;align-items:center;justify-content:center}
+.stat{display:flex;gap:7px;align-items:baseline;border:1px solid rgba(39,50,70,.9);background:rgba(16,23,34,.45);border-radius:14px;padding:8px 10px;font-variant-numeric:tabular-nums}
+.stat .k{font-size:11px;color:var(--muted);font-weight:750}.stat .v{font-size:18px;font-weight:950}
+.tiny{font-size:12px;color:var(--muted);font-weight:650}.sectionTitle{font-size:14px;font-weight:950;margin:0 0 10px;color:#fff}
+.settings{display:none;position:fixed;inset:0;z-index:50;padding:calc(12px + var(--safeTop)) calc(12px + var(--safeRight)) calc(12px + var(--safeBottom)) calc(12px + var(--safeLeft));background:rgba(5,6,8,.985);overflow:hidden}
 .settingsCard{height:100%;display:flex;flex-direction:column;min-height:0}
-.settingsHead{padding:10px 12px;border-bottom:1px solid var(--border);display:flex;gap:12px;justify-content:space-between;align-items:flex-start}
+.settingsHead{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;gap:12px;justify-content:space-between;align-items:flex-start}
 .settingsBody{display:flex;min-height:0;flex:1}
-.tabs{flex:0 0 238px;padding:10px;border-right:1px solid var(--border);overflow:auto;-webkit-overflow-scrolling:touch}
-.tabBtn{width:100%;justify-content:flex-start;margin-bottom:8px}.tabBtn.active{border-color:rgba(89,167,255,.45);background:rgba(89,167,255,.12)}
+.tabs{flex:0 0 240px;padding:12px;border-right:1px solid var(--border);overflow:auto;-webkit-overflow-scrolling:touch}
+.tabBtn{width:100%;justify-content:flex-start;margin-bottom:9px}.tabBtn.active{border-color:rgba(89,167,255,.45);background:rgba(89,167,255,.12)}
 .panels{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:12px;min-width:0}
 .panel{display:none}.panel.active{display:block}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .box{border:1px solid rgba(39,50,70,.9);background:rgba(16,23,34,.42);border-radius:16px;padding:12px;min-width:0}
-.label{font-size:12px;color:var(--muted);font-weight:900;margin-bottom:7px}
-input[type=text],input[type=number],select,textarea{width:100%;border:1px solid var(--border);background:rgba(8,13,21,.72);border-radius:12px;padding:11px;outline:none;min-height:44px}
-textarea{min-height:76px;resize:vertical}
+.label{font-size:12px;color:var(--muted);font-weight:800;margin-bottom:7px}
+input[type=text],input[type=number],select{width:100%;border:1px solid var(--border);background:rgba(8,13,21,.72);border-radius:12px;padding:12px;outline:none;min-height:46px}
 input[type=color]{width:56px;height:44px;border:1px solid var(--border);background:transparent;border-radius:10px;padding:2px}
 select{appearance:none;-webkit-appearance:none}
-.toggle{display:flex;gap:10px;align-items:center;border:1px solid rgba(39,50,70,.9);background:rgba(16,23,34,.35);border-radius:14px;padding:10px;min-height:47px}
+.toggle{display:flex;gap:10px;align-items:center;border:1px solid rgba(39,50,70,.9);background:rgba(16,23,34,.35);border-radius:14px;padding:10px;min-height:48px}
 .toggle input{width:22px;height:22px;accent-color:var(--accent)}
-.situationList{display:grid;grid-template-columns:1fr;gap:10px}
-.situationCard{border:1px solid rgba(39,50,70,.9);background:rgba(13,19,29,.55);border-radius:16px;padding:10px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-.situationCard .full{grid-column:1/-1}
-.warnBox{border:1px solid rgba(255,211,77,.35);background:rgba(255,211,77,.08);color:#ffe7a0;padding:10px 12px;border-radius:14px;font-size:13px;font-weight:850;margin-bottom:10px}
-.infoBox{border:1px solid rgba(89,167,255,.28);background:rgba(89,167,255,.08);color:#cfe6ff;padding:10px 12px;border-radius:14px;font-size:13px;font-weight:750;margin-bottom:10px;line-height:1.35}
-.toast{position:fixed;left:50%;bottom:calc(18px + var(--safeBottom));transform:translateX(-50%);z-index:80;background:rgba(8,13,21,.96);border:1px solid rgba(89,167,255,.35);border-radius:14px;padding:11px 14px;box-shadow:var(--shadow);font-weight:850;max-width:min(92vw,620px);display:none;text-align:center}
+.stimList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.stimCard{border:1px solid rgba(39,50,70,.9);background:rgba(13,19,29,.55);border-radius:16px;padding:10px;display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center}
+.stimCard .full{grid-column:1/-1}.swatchMini{width:38px;height:38px;border-radius:10px;border:1px solid rgba(255,255,255,.18)}
+.warnBox{border:1px solid rgba(255,211,77,.35);background:rgba(255,211,77,.08);color:#ffe7a0;padding:10px 12px;border-radius:14px;font-size:13px;font-weight:800;margin-bottom:10px}
+.infoBox{border:1px solid rgba(89,167,255,.28);background:rgba(89,167,255,.08);color:#cfe6ff;padding:10px 12px;border-radius:14px;font-size:13px;font-weight:700;margin-bottom:10px;line-height:1.35}
+.hidden{display:none!important}
 
-@media(max-width:980px){
-  .hud{grid-template-columns:1fr;align-items:stretch}.hudGroup,.hudGroup.right,.hudGroup.center{justify-content:center}
-  .settingsBody{flex-direction:column}.tabs{flex:0 0 auto;border-right:0;border-bottom:1px solid var(--border);display:flex;gap:8px;overflow:auto}.tabBtn{width:auto;margin:0;white-space:nowrap}
-  .grid,.situationCard{grid-template-columns:1fr}.settingsHead{flex-direction:column}
-  .actions .btn span,.controls .btn span{display:none}
+/* === iPhone / smartphone landscape fix: mantiene proporzioni senza cambiare logica JS === */
+@media (max-height: 520px) and (orientation: landscape){
+  html,body{height:100%;overflow:hidden;}
+  body{position:relative;min-height:100svh;}
+  .app{height:100svh;max-height:100svh;padding:calc(5px + var(--safeTop)) calc(8px + var(--safeRight)) calc(5px + var(--safeBottom)) calc(8px + var(--safeLeft));gap:5px;}
+  #training{gap:5px!important;}
+  .topbar{align-items:center;gap:8px;}
+  .brand{gap:7px;}
+  .badge{width:34px;height:34px;border-radius:11px;font-size:18px;}
+  h1{font-size:clamp(15px,2.2vw,19px);}
+  .sub{font-size:clamp(10px,1.55vw,12px);margin-top:1px;}
+  .actions{gap:6px;}
+  .actions .btn span,.controls .btn span{display:none;}
+  .btn{min-height:36px;padding:7px 10px;border-radius:12px;}
+  .hud{grid-template-columns:1fr auto 1fr!important;padding:6px 8px;gap:6px;align-items:center;}
+  .hudGroup{gap:6px;flex-wrap:nowrap;}
+  .hudGroup.center{justify-content:center;}
+  .hudGroup.right{justify-content:flex-end;}
+  .key{font-size:10px;}
+  .val{font-size:clamp(14px,2.7vw,22px);}
+  #timeTxt{font-size:clamp(18px,3.8vw,28px)!important;}
+  .chip{font-size:10px;padding:4px 8px;gap:5px;}
+  .dot{width:7px;height:7px;}
+  .stage{padding:5px;}
+  .stimWrap{gap:5px;}
+  .stimulus{height:auto;flex:1 1 auto;min-height:0;width:100%;border-radius:18px;padding:8px;}
+  .stimText{font-size:clamp(42px,13vw,110px);line-height:.88;}
+  .numText{font-size:clamp(86px,24vw,190px);line-height:.78;}
+  .arrowText{font-size:clamp(78px,22vw,170px);line-height:.78;}
+  .colorBlock{height:100%;min-height:0;border-radius:22px;}
+  .cue{min-height:28px;font-size:clamp(13px,2.2vw,20px);padding:4px 10px;}
+  .bottom{gap:5px;}
+  .controls{padding:6px 8px;}
+  .stats{padding:6px 8px;gap:6px;}
+  .stat{padding:5px 8px;border-radius:12px;}
+  .stat .k{font-size:10px;}.stat .v{font-size:15px;}
 }
-@media(max-width:680px) and (orientation:portrait){
-  .app{gap:6px;padding:calc(8px + var(--safeTop)) calc(8px + var(--safeRight)) calc(8px + var(--safeBottom)) calc(8px + var(--safeLeft))}
-  h1{font-size:clamp(18px,5vw,22px);white-space:normal;line-height:1.04}
-  .sub{font-size:11px;white-space:normal;line-height:1.15;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-  .topbar{align-items:center}.btn{min-height:40px;padding:8px 10px}
-  .hud{padding:6px 8px;gap:4px}.chip{font-size:10.5px;padding:4px 7px}
-  .stage{padding:8px}.stimWrap{gap:6px}
-  .mainStim{font-size:clamp(44px,15vw,112px)}
-  .colorBlock{width:min(92%,430px);height:min(62%,330px);min-height:165px}
-  .stimName{font-size:clamp(17px,5vw,25px);margin-top:8px}
-  .infoLine{font-size:clamp(14px,4vw,21px);margin-top:6px}
-  .infoLine.small{font-size:clamp(12px,3.5vw,17px)}
-  .decisionBadge{font-size:clamp(12px,3.5vw,17px);padding:6px 9px}
-  .cue{min-height:38px;font-size:clamp(14px,4vw,20px);padding:7px 10px}
-  .controls{justify-content:center;padding:6px 8px}.stats{gap:5px;padding:5px}
-  .stat{padding:5px 7px}.stat .v{font-size:13px}.stat .k{font-size:9px}
+
+@media (max-width: 680px) and (orientation: portrait){
+  .stimText{font-size:clamp(38px,12vw,96px);}
+  .numText{font-size:clamp(92px,25vw,210px);}
+  .arrowText{font-size:clamp(80px,22vw,180px);}
 }
-@media(max-height:650px) and (orientation:landscape){
-  .app{grid-template-rows:auto auto minmax(0,1fr) auto auto;gap:5px;padding:calc(6px + var(--safeTop)) calc(8px + var(--safeRight)) calc(6px + var(--safeBottom)) calc(8px + var(--safeLeft))}
-  h1{font-size:clamp(16px,2.8vw,21px)}.sub{font-size:10.5px}.actions .btn span{display:none}
-  .hud{grid-template-columns:1fr auto 1fr;padding:5px 8px}.chip{font-size:10.5px;padding:4px 7px}.key{font-size:9px}
-  .stage{padding:6px}.stimWrap{gap:5px}
-  .mainStim{font-size:clamp(38px,10vw,118px)}
-  .colorBlock{width:min(72%,680px);height:min(64%,260px);min-height:120px}
-  .stimName{font-size:clamp(16px,3vw,26px);margin-top:6px}
-  .infoLine{font-size:clamp(13px,2.5vw,22px);margin-top:5px}
-  .infoLine.small{font-size:clamp(11px,2vw,16px)}
-  .decisionBadge{font-size:clamp(11px,2vw,16px);padding:5px 8px}
-  .cue{min-height:32px;font-size:clamp(13px,2.2vw,18px);padding:5px 9px}
-  .btn{min-height:36px;padding:6px 9px}.controls,.stats{padding:4px 7px}.stat{padding:4px 7px}.stat .v{font-size:12px}.stat .k{font-size:8.5px}
+
+@media(max-width:980px){.hud{grid-template-columns:1fr;align-items:stretch}.hudGroup,.hudGroup.right,.hudGroup.center{justify-content:center}.settingsBody{flex-direction:column}.tabs{flex:0 0 auto;border-right:0;border-bottom:1px solid var(--border);display:flex;gap:8px;overflow:auto}.tabBtn{width:auto;margin:0;white-space:nowrap}.grid,.stimList{grid-template-columns:1fr}.settingsHead{flex-direction:column}.actions .btn span,.controls .btn span{display:none}}
+@media(max-width:680px){.app{gap:8px;padding:calc(9px + var(--safeTop)) calc(9px + var(--safeRight)) calc(9px + var(--safeBottom)) calc(9px + var(--safeLeft))}.badge{width:38px;height:38px}.stimulus{height:min(58dvh,620px);min-height:220px}.cue{min-height:46px}.controls{justify-content:center}.btn{min-height:46px;padding:10px 12px}.stats{gap:6px}.stat{padding:7px 8px}.stat .v{font-size:16px}}
+@media(max-height:650px) and (orientation:landscape){.app{gap:7px}.hud,.controls,.stats{padding:7px 10px}.stage{padding:8px}.stimulus{height:min(55dvh,460px);min-height:180px}.colorBlock{min-height:165px}.cue{min-height:38px;font-size:clamp(16px,2.2vw,26px);padding:6px 12px}.btn{min-height:42px}.stat{padding:6px 8px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+
+
+/* =========================================================
+   TKD PRO 5.4 - Mobile/Landscape refinement only
+   Logica e funzionamento invariati
+   ========================================================= */
+html,body{
+  height:100%;
+  min-height:100%;
+  overflow:hidden;
 }
+body{
+  position:relative!important;
+  min-height:100svh;
+}
+.app{
+  height:100svh!important;
+  max-height:100svh!important;
+  width:100%;
+  overflow:hidden!important;
+}
+#training{
+  min-height:0!important;
+}
+
+/* Tablet / telefoni grandi: mantiene proporzioni più stabili */
+@media (max-width: 1180px){
+  .app{gap:8px;padding:calc(8px + var(--safeTop)) calc(8px + var(--safeRight)) calc(8px + var(--safeBottom)) calc(8px + var(--safeLeft));}
+  .topbar{align-items:center;}
+  .badge{width:38px;height:38px;border-radius:12px;font-size:20px;}
+  h1{font-size:clamp(17px,2.4vw,25px);}
+  .sub{font-size:clamp(11px,1.55vw,14px);}
+  .hud{grid-template-columns:1fr auto 1fr!important;gap:8px;padding:8px 10px;align-items:center;}
+  .hudGroup{flex-wrap:nowrap;}
+  .hudGroup.center{justify-content:center;}
+  .hudGroup.right{justify-content:flex-end;}
+  .stage{padding:8px;}
+  .stimulus{height:auto!important;flex:1 1 auto;min-height:0!important;width:100%;}
+  .stimWrap{min-height:0;}
+}
+
+/* iPhone/Android in orizzontale: layout compatto, non schiacciato */
+@media (orientation: landscape) and (max-height: 520px){
+  :root{--radius:16px;}
+  .app{
+    height:100svh!important;
+    max-height:100svh!important;
+    gap:5px!important;
+    padding:calc(4px + var(--safeTop)) calc(8px + var(--safeRight)) calc(5px + var(--safeBottom)) calc(8px + var(--safeLeft))!important;
+  }
+  #training{gap:5px!important;}
+  .topbar{min-height:34px;align-items:center;}
+  .brand{gap:7px;}
+  .badge{width:32px!important;height:32px!important;border-radius:10px!important;font-size:17px!important;}
+  h1{font-size:clamp(16px,2.6vw,23px)!important;line-height:1!important;}
+  .sub{font-size:clamp(10px,1.55vw,13px)!important;margin-top:1px!important;}
+  .actions{gap:6px!important;}
+  .actions .btn,.controls .btn{min-height:34px!important;width:44px!important;padding:6px!important;border-radius:12px!important;}
+  .actions .btn span,.controls .btn span{display:none!important;}
+
+  .hud{
+    grid-template-columns:1fr auto 1fr!important;
+    gap:6px!important;
+    padding:6px 8px!important;
+    min-height:48px!important;
+  }
+  .hudGroup{gap:5px!important;flex-wrap:nowrap!important;min-width:0;}
+  .hudGroup.center{justify-content:center!important;}
+  .hudGroup.right{justify-content:flex-end!important;}
+  .key{font-size:9px!important;letter-spacing:.28px!important;}
+  .val{font-size:clamp(14px,2.6vw,24px)!important;line-height:1!important;}
+  #timeTxt{font-size:clamp(22px,4.8vw,38px)!important;line-height:.95!important;}
+  .chip{font-size:10px!important;padding:4px 8px!important;gap:5px!important;}
+  #flowChip,#audioChip,#voiceChip{max-width:31vw;overflow:hidden;text-overflow:ellipsis;}
+
+  .stage{
+    flex:1 1 auto!important;
+    min-height:0!important;
+    padding:5px!important;
+  }
+  .stimWrap{gap:4px!important;}
+  .stimulus{
+    flex:1 1 auto!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    border-radius:18px!important;
+    padding:8px!important;
+  }
+  .stimText{font-size:clamp(52px,12.2vw,132px)!important;line-height:.86!important;letter-spacing:.5px!important;}
+  .numText{font-size:clamp(115px,25vw,230px)!important;line-height:.76!important;}
+  .arrowText{font-size:clamp(96px,21vw,190px)!important;line-height:.76!important;}
+  .colorBlock{height:100%!important;min-height:0!important;border-radius:22px!important;}
+  .cue{
+    min-height:26px!important;
+    font-size:clamp(13px,2.15vw,20px)!important;
+    line-height:1!important;
+    padding:4px 12px!important;
+    max-width:70%;
+  }
+
+  .bottom{gap:5px!important;}
+  .controls{
+    min-height:46px!important;
+    padding:5px 8px!important;
+    flex-wrap:nowrap!important;
+  }
+  .btnRow{gap:7px!important;flex-wrap:nowrap!important;}
+  .stats{
+    min-height:44px!important;
+    padding:5px 8px!important;
+    gap:6px!important;
+    flex-wrap:nowrap!important;
+    overflow:hidden!important;
+  }
+  .stat{padding:5px 8px!important;border-radius:12px!important;gap:5px!important;}
+  .stat .k{font-size:9px!important;}
+  .stat .v{font-size:15px!important;}
+}
+
+/* iPhone molto bassi / browser con barra visibile */
+@media (orientation: landscape) and (max-height: 430px){
+  .app{gap:4px!important;padding-top:3px!important;padding-bottom:4px!important;}
+  #training{gap:4px!important;}
+  .topbar{min-height:30px!important;}
+  .badge{width:28px!important;height:28px!important;font-size:15px!important;}
+  h1{font-size:clamp(15px,2.4vw,20px)!important;}
+  .sub{font-size:clamp(9px,1.45vw,12px)!important;}
+  .hud{min-height:42px!important;padding:4px 8px!important;}
+  #timeTxt{font-size:clamp(20px,4.2vw,32px)!important;}
+  .stage{padding:4px!important;}
+  .stimText{font-size:clamp(46px,11vw,112px)!important;}
+  .numText{font-size:clamp(100px,23vw,205px)!important;}
+  .cue{min-height:24px!important;font-size:clamp(12px,2vw,18px)!important;}
+  .controls{min-height:42px!important;padding:4px 8px!important;}
+  .stats{min-height:38px!important;padding:4px 8px!important;}
+  .stat{padding:4px 7px!important;}
+  .stat .k{font-size:8.5px!important;}.stat .v{font-size:14px!important;}
+}
+
+/* Ritratto: più leggibile, ma senza uscire dallo schermo */
+@media (orientation: portrait) and (max-width: 680px){
+  .app{height:100svh!important;max-height:100svh!important;gap:8px!important;}
+  .topbar{align-items:center;}
+  .hud{grid-template-columns:1fr!important;gap:6px!important;}
+  .hudGroup,.hudGroup.center,.hudGroup.right{justify-content:center!important;}
+  .stimulus{height:auto!important;min-height:0!important;flex:1 1 auto!important;}
+  .stimText{font-size:clamp(42px,14vw,105px)!important;}
+  .numText{font-size:clamp(92px,28vw,210px)!important;}
+  .arrowText{font-size:clamp(84px,25vw,180px)!important;}
+  .stats{overflow:auto!important;justify-content:flex-start!important;-webkit-overflow-scrolling:touch;}
+}
+
+/* Messaggio fullscreen leggibile */
+.warnBox,.infoBox{line-height:1.35;}
+
+
+/* =========================================================
+   TKD PRO 5.5 - Fix definitivo orientamento verticale/orizzontale
+   Solo CSS: logica JavaScript e funzionamento invariati
+   ========================================================= */
+html,body{
+  width:100%!important;
+  height:100%!important;
+  margin:0!important;
+  overflow:hidden!important;
+}
+body{
+  position:relative!important;
+  min-height:100svh!important;
+}
+.app{
+  width:100%!important;
+  height:100svh!important;
+  max-height:100svh!important;
+  overflow:hidden!important;
+}
+#training{
+  height:100%!important;
+  min-height:0!important;
+  display:grid!important;
+  grid-template-rows:auto auto minmax(0,1fr) auto!important;
+  gap:clamp(5px,1.1svh,10px)!important;
+}
+.topbar,.hud,.stage,.bottom{min-width:0!important;}
+.stage{min-height:0!important;overflow:hidden!important;}
+.stimWrap{height:100%!important;min-height:0!important;overflow:hidden!important;}
+.stimulus{min-height:0!important;max-height:none!important;}
+.bottom{min-height:0!important;}
+.controls,.stats{min-width:0!important;}
+
+/* Telefoni in verticale: tutto deve stare dentro lo schermo */
+@media (orientation: portrait) and (max-width: 760px){
+  .app{
+    padding:calc(8px + var(--safeTop)) calc(10px + var(--safeRight)) calc(8px + var(--safeBottom)) calc(10px + var(--safeLeft))!important;
+    gap:0!important;
+  }
+  #training{
+    grid-template-rows:auto auto minmax(0,1fr) auto!important;
+    gap:8px!important;
+  }
+  .topbar{
+    min-height:52px!important;
+    align-items:center!important;
+    gap:8px!important;
+  }
+  .brand{gap:8px!important;min-width:0!important;}
+  .badge{
+    width:44px!important;
+    height:44px!important;
+    border-radius:13px!important;
+    font-size:22px!important;
+    flex:0 0 auto!important;
+  }
+  h1{
+    font-size:clamp(19px,5.1vw,26px)!important;
+    line-height:1.02!important;
+    max-width:100%!important;
+  }
+  .sub{
+    font-size:clamp(11px,3.1vw,15px)!important;
+    line-height:1.1!important;
+    margin-top:2px!important;
+    max-width:calc(100vw - 128px)!important;
+  }
+  .actions{gap:6px!important;flex:0 0 auto!important;}
+  .actions .btn{
+    width:56px!important;
+    min-height:56px!important;
+    padding:0!important;
+    border-radius:18px!important;
+    font-size:22px!important;
+  }
+  .actions .btn span{display:none!important;}
+
+  .hud{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    grid-template-rows:auto auto auto!important;
+    gap:5px!important;
+    padding:9px 10px!important;
+    border-radius:20px!important;
+    min-height:0!important;
+  }
+  .hudGroup,.hudGroup.center,.hudGroup.right{
+    justify-content:center!important;
+    flex-wrap:wrap!important;
+    gap:6px!important;
+    min-width:0!important;
+  }
+  .hudGroup.right{
+    max-height:none!important;
+    overflow:visible!important;
+  }
+  .key{font-size:10px!important;letter-spacing:.28px!important;}
+  .val{font-size:clamp(18px,5.4vw,26px)!important;line-height:1!important;}
+  #timeTxt{font-size:clamp(34px,10.5vw,50px)!important;line-height:.9!important;}
+  .chip{font-size:clamp(10px,2.7vw,13px)!important;padding:5px 8px!important;gap:5px!important;}
+  #flowChip,#audioChip,#voiceChip{max-width:31vw!important;overflow:hidden!important;text-overflow:ellipsis!important;}
+
+  .stage{
+    padding:8px!important;
+    border-radius:20px!important;
+  }
+  .stimWrap{gap:7px!important;}
+  .stimulus{
+    flex:1 1 auto!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    border-radius:24px!important;
+    padding:10px!important;
+  }
+  .stimText{font-size:clamp(44px,15vw,110px)!important;line-height:.9!important;letter-spacing:.6px!important;}
+  .numText{font-size:clamp(110px,34vw,230px)!important;line-height:.78!important;}
+  .arrowText{font-size:clamp(92px,29vw,200px)!important;line-height:.78!important;}
+  .colorBlock{
+    width:min(92%,560px)!important;
+    height:min(82%,420px)!important;
+    min-height:0!important;
+    aspect-ratio:4/3!important;
+    border-radius:28px!important;
+  }
+  .cue{
+    min-height:36px!important;
+    max-height:46px!important;
+    max-width:92%!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+    font-size:clamp(15px,4vw,22px)!important;
+    line-height:1!important;
+    padding:7px 14px!important;
+  }
+
+  .bottom{
+    display:grid!important;
+    grid-template-rows:auto auto!important;
+    gap:8px!important;
+  }
+  .controls{
+    justify-content:center!important;
+    flex-wrap:nowrap!important;
+    padding:9px 10px!important;
+    border-radius:20px!important;
+  }
+  .btnRow{gap:10px!important;flex-wrap:nowrap!important;}
+  .controls .btn{
+    width:58px!important;
+    min-height:58px!important;
+    padding:0!important;
+    border-radius:18px!important;
+    font-size:20px!important;
+  }
+  .controls .btn span{display:none!important;}
+  .stats{
+    justify-content:center!important;
+    align-content:center!important;
+    flex-wrap:wrap!important;
+    overflow:hidden!important;
+    padding:9px 10px!important;
+    gap:8px!important;
+    border-radius:20px!important;
+  }
+  .stat{
+    padding:7px 10px!important;
+    border-radius:14px!important;
+    gap:6px!important;
+  }
+  .stat .k{font-size:clamp(10px,2.8vw,13px)!important;}
+  .stat .v{font-size:clamp(17px,5vw,25px)!important;}
+}
+
+/* Telefoni in verticale molto bassi: riduzione ulteriore */
+@media (orientation: portrait) and (max-width: 760px) and (max-height: 760px){
+  #training{gap:6px!important;}
+  .topbar{min-height:46px!important;}
+  .badge{width:38px!important;height:38px!important;font-size:20px!important;}
+  h1{font-size:clamp(17px,4.7vw,23px)!important;}
+  .sub{font-size:clamp(10px,2.8vw,13px)!important;}
+  .actions .btn{width:48px!important;min-height:48px!important;}
+  .hud{padding:7px 9px!important;gap:4px!important;}
+  #timeTxt{font-size:clamp(30px,9vw,44px)!important;}
+  .stage{padding:6px!important;}
+  .stimWrap{gap:5px!important;}
+  .cue{min-height:30px!important;max-height:36px!important;font-size:clamp(13px,3.6vw,18px)!important;padding:5px 11px!important;}
+  .controls{padding:7px 9px!important;}
+  .controls .btn{width:50px!important;min-height:50px!important;}
+  .stats{padding:7px 8px!important;gap:6px!important;}
+  .stat{padding:6px 8px!important;}
+  .stat .v{font-size:clamp(15px,4.3vw,21px)!important;}
+}
+
+/* Orizzontale: priorità assoluta al campo e statistiche sempre visibili */
+@media (orientation: landscape) and (max-height: 560px){
+  .app{
+    padding:calc(4px + var(--safeTop)) calc(8px + var(--safeRight)) calc(5px + var(--safeBottom)) calc(8px + var(--safeLeft))!important;
+  }
+  #training{
+    grid-template-rows:auto auto minmax(0,1fr) auto!important;
+    gap:5px!important;
+  }
+  .topbar{min-height:30px!important;align-items:center!important;gap:8px!important;}
+  .brand{gap:7px!important;}
+  .badge{width:30px!important;height:30px!important;border-radius:10px!important;font-size:16px!important;}
+  h1{font-size:clamp(15px,2.3vw,22px)!important;line-height:1!important;}
+  .sub{font-size:clamp(9px,1.45vw,12px)!important;line-height:1!important;margin-top:1px!important;}
+  .actions{gap:6px!important;}
+  .actions .btn{width:42px!important;min-height:32px!important;padding:0!important;border-radius:12px!important;}
+  .actions .btn span{display:none!important;}
+
+  .hud{
+    grid-template-columns:1fr auto 1fr!important;
+    gap:6px!important;
+    padding:5px 8px!important;
+    min-height:42px!important;
+    border-radius:17px!important;
+  }
+  .hudGroup{gap:5px!important;flex-wrap:nowrap!important;min-width:0!important;}
+  .hudGroup.center{justify-content:center!important;}
+  .hudGroup.right{justify-content:flex-end!important;overflow:hidden!important;}
+  .key{font-size:8.5px!important;}
+  .val{font-size:clamp(14px,2.4vw,22px)!important;}
+  #timeTxt{font-size:clamp(22px,4.2vw,36px)!important;}
+  .chip{font-size:9.5px!important;padding:4px 7px!important;gap:4px!important;}
+  #flowChip,#audioChip,#voiceChip{max-width:22vw!important;overflow:hidden!important;text-overflow:ellipsis!important;}
+
+  .stage{padding:5px!important;border-radius:17px!important;}
+  .stimWrap{gap:4px!important;}
+  .stimulus{
+    flex:1 1 auto!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    border-radius:16px!important;
+    padding:8px!important;
+  }
+  .stimText{font-size:clamp(44px,10.5vw,118px)!important;line-height:.84!important;letter-spacing:.4px!important;}
+  .numText{font-size:clamp(92px,22vw,210px)!important;line-height:.74!important;}
+  .arrowText{font-size:clamp(82px,19vw,175px)!important;line-height:.74!important;}
+  .colorBlock{
+    width:min(94%,1080px)!important;
+    height:88%!important;
+    min-height:0!important;
+    border-radius:22px!important;
+  }
+  .cue{
+    min-height:24px!important;
+    max-height:28px!important;
+    max-width:68%!important;
+    font-size:clamp(12px,1.9vw,18px)!important;
+    line-height:1!important;
+    padding:4px 11px!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+
+  .bottom{gap:5px!important;}
+  .controls{
+    min-height:40px!important;
+    padding:4px 8px!important;
+    justify-content:space-between!important;
+    flex-wrap:nowrap!important;
+    border-radius:17px!important;
+  }
+  .btnRow{gap:7px!important;flex-wrap:nowrap!important;}
+  .controls .btn{
+    width:42px!important;
+    min-height:34px!important;
+    padding:0!important;
+    border-radius:12px!important;
+  }
+  .controls .btn span{display:none!important;}
+  .stats{
+    min-height:38px!important;
+    padding:4px 8px!important;
+    gap:6px!important;
+    flex-wrap:nowrap!important;
+    justify-content:center!important;
+    overflow:hidden!important;
+    border-radius:17px!important;
+  }
+  .stat{padding:4px 7px!important;border-radius:12px!important;gap:5px!important;}
+  .stat .k{font-size:8.5px!important;}
+  .stat .v{font-size:14px!important;}
+}
+
+/* Orizzontale molto basso: comprime in modo controllato senza tagliare */
+@media (orientation: landscape) and (max-height: 430px){
+  .app{padding-top:3px!important;padding-bottom:4px!important;}
+  #training{gap:4px!important;}
+  .topbar{min-height:26px!important;}
+  .badge{width:26px!important;height:26px!important;font-size:14px!important;}
+  h1{font-size:clamp(14px,2.05vw,19px)!important;}
+  .sub{font-size:clamp(8.5px,1.25vw,11px)!important;}
+  .actions .btn{width:38px!important;min-height:28px!important;}
+  .hud{min-height:36px!important;padding:4px 7px!important;}
+  #timeTxt{font-size:clamp(18px,3.7vw,30px)!important;}
+  .stage{padding:4px!important;}
+  .stimulus{padding:6px!important;}
+  .stimText{font-size:clamp(38px,9.5vw,98px)!important;}
+  .numText{font-size:clamp(78px,20vw,180px)!important;}
+  .cue{display:none!important;}
+  .controls{min-height:34px!important;padding:3px 7px!important;}
+  .controls .btn{width:38px!important;min-height:30px!important;}
+  .stats{min-height:32px!important;padding:3px 7px!important;gap:5px!important;}
+  .stat{padding:3px 6px!important;}
+  .stat .k{font-size:8px!important;}.stat .v{font-size:13px!important;}
+}
+
+/* Landscape largo, tipo iPhone Pro Max: campo più equilibrato */
+@media (orientation: landscape) and (min-height: 431px) and (max-height: 560px) and (min-width: 780px){
+  .colorBlock{height:84%!important;}
+  .stimulus{border-radius:18px!important;}
+  .stage{padding-left:8px!important;padding-right:8px!important;}
+}
+
+
+
+/* =========================================================
+   TKD Reaction Trainer PRO 5.7 - Header senza riquadro TKD
+   Miglioria SOLO grafica/responsive: logica JS invariata.
+   ========================================================= */
+.badge{
+  display:none!important;
+}
+.brand{
+  gap:0!important;
+  flex:1 1 auto!important;
+  min-width:0!important;
+}
+.topbar{
+  width:100%!important;
+  align-items:center!important;
+}
+.topbar .actions{
+  flex:0 0 auto!important;
+}
+h1{
+  letter-spacing:-.35px!important;
+}
+
+@media (orientation: portrait) and (max-width: 760px){
+  .topbar{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) auto!important;
+    column-gap:10px!important;
+    row-gap:4px!important;
+    min-height:68px!important;
+    padding-top:2px!important;
+  }
+  .brand{
+    min-width:0!important;
+    width:100%!important;
+  }
+  .brand > div:last-child{
+    min-width:0!important;
+    width:100%!important;
+  }
+  h1{
+    font-size:clamp(20px,5.1vw,23px)!important;
+    line-height:1.02!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    max-width:100%!important;
+  }
+  .sub{
+    font-size:clamp(11px,3.15vw,13px)!important;
+    line-height:1.18!important;
+    margin-top:3px!important;
+    white-space:normal!important;
+    overflow:hidden!important;
+    display:-webkit-box!important;
+    -webkit-line-clamp:2!important;
+    -webkit-box-orient:vertical!important;
+    max-width:100%!important;
+  }
+  .actions{
+    gap:8px!important;
+    flex-wrap:nowrap!important;
+    align-self:center!important;
+  }
+  .actions .btn{
+    width:54px!important;
+    height:54px!important;
+    min-height:54px!important;
+    padding:0!important;
+    border-radius:18px!important;
+    font-size:24px!important;
+  }
+  .hud{
+    margin-top:2px!important;
+  }
+}
+
+@media (orientation: portrait) and (max-width: 430px){
+  .topbar{
+    grid-template-columns:minmax(0,1fr) auto!important;
+    column-gap:8px!important;
+    min-height:64px!important;
+  }
+  h1{
+    font-size:clamp(19px,5.3vw,22px)!important;
+    letter-spacing:-.55px!important;
+  }
+  .sub{
+    font-size:clamp(10.5px,3.05vw,12.5px)!important;
+    line-height:1.14!important;
+  }
+  .actions .btn{
+    width:50px!important;
+    height:50px!important;
+    min-height:50px!important;
+    border-radius:16px!important;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 560px){
+  .topbar{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) auto!important;
+    column-gap:10px!important;
+    min-height:32px!important;
+  }
+  h1{
+    font-size:clamp(17px,2.55vw,24px)!important;
+    line-height:1!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+  .sub{
+    font-size:clamp(10px,1.55vw,13px)!important;
+    line-height:1.05!important;
+    margin-top:1px!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+  .actions .btn{
+    width:42px!important;
+    height:42px!important;
+    min-height:42px!important;
+    padding:0!important;
+    border-radius:14px!important;
+    font-size:20px!important;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 430px){
+  .topbar{min-height:28px!important;}
+  h1{font-size:clamp(16px,2.35vw,22px)!important;}
+  .sub{font-size:clamp(9px,1.35vw,12px)!important;}
+  .actions .btn{
+    width:38px!important;
+    height:38px!important;
+    min-height:38px!important;
+    font-size:18px!important;
+  }
+}
+
 </style>
 </head>
 <body>
 <div class="app">
-  <header class="topbar">
-    <div class="brand">
-      <h1>TKD Situation Reaction Trainer PRO</h1>
-      <span class="sub" id="subtitle">Preset: — • Livello: — • Modalità: —</span>
+  <section id="training" style="height:100%;display:flex;flex-direction:column;gap:10px;min-height:0">
+    <header class="topbar">
+      <div class="brand"><div style="min-width:0"><h1>TKD Reaction Trainer PRO</h1><span class="sub" id="subtitle">Modalità: — • Livello: — • Flow: OFF</span></div></div>
+      <div class="actions"><button class="btn" id="openSettings">⚙ <span>Impostazioni</span></button><button class="btn" id="fullTop">⛶ <span>Fullscreen</span></button></div>
+    </header>
+    <div class="card hud">
+      <div class="hudGroup"><span class="key">ROUND</span><span class="val" id="roundTxt">R1/3</span><span class="chip"><span class="dot stop" id="phaseDot"></span><span id="phaseTxt">PRONTO</span></span></div>
+      <div class="hudGroup center"><span class="key">TEMPO</span><span class="val" id="timeTxt" style="font-size:clamp(22px,3vw,32px)">60s</span></div>
+      <div class="hudGroup right"><span class="chip" id="flowChip">Flow OFF</span><span class="chip" id="audioChip">Audio bloccato</span><span class="chip" id="voiceChip">Voce OFF</span></div>
     </div>
-    <div class="actions">
-      <button class="btn" id="openSettings">⚙ <span>Impostazioni</span></button>
-      <button class="btn" id="fullTop">⛶ <span>Fullscreen</span></button>
-    </div>
-  </header>
-
-  <div class="card hud">
-    <div class="hudGroup"><span class="key">ROUND</span><span class="val" id="roundTxt">R1/3</span><span class="chip"><span class="dot stop" id="phaseDot"></span><span id="phaseTxt">PRONTO</span></span></div>
-    <div class="hudGroup center"><span class="key">TEMPO</span><span class="val" id="timeTxt" style="font-size:clamp(22px,3vw,32px)">60s</span></div>
-    <div class="hudGroup right"><span class="chip" id="modeChip">Situazioni</span><span class="chip" id="audioChip">Audio bloccato</span><span class="chip" id="voiceChip">Voce OFF</span></div>
-  </div>
-
-  <main class="card stage">
-    <div class="stimWrap">
-      <div class="stimulus" id="stimulus">
-        <div class="mainStim">PRONTO</div>
-        <div class="infoLine">Situazione → Soluzione tecnica</div>
+    <main class="card stage">
+      <div class="stimWrap">
+        <div class="stimulus" id="stimulus"><div class="stimText" style="font-size:clamp(44px,7vw,86px)">PRONTO</div></div>
+        <div class="cue" id="cue">Premi INIZIA</div>
       </div>
-      <div class="cue" id="cue">Premi INIZIA oppure scegli un preset</div>
-    </div>
-    <div class="overlay"><div class="countdown" id="countdown">3</div></div>
-  </main>
-
-  <div class="card controls">
-    <div class="btnRow">
-      <button class="btn btnPrimary" id="startBtn">▶ <span>INIZIA</span></button>
-      <button class="btn btnWarn" id="pauseBtn" disabled>⏸ <span>PAUSA</span></button>
-      <button class="btn btnDanger" id="stopBtn" disabled>⏹ <span>STOP</span></button>
-    </div>
-    <div class="btnRow">
-      <button class="btn" id="audioBtn">🔈 <span>AUDIO TEST</span></button>
-      <button class="btn" id="fullBtn">⛶ <span>FULLSCREEN</span></button>
-    </div>
-  </div>
-
-  <div class="card stats">
-    <div class="stat"><span class="k">Stimoli</span><span class="v" id="stStim">0</span></div>
-    <div class="stat"><span class="k">Situazioni</span><span class="v" id="stSit">0</span></div>
-    <div class="stat"><span class="k">Sequenze</span><span class="v" id="stSeq">0</span></div>
-    <div class="stat"><span class="k">Finte</span><span class="v" id="stFake">0</span></div>
-    <div class="stat"><span class="k">Ripetizioni</span><span class="v" id="stRep">0</span></div>
-    <div class="stat"><span class="k">Errori</span><span class="v" id="stErr">0</span></div>
-  </div>
-
-  <div class="card feedback" id="feedback">
-    <button class="btn btnGood" data-fb="good">✓ Buono</button>
-    <button class="btn btnWarn" data-fb="hesitation">⚠ Esita</button>
-    <button class="btn btnWarn" data-fb="stop">⏸ Si ferma</button>
-    <button class="btn btnWarn" data-fb="guard">🛡 Guardia</button>
-    <button class="btn btnDanger" data-fb="fake">Finta</button>
-    <button class="btn btnDanger" data-fb="err">✕ Errore</button>
-  </div>
+      <div class="overlay"><div class="countdown" id="countdown">3</div></div>
+    </main>
+    <footer class="bottom">
+      <div class="card controls">
+        <div class="btnRow"><button class="btn btnPrimary" id="startBtn">▶ <span>INIZIA</span></button><button class="btn btnWarn" id="pauseBtn" disabled>⏸ <span>PAUSA</span></button><button class="btn btnDanger" id="stopBtn" disabled>⏹ <span>STOP</span></button></div>
+        <div class="btnRow"><button class="btn" id="audioBtn">🔈 <span>AUDIO TEST</span></button><button class="btn" id="fullBtn">⛶ <span>FULLSCREEN</span></button></div>
+      </div>
+      <div class="card stats">
+        <div class="stat"><span class="k">Stimoli</span><span class="v" id="stStim">0</span></div>
+        <div class="stat"><span class="k">Sequenze</span><span class="v" id="stSeq">0</span></div>
+        <div class="stat"><span class="k">Combo</span><span class="v" id="stCombo">0</span></div>
+        <div class="stat"><span class="k">Finte</span><span class="v" id="stFake">0</span></div>
+        <div class="stat"><span class="k">Ripetizioni</span><span class="v" id="stRep">0</span></div>
+        <div class="stat"><span class="k">Cue respiro</span><span class="v" id="stBreath">0</span></div>
+      </div>
+    </footer>
+  </section>
 </div>
 
 <section class="settings" id="settings">
   <div class="card settingsCard">
     <div class="settingsHead">
-      <div>
-        <div class="sectionTitle">Impostazioni PRO 7.0</div>
-        <div class="tiny">Metodo: lo stimolo è casuale, ma rappresenta una situazione reale con soluzione tecnica associata. Tempi variabili e ripetizioni controllate.</div>
-      </div>
-      <div class="btnRow">
-        <button class="btn" id="saveSet">SALVA</button>
-        <button class="btn btnPrimary" id="saveBack">SALVA E TORNA</button>
-        <button class="btn btnWarn" id="closeSet">ANNULLA</button>
-        <button class="btn btnDanger" id="resetSet">RESET</button>
-      </div>
+      <div><div class="sectionTitle">Impostazioni</div><div class="tiny">Versione completa: fasce età, livelli, modalità operative, preset Taekwondo, stimoli dinamici, Flow reale e respirazione.</div></div>
+      <div class="btnRow"><button class="btn" id="saveSet">SALVA</button><button class="btn btnPrimary" id="saveBack">SALVA E TORNA</button><button class="btn btnWarn" id="closeSet">ANNULLA</button><button class="btn btnDanger" id="resetSet">RESET</button></div>
     </div>
     <div class="settingsBody">
       <nav class="tabs">
-        <button class="btn tabBtn active" data-tab="rapido">Uso rapido</button>
-        <button class="btn tabBtn" data-tab="allenamento">Allenamento</button>
-        <button class="btn tabBtn" data-tab="situazioni">Situazioni</button>
-        <button class="btn tabBtn" data-tab="ritmo">Ritmo</button>
-        <button class="btn tabBtn" data-tab="visuale">Visuale</button>
-        <button class="btn tabBtn" data-tab="coach">Coach</button>
+        <button class="btn tabBtn active" data-tab="allenamento">Allenamento</button>
+        <button class="btn tabBtn" data-tab="stimoli">Stimoli</button>
+        <button class="btn tabBtn" data-tab="flow">Flow</button>
         <button class="btn tabBtn" data-tab="audio">Audio</button>
+        <button class="btn tabBtn" data-tab="preset">Preset</button>
+        <button class="btn tabBtn" data-tab="avanzate">Avanzate</button>
       </nav>
-
       <div class="panels">
         <div id="banner" class="warnBox hidden"></div>
 
-        <div class="panel active" data-panel="rapido">
-          <div class="sectionTitle">Uso rapido</div>
-          <div class="infoBox">Scegli un preset. Ogni preset imposta situazioni attive, tempi, ripetizioni, finte, visualizzazione e livello.</div>
-          <div class="grid">
-            <div class="box"><div class="label">Preset</div><select id="presetSelect"></select><button class="btn btnPrimary" id="applyPreset" style="width:100%;margin-top:8px">APPLICA PRESET</button></div>
-            <div class="box"><div class="label">Descrizione</div><div class="infoBox" id="presetInfo"></div></div>
-            <div class="box"><div class="label">Preset personale</div><input id="customPresetName" type="text" placeholder="Nome preset"><button class="btn" id="savePreset" style="width:100%;margin-top:8px">SALVA PRESET</button><button class="btn btnDanger" id="deletePreset" style="width:100%;margin-top:8px">ELIMINA PRESET</button></div>
-            <div class="box"><div class="label">Ripristino</div><button class="btn btnWarn" id="restoreDefaults" style="width:100%">RIPRISTINA STANDARD</button></div>
-          </div>
-        </div>
-
-        <div class="panel" data-panel="allenamento">
+        <div class="panel active" data-panel="allenamento">
           <div class="sectionTitle">Allenamento</div>
+          <div class="infoBox" id="modeInfo">Seleziona modalità, fascia d’età e livello. Ogni modalità applica una logica diversa di stimoli, pause, raffiche e finte.</div>
           <div class="grid">
-            <div class="box"><div class="label">Modalità</div><select id="mode"></select></div>
-            <div class="box"><div class="label">Livello</div><select id="level"><option value="1">Livello 1 - mostra soluzione</option><option value="2">Livello 2 - mostra situazione</option><option value="3">Livello 3 - solo stimolo</option><option value="4">Livello 4 - alto livello</option></select></div>
+            <div class="box"><div class="label">Modalità allenamento</div><select id="mode"></select></div>
+            <div class="box"><div class="label">Livello atleta</div><select id="level"><option value="bambini">Bambini</option><option value="principianti">Principianti</option><option value="intermedio">Intermedio</option><option value="agonisti">Agonisti</option><option value="alto_livello">Alto livello</option><option value="personalizzato">Personalizzato</option></select></div>
+            <div class="box"><div class="label">Fascia età</div><select id="ageBand"><option value="5_7">Bambini 5–7 anni</option><option value="8_10">Bambini 8–10 anni</option><option value="11_13">Ragazzi 11–13 anni</option><option value="cadetti">Cadetti 12–14 anni</option><option value="junior">Junior 15–17 anni</option><option value="senior">Senior 18+</option><option value="master">Master/adulti</option><option value="personalizzato">Personalizzato</option></select></div>
+            <div class="box"><div class="label">Preset attivo</div><input id="activePreset" type="text" readonly></div>
             <div class="box"><div class="label">Numero round</div><input id="rounds" type="number" min="1" max="50" step="1"></div>
             <div class="box"><div class="label">Durata round (sec)</div><input id="roundSec" type="number" min="10" max="900" step="5"></div>
             <div class="box"><div class="label">Pausa tra round (sec)</div><input id="restSec" type="number" min="0" max="600" step="5"></div>
             <div class="box"><div class="label">Countdown iniziale (sec)</div><input id="countSec" type="number" min="1" max="20" step="1"></div>
-            <div class="box"><label class="toggle"><input id="allowFake" type="checkbox"><div><b>Finte attive</b><div class="tiny">La finta richiede sempre una risposta attiva.</div></div></label></div>
-            <div class="box"><div class="label">Percentuale finte</div><input id="fakePct" type="number" min="0" max="80" step="1"></div>
+            <div class="box"><div class="label">Durata visibilità stimolo (sec)</div><input id="visibleSec" type="number" min="0.1" max="10" step="0.05"></div>
+            <div class="box"><div class="label">Pausa minima tra gruppi (sec)</div><input id="groupMin" type="number" min="0.1" max="20" step="0.1"></div>
+            <div class="box"><div class="label">Pausa massima tra gruppi (sec)</div><input id="groupMax" type="number" min="0.1" max="20" step="0.1"></div>
+            <div class="box"><div class="label">Percentuale finte</div><input id="fakePctA" type="number" min="0" max="80" step="1"></div>
           </div>
         </div>
 
-        <div class="panel" data-panel="situazioni">
-          <div class="sectionTitle">Archivio situazioni</div>
-          <div class="infoBox">Ogni stimolo rappresenta una situazione reale. Esempio: BLU = Dollyo avversario → Twi Chagi.</div>
-          <button class="btn" id="addSituation" style="width:100%;margin-bottom:10px">+ Aggiungi situazione</button>
-          <div class="situationList" id="situationList"></div>
-        </div>
-
-        <div class="panel" data-panel="ritmo">
-          <div class="sectionTitle">Ritmo dinamico</div>
-          <div class="infoBox">Gli stimoli non sono cadenzati: alternano pause brevi, medie, lunghe, raffiche e ripetizioni controllate.</div>
+        <div class="panel" data-panel="stimoli">
+          <div class="sectionTitle">Stimoli dinamici</div>
+          <div class="infoBox">I campi tecnica sono vuoti di default. Se cancelli una tecnica, resta vuota e la voce non la pronuncia.</div>
           <div class="grid">
-            <div class="box"><div class="label">Durata stimolo visibile (sec)</div><input id="visibleSec" type="number" min="0.1" max="10" step="0.05"></div>
-            <div class="box"><div class="label">Pausa minima (sec)</div><input id="pauseMin" type="number" min="0.1" max="20" step="0.05"></div>
-            <div class="box"><div class="label">Pausa massima (sec)</div><input id="pauseMax" type="number" min="0.1" max="20" step="0.05"></div>
-            <div class="box"><div class="label">Probabilità raffica (%)</div><input id="burstPct" type="number" min="0" max="80" step="1"></div>
-            <div class="box"><div class="label">Probabilità pausa lunga (%)</div><input id="longPausePct" type="number" min="0" max="80" step="1"></div>
-            <div class="box"><div class="label">Max stimoli in sequenza</div><select id="maxSeq"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
-            <div class="box"><label class="toggle"><input id="allowRepeats" type="checkbox"><div><b>Permetti ripetizioni</b><div class="tiny">Può capitare che l’avversario ripeta la stessa tecnica.</div></div></label></div>
-            <div class="box"><div class="label">Max ripetizioni consecutive</div><select id="maxRepeats"><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
-            <div class="box"><div class="label">Probabilità ripetizione immediata (%)</div><input id="repeatPct" type="number" min="0" max="80" step="1"></div>
-            <div class="box"><label class="toggle"><input id="smartRandom" type="checkbox"><div><b>Smart random</b><div class="tiny">Evita pattern troppo prevedibili.</div></div></label></div>
+            <div class="box"><div class="label">Colori</div><button class="btn" id="addColor" style="width:100%">+ Aggiungi colore</button><div class="stimList" id="colorList" style="margin-top:10px"></div></div>
+            <div class="box"><div class="label">Numeri</div><div class="grid" style="grid-template-columns:1fr 1fr"><input id="numFrom" type="number" min="0" max="999" placeholder="Da"><input id="numTo" type="number" min="0" max="999" placeholder="A"></div><button class="btn" id="makeNums" style="width:100%;margin-top:8px">GENERA RANGE</button><button class="btn" id="addNumber" style="width:100%;margin-top:8px">+ Aggiungi numero</button><div class="stimList" id="numberList" style="margin-top:10px"></div></div>
+            <div class="box"><div class="label">Parole</div><button class="btn" id="addWord" style="width:100%">+ Aggiungi parola</button><div class="stimList" id="wordList" style="margin-top:10px"></div></div>
+            <div class="box"><div class="label">Frecce</div><div class="stimList" id="arrowList"></div></div>
           </div>
         </div>
 
-        <div class="panel" data-panel="visuale">
-          <div class="sectionTitle">Visualizzazione</div>
+        <div class="panel" data-panel="flow">
+          <div class="sectionTitle">Flow e respirazione</div>
+          <div class="infoBox">Flow modifica realmente tempi, pause, sequenze, cue e gestione respiratoria. Non è solo un’etichetta grafica.</div>
           <div class="grid">
-            <div class="box"><label class="toggle"><input id="showSituation" type="checkbox"><div><b>Mostra situazione</b></div></label></div>
-            <div class="box"><label class="toggle"><input id="showOpponent" type="checkbox"><div><b>Mostra tecnica avversario</b></div></label></div>
-            <div class="box"><label class="toggle"><input id="showSolution" type="checkbox"><div><b>Mostra soluzione tecnica</b></div></label></div>
-            <div class="box"><label class="toggle"><input id="showAfter" type="checkbox"><div><b>Mostra comando successivo</b></div></label></div>
-            <div class="box"><div class="label">Scala stimolo colore</div><input id="colorScale" type="number" min="50" max="100" step="1"></div>
-            <div class="box"><div class="label">Scala testo (%)</div><input id="textScale" type="number" min="70" max="140" step="5"></div>
-          </div>
-        </div>
-
-        <div class="panel" data-panel="coach">
-          <div class="sectionTitle">Coach Mode</div>
-          <div class="grid">
-            <div class="box"><label class="toggle"><input id="coachOn" type="checkbox"><div><b>Feedback coach attivo</b></div></label></div>
-            <div class="box"><label class="toggle"><input id="adaptiveOn" type="checkbox"><div><b>Difficoltà adattiva</b></div></label></div>
-            <div class="box"><div class="label">Obiettivo tecnico</div><select id="coachGoal"><option value="prima_gara">Prima gara</option><option value="non_parte">Non parte subito</option><option value="si_ferma">Si ferma dopo il primo colpo</option><option value="finte">Abbocca alle finte</option><option value="guardia">Perde guardia</option><option value="pressione">Pressione</option></select></div>
-            <div class="box"><div class="label">Nota coach</div><textarea id="coachNote" placeholder="Annotazioni per la seduta"></textarea></div>
+            <div class="box"><label class="toggle"><input id="flowOn" type="checkbox"><div><b>Flow ON/OFF</b><div class="tiny">Attiva logica fluida e meno meccanica.</div></div></label></div>
+            <div class="box"><div class="label">Profilo Flow</div><select id="flowProfile"><option value="base">Base</option><option value="gara">Gara</option><option value="agonista">Agonista</option></select></div>
+            <div class="box"><div class="label">Respirazione</div><select id="breathMode"><option value="off">OFF</option><option value="recupero">Solo recupero</option><option value="countdown_recupero">Countdown + recupero</option><option value="completa">Completa</option></select></div>
+            <div class="box"><div class="label">Frequenza cue respiratori</div><select id="breathFreq"><option value="bassa">Bassa</option><option value="media">Media</option><option value="alta">Alta</option></select></div>
+            <div class="box"><div class="label">Kihap</div><select id="kihap"><option value="libero">Libero</option><option value="decisivo">Solo azione decisiva</option><option value="non_forzato">Nessun kihap forzato</option></select></div>
           </div>
         </div>
 
         <div class="panel" data-panel="audio">
           <div class="sectionTitle">Audio e voce</div>
           <div class="grid">
-            <div class="box"><label class="toggle"><input id="beepOn" type="checkbox"><div><b>Beep ON/OFF</b></div></label><label class="toggle" style="margin-top:8px"><input id="fakeBeep" type="checkbox"><div><b>Beep diverso per finta</b></div></label><label class="toggle" style="margin-top:8px"><input id="comboBeep" type="checkbox"><div><b>Doppio beep raffica</b></div></label></div>
-            <div class="box"><label class="toggle"><input id="voiceOn" type="checkbox"><div><b>Voce ON/OFF</b></div></label><label class="toggle" style="margin-top:8px"><input id="speakStim" type="checkbox"><div><b>Pronuncia stimolo</b></div></label><label class="toggle" style="margin-top:8px"><input id="speakSolution" type="checkbox"><div><b>Pronuncia soluzione</b></div></label></div>
+            <div class="box"><label class="toggle"><input id="beepOn" type="checkbox"><div><b>Beep ON/OFF</b></div></label><label class="toggle" style="margin-top:8px"><input id="fakeBeep" type="checkbox"><div><b>Beep diverso per finta</b></div></label><label class="toggle" style="margin-top:8px"><input id="comboBeep" type="checkbox"><div><b>Doppio beep combo</b></div></label></div>
+            <div class="box"><label class="toggle"><input id="voiceOn" type="checkbox"><div><b>Voce ON/OFF</b></div></label><label class="toggle" style="margin-top:8px"><input id="speakStim" type="checkbox"><div><b>Pronuncia stimolo</b></div></label><label class="toggle" style="margin-top:8px"><input id="speakTech" type="checkbox"><div><b>Pronuncia tecnica solo se presente</b></div></label></div>
             <div class="box"><div class="label">Velocità voce</div><input id="voiceRate" type="number" min="0.5" max="1.8" step="0.05"><div class="label" style="margin-top:8px">Tono voce</div><input id="voicePitch" type="number" min="0.5" max="1.5" step="0.05"><div class="label" style="margin-top:8px">Volume voce</div><input id="voiceVol" type="number" min="0" max="1" step="0.05"></div>
             <div class="box"><button class="btn" id="testBeep" style="width:100%">TEST BEEP</button><button class="btn" id="testVoice" style="width:100%;margin-top:8px">TEST VOCE</button></div>
+          </div>
+        </div>
+
+        <div class="panel" data-panel="preset">
+          <div class="sectionTitle">Preset Taekwondo</div>
+          <div class="infoBox">I preset impostano automaticamente modalità, livello, fascia età, round, tempi, finte, Flow e respirazione. Puoi modificarli e salvare una copia personale.</div>
+          <div class="grid">
+            <div class="box"><div class="label">Preset standard e personali</div><select id="presetSelect"></select><button class="btn btnPrimary" id="applyPreset" style="width:100%;margin-top:8px">APPLICA PRESET</button><button class="btn btnWarn" id="restorePresets" style="width:100%;margin-top:8px">RIPRISTINA STANDARD</button></div>
+            <div class="box"><div class="label">Salva preset personale</div><input id="customPresetName" type="text" placeholder="Nome preset"><button class="btn" id="savePreset" style="width:100%;margin-top:8px">SALVA PRESET PERSONALE</button><button class="btn btnDanger" id="deletePreset" style="width:100%;margin-top:8px">ELIMINA PRESET PERSONALE</button></div>
+            <div class="box" style="grid-column:1/-1"><div class="label">Descrizione preset/modalità</div><div class="infoBox" id="presetInfo"></div></div>
+          </div>
+        </div>
+
+        <div class="panel" data-panel="avanzate">
+          <div class="sectionTitle">Avanzate</div>
+          <div class="grid">
+            <div class="box"><div class="label">Lunghezza sequenze</div><select id="seqType"><option value="singolo">Singolo</option><option value="doppio">Doppio</option><option value="triplo">Triplo</option><option value="misto">Misto</option></select></div>
+            <div class="box"><div class="label">Lunghezza massima sequenza</div><select id="maxCombo"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+            <div class="box"><div class="label">Pausa minima dentro sequenza (sec)</div><input id="intraMin" type="number" min="0.05" max="10" step="0.05"></div>
+            <div class="box"><div class="label">Pausa massima dentro sequenza (sec)</div><input id="intraMax" type="number" min="0.05" max="10" step="0.05"></div>
+            <div class="box"><label class="toggle"><input id="smartRandom" type="checkbox"><div><b>Smart random</b><div class="tiny">Evita pattern troppo prevedibili.</div></div></label></div>
+            <div class="box"><label class="toggle"><input id="allowRepeats" type="checkbox"><div><b>Permetti ripetizioni consecutive</b></div></label></div>
+            <div class="box"><div class="label">Massimo ripetizioni consecutive</div><select id="maxRepeats"><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
+            <div class="box"><button class="btn" id="resetStats" style="width:100%">RESET STATISTICHE</button></div>
+            <div class="box"><button class="btn btnDanger" id="resetAll" style="width:100%">RESET IMPOSTAZIONI</button></div>
           </div>
         </div>
 
@@ -338,233 +905,231 @@ select{appearance:none;-webkit-appearance:none}
   </div>
 </section>
 
-<div class="toast" id="toast"></div>
-
 <script>
 (()=>{"use strict";
-const $=id=>document.getElementById(id);
-const STORAGE="tkd-situation-reaction-pro-7";
-const clone=o=>JSON.parse(JSON.stringify(o));
+const $=id=>document.getElementById(id), STORAGE="tkd-reaction-pro-5";
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+const clone=o=>JSON.parse(JSON.stringify(o));
 const clamp=(n,a,b)=>Math.min(b,Math.max(a,n));
 const rand=(a,b)=>a+Math.random()*(b-a);
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const fmt=s=>{s=Math.max(0,Math.floor(s));let m=Math.floor(s/60),r=s%60;return m?m+":"+String(r).padStart(2,"0"):r+"s"};
 const MODES={
-  attenzione:"Attenzione",prima_gara:"Prima gara",tecnica:"Tecnica pulita",reazione:"Reazione singola",anticipo:"Anticipo",contrattacco:"Contrattacco",finte:"Gestione finte",continuita:"Continuità",pressione:"Pressione",uscite:"Uscite laterali",combattimento:"Combattimento",finale:"Finale round",resistenza:"Resistenza mentale",alto:"Alto livello",recupero:"Recupero attivo"
+ base_tecnica:{name:"Base Tecnica",desc:"Riconoscimento stimolo → risposta corretta. Stimoli singoli, ritmo didattico, pause regolari, finte quasi assenti. Adatta a principianti, bambini pronti e riscaldamento tecnico."},
+ controllo:{name:"Controllo",desc:"Attenzione e comprensione senza ansia. Stimoli lenti, massimo 1–2 stimoli, pause lunghe, finte assenti o rare. Indicata per bambini piccoli, principianti e lavoro pulito."},
+ sequenze:{name:"Sequenze",desc:"Memoria breve e continuità. Sequenze 2–5 stimoli mostrati uno alla volta, pause interne variabili e possibilità di ripetizioni."},
+ reazione_rapida:{name:"Reazione Rapida",desc:"Riduzione del tempo di risposta. Stimoli brevi, ravvicinati e imprevedibili, micro-raffiche leggibili. Per intermedi pronti e agonisti."},
+ decision_making:{name:"Decision Making",desc:"Scelta corretta tra più possibilità. Stimoli misti, colori/numeri/parole/frecce, finte moderate, velocità senza perdere lucidità."},
+ combattimento:{name:"Combattimento",desc:"Simula ritmo reale: pause, raffiche, finte, ripetizioni e cambi improvvisi. Per preparazione gara e sparring."},
+ sparring:{name:"Sparring Simulation",desc:"Round realistico con studio, attacco, finta, contrattacco e uscita. Pressione mentale e variabilità alta."},
+ flow:{name:"Flow",desc:"Continuità, fluidità, respirazione e adattamento. Modifica realmente tempi e pause, evita ritmo meccanico e kihap forzato."},
+ resistenza:{name:"Resistenza Mentale",desc:"Lucidità sotto fatica. Round più lunghi, stimoli continui, finte e cue respiratori controllati."},
+ recupero:{name:"Recupero Attivo",desc:"Bassa intensità, stimoli lenti, respirazione e attenzione leggera. Per recupero tra blocchi e defaticamento."}
 };
-const SITUATIONS=[
-{id:"blu_dollyo",type:"color",value:"BLU",color:"#1689ff",name:"Dollyo avversario",description:"L’avversario attacca con Dollyo Chagi",opponent:"Dollyo Chagi",distance:"media",phase:"attacco",solution:"Twi Chagi",solutionType:"contrattacco",after:"Esci",difficulty:2,active:true,fake:false},
-{id:"rosso_ap",type:"color",value:"ROSSO",color:"#ff2f55",name:"Ap Chagi avversario",description:"L’avversario entra con Ap Chagi",opponent:"Ap Chagi",distance:"media",phase:"attacco",solution:"Spostamento laterale + Dollyo Chagi",solutionType:"contrattacco",after:"Continua",difficulty:2,active:true,fake:false},
-{id:"verde_arretra",type:"color",value:"VERDE",color:"#24d978",name:"Avversario arretra",description:"L’avversario arretra e lascia spazio",opponent:"Arretramento",distance:"lunga",phase:"pressione",solution:"Pressione + doppia azione",solutionType:"pressione",after:"Seconda azione",difficulty:2,active:false,fake:false},
-{id:"giallo_finta",type:"color",value:"GIALLO",color:"#ffd21e",name:"Finta avversario",description:"L’avversario prova a farti reagire",opponent:"Finta",distance:"media",phase:"finta",solution:"Non abboccare + mantieni distanza",solutionType:"difesa",after:"Riparti",difficulty:2,active:true,fake:true},
-{id:"num1_fermo",type:"number",value:"1",color:"#ffffff",name:"Avversario fermo",description:"L’avversario resta fermo",opponent:"Nessuna azione",distance:"lunga",phase:"iniziativa",solution:"Finta + attacco",solutionType:"attacco",after:"Torna in guardia",difficulty:1,active:true,fake:false},
-{id:"num2_entra",type:"number",value:"2",color:"#ffffff",name:"Avversario entra dritto",description:"L’avversario avanza in linea",opponent:"Avanzamento diretto",distance:"media",phase:"anticipo",solution:"Anticipo con tecnica frontale",solutionType:"anticipo",after:"Esci",difficulty:2,active:true,fake:false},
-{id:"sx_pressione",type:"arrow",value:"⬅️",color:"#ffffff",name:"Uscita laterale sinistra",description:"L’avversario mette pressione",opponent:"Pressione",distance:"corta/media",phase:"uscita",solution:"Passo laterale + contrattacco",solutionType:"uscita",after:"Continua",difficulty:3,active:false,fake:false},
-{id:"dx_pressione",type:"arrow",value:"➡️",color:"#ffffff",name:"Uscita laterale destra",description:"L’avversario mette pressione",opponent:"Pressione",distance:"corta/media",phase:"uscita",solution:"Passo laterale + contrattacco",solutionType:"uscita",after:"Continua",difficulty:3,active:false,fake:false},
-{id:"finta_word",type:"word",value:"FINTA",color:"#8a93a8",name:"Non abboccare",description:"L’avversario finta per provocare una reazione",opponent:"Finta",distance:"media",phase:"finta",solution:"Resta in guardia + controlla distanza",solutionType:"controllo",after:"Riparti",difficulty:2,active:false,fake:true},
-{id:"continua_word",type:"word",value:"CONTINUA",color:"#45f0b0",name:"Continuità dopo primo colpo",description:"Dopo la prima azione non devi fermarti",opponent:"Reazione avversario",distance:"media",phase:"continuita",solution:"Seconda tecnica immediata",solutionType:"combinazione",after:"Esci",difficulty:3,active:false,fake:false},
-{id:"finale_word",type:"word",value:"FINALE",color:"#ffd34d",name:"Pressione finale",description:"Ultimi secondi del round",opponent:"Avversario stanco o chiuso",distance:"media",phase:"finale",solution:"Pressione controllata + seconda azione",solutionType:"pressione",after:"Torna in guardia",difficulty:4,active:false,fake:false}
+const DEFAULT_ARROWS=[
+ {id:"arrow_up",type:"arrow",label:"⬆️",name:"avanti",active:true,technique:""},
+ {id:"arrow_down",type:"arrow",label:"⬇️",name:"indietro",active:true,technique:""},
+ {id:"arrow_left",type:"arrow",label:"⬅️",name:"sinistra",active:true,technique:""},
+ {id:"arrow_right",type:"arrow",label:"➡️",name:"destra",active:true,technique:""},
+ {id:"arrow_ul",type:"arrow",label:"↖️",name:"diagonale avanti sinistra",active:false,technique:""},
+ {id:"arrow_ur",type:"arrow",label:"↗️",name:"diagonale avanti destra",active:false,technique:""},
+ {id:"arrow_dl",type:"arrow",label:"↙️",name:"diagonale indietro sinistra",active:false,technique:""},
+ {id:"arrow_dr",type:"arrow",label:"↘️",name:"diagonale indietro destra",active:false,technique:""}
 ];
 const DEFAULTS={
- activePreset:"Prima gara",mode:"prima_gara",level:"1",rounds:3,roundSec:60,restSec:25,countSec:3,
- allowFake:true,fakePct:5,
- rhythm:{visibleSec:.9,pauseMin:.55,pauseMax:2.2,burstPct:12,longPausePct:18,maxSeq:2,allowRepeats:true,maxRepeats:2,repeatPct:18,smartRandom:true},
- visual:{showSituation:true,showOpponent:true,showSolution:true,showAfter:true,colorScale:92,textScale:100},
- coach:{on:false,adaptive:false,goal:"prima_gara",note:""},
- audio:{beepOn:true,fakeBeep:true,comboBeep:true,voiceOn:false,speakStim:true,speakSolution:false,rate:1,pitch:1,vol:1},
- situations:clone(SITUATIONS),customPresets:[]
+ activePreset:"Default",level:"principianti",ageBand:"8_10",mode:"base_tecnica",rounds:3,roundSec:60,restSec:20,countSec:3,groupMin:1.2,groupMax:2.5,visibleSec:.9,
+ flow:{on:false,profile:"base",breathMode:"countdown_recupero",breathFreq:"media",kihap:"non_forzato"},
+ audio:{beepOn:true,fakeBeep:true,comboBeep:true,voiceOn:false,speakStim:true,speakTech:true,rate:1,pitch:1,vol:1},
+ advanced:{fakePct:3,seqType:"singolo",maxCombo:1,intraMin:.6,intraMax:1.2,smartRandom:true,allowRepeats:true,maxRepeats:2},
+ stimuli:{
+  colors:[
+   {id:"red",type:"color",name:"Rosso",value:"#ff2f55",active:true,custom:false,technique:""},
+   {id:"blue",type:"color",name:"Blu",value:"#1689ff",active:true,custom:false,technique:""},
+   {id:"green",type:"color",name:"Verde",value:"#24d978",active:false,custom:false,technique:""},
+   {id:"yellow",type:"color",name:"Giallo",value:"#ffd21e",active:false,custom:false,technique:""},
+   {id:"orange",type:"color",name:"Arancione",value:"#ff8a1c",active:false,custom:false,technique:""},
+   {id:"purple",type:"color",name:"Viola",value:"#9c5cff",active:false,custom:false,technique:""},
+   {id:"cyan",type:"color",name:"Azzurro",value:"#22d3ee",active:false,custom:false,technique:""},
+   {id:"pink",type:"color",name:"Rosa",value:"#ff5ecb",active:false,custom:false,technique:""},
+   {id:"gray",type:"color",name:"Finta",value:"#8a93a8",active:true,custom:false,fake:true,technique:""}
+  ],
+  numbers:Array.from({length:10},(_,i)=>({id:"num_"+(i+1),type:"number",name:String(i+1),value:String(i+1),active:i<2,custom:false,technique:""})),
+  words:[
+   {id:"attack",type:"word",name:"Attacca",value:"ATTACCA",active:true,custom:false,technique:""},
+   {id:"defend",type:"word",name:"Difendi",value:"DIFENDI",active:false,custom:false,technique:""},
+   {id:"counter",type:"word",name:"Contrattacca",value:"CONTRATTACCA",active:false,custom:false,technique:""},
+   {id:"enter",type:"word",name:"Entra",value:"ENTRA",active:false,custom:false,technique:""},
+   {id:"exit",type:"word",name:"Esci",value:"ESCI",active:false,custom:false,technique:""},
+   {id:"guard",type:"word",name:"Cambia guardia",value:"CAMBIA GUARDIA",active:false,custom:false,technique:""},
+   {id:"stop",type:"word",name:"Stop",value:"STOP",active:true,custom:false,fake:true,technique:""},
+   {id:"fake",type:"word",name:"Finta",value:"FINTA",active:false,custom:false,fake:true,technique:""}
+  ],
+  arrows:clone(DEFAULT_ARROWS)
+ },
+ customPresets:[]
 };
 const PRESETS={
- "Bambini attenzione":{mode:"attenzione",level:"1",rounds:2,roundSec:40,restSec:25,countSec:5,allowFake:false,fakePct:0,rhythm:{visibleSec:1.35,pauseMin:1.7,pauseMax:3.4,burstPct:0,longPausePct:8,maxSeq:1,allowRepeats:true,maxRepeats:2,repeatPct:16},visual:{showSituation:true,showOpponent:false,showSolution:true,showAfter:true}},
- "Prima esperienza":{mode:"attenzione",level:"1",rounds:2,roundSec:45,restSec:25,countSec:4,allowFake:false,fakePct:0,rhythm:{visibleSec:1.2,pauseMin:1.4,pauseMax:3.0,burstPct:3,longPausePct:10,maxSeq:1,allowRepeats:true,maxRepeats:2,repeatPct:14},visual:{showSituation:true,showOpponent:true,showSolution:true,showAfter:true}},
- "Prima gara":{mode:"prima_gara",level:"1",rounds:3,roundSec:60,restSec:25,countSec:3,allowFake:true,fakePct:5,rhythm:{visibleSec:.95,pauseMin:.8,pauseMax:2.4,burstPct:8,longPausePct:16,maxSeq:2,allowRepeats:true,maxRepeats:2,repeatPct:16},visual:{showSituation:true,showOpponent:true,showSolution:true,showAfter:true}},
- "Tecnica pulita":{mode:"tecnica",level:"1",rounds:3,roundSec:60,restSec:25,countSec:3,allowFake:false,fakePct:0,rhythm:{visibleSec:1.0,pauseMin:1.1,pauseMax:2.6,burstPct:4,longPausePct:14,maxSeq:1,allowRepeats:true,maxRepeats:2,repeatPct:20},visual:{showSituation:true,showOpponent:true,showSolution:true,showAfter:true}},
- "Reazione singola":{mode:"reazione",level:"2",rounds:3,roundSec:60,restSec:25,countSec:3,allowFake:true,fakePct:4,rhythm:{visibleSec:.55,pauseMin:.35,pauseMax:1.5,burstPct:12,longPausePct:12,maxSeq:1,allowRepeats:true,maxRepeats:2,repeatPct:18},visual:{showSituation:true,showOpponent:false,showSolution:false,showAfter:false}},
- "Anticipo":{mode:"anticipo",level:"2",rounds:3,roundSec:70,restSec:30,countSec:3,allowFake:true,fakePct:6,rhythm:{visibleSec:.68,pauseMin:.45,pauseMax:1.8,burstPct:14,longPausePct:12,maxSeq:2,allowRepeats:true,maxRepeats:2,repeatPct:18},visual:{showSituation:true,showOpponent:true,showSolution:false,showAfter:true}},
- "Contrattacco":{mode:"contrattacco",level:"2",rounds:3,roundSec:70,restSec:30,countSec:3,allowFake:true,fakePct:8,rhythm:{visibleSec:.68,pauseMin:.45,pauseMax:1.9,burstPct:14,longPausePct:14,maxSeq:2,allowRepeats:true,maxRepeats:2,repeatPct:22},visual:{showSituation:true,showOpponent:true,showSolution:false,showAfter:true}},
- "Gestione finte":{mode:"finte",level:"2",rounds:3,roundSec:75,restSec:30,countSec:3,allowFake:true,fakePct:22,rhythm:{visibleSec:.72,pauseMin:.55,pauseMax:2.2,burstPct:10,longPausePct:22,maxSeq:2,allowRepeats:true,maxRepeats:2,repeatPct:14},visual:{showSituation:true,showOpponent:true,showSolution:true,showAfter:true}},
- "Continuità":{mode:"continuita",level:"2",rounds:3,roundSec:80,restSec:30,countSec:3,allowFake:true,fakePct:8,rhythm:{visibleSec:.62,pauseMin:.25,pauseMax:1.5,burstPct:24,longPausePct:10,maxSeq:3,allowRepeats:true,maxRepeats:2,repeatPct:20},visual:{showSituation:true,showOpponent:false,showSolution:false,showAfter:true}},
- "Pressione":{mode:"pressione",level:"3",rounds:3,roundSec:90,restSec:30,countSec:3,allowFake:true,fakePct:10,rhythm:{visibleSec:.55,pauseMin:.28,pauseMax:1.6,burstPct:26,longPausePct:8,maxSeq:3,allowRepeats:true,maxRepeats:3,repeatPct:24},visual:{showSituation:false,showOpponent:false,showSolution:false,showAfter:true}},
- "Uscite laterali":{mode:"uscite",level:"2",rounds:3,roundSec:70,restSec:30,countSec:3,allowFake:true,fakePct:6,rhythm:{visibleSec:.70,pauseMin:.5,pauseMax:2.0,burstPct:12,longPausePct:14,maxSeq:2,allowRepeats:true,maxRepeats:2,repeatPct:16},visual:{showSituation:true,showOpponent:true,showSolution:false,showAfter:true}},
- "Combattimento":{mode:"combattimento",level:"3",rounds:3,roundSec:120,restSec:35,countSec:3,allowFake:true,fakePct:16,rhythm:{visibleSec:.44,pauseMin:.22,pauseMax:2.4,burstPct:28,longPausePct:22,maxSeq:4,allowRepeats:true,maxRepeats:3,repeatPct:22},visual:{showSituation:false,showOpponent:false,showSolution:false,showAfter:false}},
- "Finale round":{mode:"finale",level:"3",rounds:3,roundSec:45,restSec:30,countSec:3,allowFake:true,fakePct:12,rhythm:{visibleSec:.42,pauseMin:.18,pauseMax:1.2,burstPct:38,longPausePct:6,maxSeq:4,allowRepeats:true,maxRepeats:3,repeatPct:24},visual:{showSituation:false,showOpponent:false,showSolution:false,showAfter:false}},
- "Resistenza mentale":{mode:"resistenza",level:"3",rounds:4,roundSec:140,restSec:30,countSec:3,allowFake:true,fakePct:14,rhythm:{visibleSec:.48,pauseMin:.3,pauseMax:1.7,burstPct:24,longPausePct:10,maxSeq:4,allowRepeats:true,maxRepeats:3,repeatPct:18},visual:{showSituation:false,showOpponent:false,showSolution:false,showAfter:false}},
- "Alto livello":{mode:"alto",level:"4",rounds:3,roundSec:120,restSec:40,countSec:3,allowFake:true,fakePct:20,rhythm:{visibleSec:.32,pauseMin:.16,pauseMax:1.6,burstPct:34,longPausePct:18,maxSeq:5,allowRepeats:true,maxRepeats:3,repeatPct:26},visual:{showSituation:false,showOpponent:false,showSolution:false,showAfter:false}},
- "Recupero attivo":{mode:"recupero",level:"1",rounds:2,roundSec:75,restSec:15,countSec:3,allowFake:false,fakePct:0,rhythm:{visibleSec:1.4,pauseMin:2.0,pauseMax:4.2,burstPct:0,longPausePct:25,maxSeq:1,allowRepeats:true,maxRepeats:2,repeatPct:12},visual:{showSituation:true,showOpponent:false,showSolution:true,showAfter:true}}
+ "Base Tecnica":{activePreset:"Base Tecnica",level:"principianti",ageBand:"8_10",mode:"base_tecnica",rounds:3,roundSec:60,restSec:20,countSec:3,groupMin:1.2,groupMax:2.5,visibleSec:.95,flow:{on:false},advanced:{fakePct:0,seqType:"singolo",maxCombo:1,intraMin:.6,intraMax:1.2,allowRepeats:true,maxRepeats:2}},
+ "Bambini 5–7":{activePreset:"Bambini 5–7",level:"bambini",ageBand:"5_7",mode:"controllo",rounds:2,roundSec:40,restSec:25,countSec:5,groupMin:2.2,groupMax:3.8,visibleSec:1.4,flow:{on:false,breathMode:"countdown_recupero"},advanced:{fakePct:0,seqType:"singolo",maxCombo:1,intraMin:1.0,intraMax:1.8,maxRepeats:1}},
+ "Bambini 8–10":{activePreset:"Bambini 8–10",level:"bambini",ageBand:"8_10",mode:"controllo",rounds:3,roundSec:50,restSec:25,countSec:4,groupMin:1.8,groupMax:3.2,visibleSec:1.15,flow:{on:false,breathMode:"countdown_recupero"},advanced:{fakePct:2,seqType:"misto",maxCombo:2,intraMin:.8,intraMax:1.8,maxRepeats:2}},
+ "Ragazzi 11–13":{activePreset:"Ragazzi 11–13",level:"intermedio",ageBand:"11_13",mode:"sequenze",rounds:3,roundSec:70,restSec:25,countSec:3,groupMin:1.0,groupMax:2.1,visibleSec:.78,flow:{on:false},advanced:{fakePct:5,seqType:"misto",maxCombo:3,intraMin:.45,intraMax:1.2,maxRepeats:2}},
+ "Cadetti":{activePreset:"Cadetti",level:"agonisti",ageBand:"cadetti",mode:"decision_making",rounds:3,roundSec:90,restSec:30,countSec:3,groupMin:.75,groupMax:1.8,visibleSec:.62,flow:{on:false},advanced:{fakePct:9,seqType:"misto",maxCombo:4,intraMin:.25,intraMax:.95,maxRepeats:2}},
+ "Junior":{activePreset:"Junior",level:"agonisti",ageBand:"junior",mode:"combattimento",rounds:3,roundSec:120,restSec:35,countSec:3,groupMin:.45,groupMax:1.8,visibleSec:.45,flow:{on:false},advanced:{fakePct:14,seqType:"misto",maxCombo:5,intraMin:.12,intraMax:.8,maxRepeats:3}},
+ "Senior":{activePreset:"Senior",level:"alto_livello",ageBand:"senior",mode:"sparring",rounds:3,roundSec:120,restSec:45,countSec:3,groupMin:.35,groupMax:2.3,visibleSec:.4,flow:{on:true,profile:"gara",breathMode:"completa",breathFreq:"media"},advanced:{fakePct:18,seqType:"misto",maxCombo:5,intraMin:.1,intraMax:.75,maxRepeats:3}},
+ "Master/Adulti":{activePreset:"Master/Adulti",level:"principianti",ageBand:"master",mode:"controllo",rounds:3,roundSec:60,restSec:25,countSec:3,groupMin:1.3,groupMax:2.6,visibleSec:1.0,flow:{on:true,profile:"base",breathMode:"countdown_recupero",breathFreq:"bassa"},advanced:{fakePct:3,seqType:"misto",maxCombo:2,intraMin:.7,intraMax:1.6,maxRepeats:2}},
+ "Principianti":{activePreset:"Principianti",level:"principianti",ageBand:"personalizzato",mode:"controllo",rounds:3,roundSec:60,restSec:25,countSec:3,groupMin:1.4,groupMax:2.8,visibleSec:1.0,flow:{on:false},advanced:{fakePct:3,seqType:"misto",maxCombo:2,intraMin:.7,intraMax:1.5,maxRepeats:2}},
+ "Intermedio":{activePreset:"Intermedio",level:"intermedio",ageBand:"personalizzato",mode:"sequenze",rounds:3,roundSec:90,restSec:30,countSec:3,groupMin:.8,groupMax:2.0,visibleSec:.65,flow:{on:false},advanced:{fakePct:8,seqType:"misto",maxCombo:4,intraMin:.35,intraMax:1.1,maxRepeats:2}},
+ "Agonisti":{activePreset:"Agonisti",level:"agonisti",ageBand:"personalizzato",mode:"combattimento",rounds:3,roundSec:120,restSec:35,countSec:3,groupMin:.4,groupMax:1.8,visibleSec:.42,flow:{on:false},advanced:{fakePct:16,seqType:"misto",maxCombo:5,intraMin:.12,intraMax:.8,maxRepeats:3}},
+ "Alto Livello":{activePreset:"Alto Livello",level:"alto_livello",ageBand:"personalizzato",mode:"flow",rounds:3,roundSec:120,restSec:45,countSec:3,groupMin:.25,groupMax:1.35,visibleSec:.32,flow:{on:true,profile:"agonista",breathMode:"completa",breathFreq:"alta",kihap:"non_forzato"},advanced:{fakePct:18,seqType:"misto",maxCombo:5,intraMin:.07,intraMax:.55,maxRepeats:3}},
+ "Reazione Rapida":{activePreset:"Reazione Rapida",level:"agonisti",ageBand:"personalizzato",mode:"reazione_rapida",rounds:3,roundSec:60,restSec:30,countSec:3,groupMin:.25,groupMax:1.0,visibleSec:.30,flow:{on:false},advanced:{fakePct:8,seqType:"misto",maxCombo:3,intraMin:.08,intraMax:.45,maxRepeats:3}},
+ "Combattimento":{activePreset:"Combattimento",level:"agonisti",ageBand:"personalizzato",mode:"combattimento",rounds:3,roundSec:120,restSec:35,countSec:3,groupMin:.3,groupMax:2.5,visibleSec:.45,flow:{on:false},advanced:{fakePct:20,seqType:"misto",maxCombo:5,intraMin:.1,intraMax:.9,maxRepeats:3}},
+ "Flow Base":{activePreset:"Flow Base",level:"intermedio",ageBand:"master",mode:"flow",rounds:3,roundSec:90,restSec:30,countSec:3,groupMin:.75,groupMax:2.2,visibleSec:.58,flow:{on:true,profile:"base",breathMode:"countdown_recupero",breathFreq:"bassa",kihap:"non_forzato"},advanced:{fakePct:6,seqType:"misto",maxCombo:3,intraMin:.3,intraMax:1.0,maxRepeats:2}},
+ "Flow Gara":{activePreset:"Flow Gara",level:"agonisti",ageBand:"junior",mode:"flow",rounds:3,roundSec:120,restSec:35,countSec:3,groupMin:.35,groupMax:1.8,visibleSec:.42,flow:{on:true,profile:"gara",breathMode:"completa",breathFreq:"media",kihap:"decisivo"},advanced:{fakePct:14,seqType:"misto",maxCombo:4,intraMin:.12,intraMax:.75,maxRepeats:3}},
+ "Flow Agonista":{activePreset:"Flow Agonista",level:"alto_livello",ageBand:"senior",mode:"flow",rounds:3,roundSec:120,restSec:40,countSec:3,groupMin:.25,groupMax:1.25,visibleSec:.32,flow:{on:true,profile:"agonista",breathMode:"completa",breathFreq:"alta",kihap:"non_forzato"},advanced:{fakePct:18,seqType:"misto",maxCombo:5,intraMin:.07,intraMax:.52,maxRepeats:3}},
+ "Sparring Simulation":{activePreset:"Sparring Simulation",level:"alto_livello",ageBand:"senior",mode:"sparring",rounds:3,roundSec:120,restSec:45,countSec:3,groupMin:.3,groupMax:2.8,visibleSec:.38,flow:{on:true,profile:"gara",breathMode:"completa",breathFreq:"media"},advanced:{fakePct:22,seqType:"misto",maxCombo:5,intraMin:.1,intraMax:.8,maxRepeats:3}},
+ "Decision Making":{activePreset:"Decision Making",level:"intermedio",ageBand:"cadetti",mode:"decision_making",rounds:3,roundSec:90,restSec:30,countSec:3,groupMin:.6,groupMax:1.8,visibleSec:.55,flow:{on:false},advanced:{fakePct:12,seqType:"misto",maxCombo:4,intraMin:.2,intraMax:1.0,maxRepeats:2}},
+ "Resistenza Mentale":{activePreset:"Resistenza Mentale",level:"agonisti",ageBand:"junior",mode:"resistenza",rounds:4,roundSec:150,restSec:30,countSec:3,groupMin:.4,groupMax:1.5,visibleSec:.45,flow:{on:true,profile:"gara",breathMode:"completa",breathFreq:"bassa"},advanced:{fakePct:15,seqType:"misto",maxCombo:5,intraMin:.15,intraMax:1.0,maxRepeats:3}},
+ "Recupero Attivo":{activePreset:"Recupero Attivo",level:"principianti",ageBand:"personalizzato",mode:"recupero",rounds:2,roundSec:90,restSec:15,countSec:3,groupMin:2.0,groupMax:4.0,visibleSec:1.4,flow:{on:true,profile:"base",breathMode:"completa",breathFreq:"alta"},advanced:{fakePct:0,seqType:"singolo",maxCombo:1,intraMin:1.0,intraMax:1.8,maxRepeats:1}}
 };
 let cfg=clone(DEFAULTS),draft=null;
-let state={phase:"ready",round:0,remain:60,tick:null,lastTick:0,timers:new Set(),recent:[],last:null,streak:0,stats:{stim:0,sit:0,seq:0,fake:0,rep:0,err:0,good:0,hesitation:0,stop:0,guard:0,fakeErr:0}};
-const E={subtitle:$("subtitle"),roundTxt:$("roundTxt"),timeTxt:$("timeTxt"),phaseTxt:$("phaseTxt"),phaseDot:$("phaseDot"),modeChip:$("modeChip"),audioChip:$("audioChip"),voiceChip:$("voiceChip"),stimulus:$("stimulus"),cue:$("cue"),countdown:$("countdown"),startBtn:$("startBtn"),pauseBtn:$("pauseBtn"),stopBtn:$("stopBtn"),settings:$("settings"),banner:$("banner"),toast:$("toast"),feedback:$("feedback")};
-
+let state={phase:"ready",round:0,remain:60,tick:null,lastTick:0,timers:new Set(),pausedFrom:null,stats:{stim:0,seq:0,combo:0,fake:0,rep:0,breath:0},recent:[],last:null};
+const E={subtitle:$("subtitle"),roundTxt:$("roundTxt"),timeTxt:$("timeTxt"),phaseTxt:$("phaseTxt"),phaseDot:$("phaseDot"),flowChip:$("flowChip"),audioChip:$("audioChip"),voiceChip:$("voiceChip"),stimulus:$("stimulus"),cue:$("cue"),countdown:$("countdown"),stStim:$("stStim"),stSeq:$("stSeq"),stCombo:$("stCombo"),stFake:$("stFake"),stRep:$("stRep"),stBreath:$("stBreath"),startBtn:$("startBtn"),pauseBtn:$("pauseBtn"),stopBtn:$("stopBtn"),settings:$("settings"),banner:$("banner")};
 function mergeDeep(t,s){for(const k in s){if(s[k]&&typeof s[k]==="object"&&!Array.isArray(s[k])){if(!t[k])t[k]={};mergeDeep(t[k],s[k])}else t[k]=clone(s[k])}return t}
-function normalize(){
- cfg.rounds=clamp(parseInt(cfg.rounds)||3,1,50);cfg.roundSec=clamp(Number(cfg.roundSec)||60,10,900);cfg.restSec=clamp(Number(cfg.restSec)||0,0,600);cfg.countSec=clamp(Number(cfg.countSec)||3,1,20);
- cfg.fakePct=clamp(Number(cfg.fakePct)||0,0,80);
- let r=cfg.rhythm;r.visibleSec=clamp(Number(r.visibleSec)||.8,.1,10);r.pauseMin=clamp(Number(r.pauseMin)||.4,.1,20);r.pauseMax=clamp(Number(r.pauseMax)||r.pauseMin,.1,20);if(r.pauseMax<r.pauseMin)r.pauseMax=r.pauseMin;
- r.burstPct=clamp(Number(r.burstPct)||0,0,80);r.longPausePct=clamp(Number(r.longPausePct)||0,0,80);r.maxSeq=clamp(parseInt(r.maxSeq)||1,1,5);r.maxRepeats=clamp(parseInt(r.maxRepeats)||1,1,4);r.repeatPct=clamp(Number(r.repeatPct)||0,0,80);
- cfg.visual.colorScale=clamp(Number(cfg.visual.colorScale)||92,50,100);cfg.visual.textScale=clamp(Number(cfg.visual.textScale)||100,70,140);
-}
-function load(){try{const raw=localStorage.getItem(STORAGE);if(raw)cfg=mergeDeep(clone(DEFAULTS),JSON.parse(raw))}catch(e){cfg=clone(DEFAULTS)}normalize()}
-function save(){try{localStorage.setItem(STORAGE,JSON.stringify(cfg));return true}catch(e){toast("Impostazioni non salvate: memoria browser non disponibile");return false}}
-function toast(msg){E.toast.textContent=msg;E.toast.style.display="block";setTimeout(()=>E.toast.style.display="none",3000)}
-function showBanner(msg){E.banner.textContent=msg;E.banner.classList.remove("hidden");setTimeout(()=>E.banner.classList.add("hidden"),3000)}
-function levelText(){return {"1":"L1 guidato","2":"L2 situazione","3":"L3 solo stimolo","4":"L4 alto livello"}[cfg.level]||cfg.level}
-function updateHeader(){E.subtitle.textContent=`Preset: ${cfg.activePreset||"—"} • Livello: ${levelText()} • Modalità: ${MODES[cfg.mode]||cfg.mode}`;E.modeChip.textContent=MODES[cfg.mode]||cfg.mode;E.roundTxt.textContent=`R${state.round+1}/${cfg.rounds}`;E.timeTxt.textContent=fmt(state.remain);E.voiceChip.textContent=Speech.ok()?`Voce ${cfg.audio.voiceOn?"ON":"OFF"}`:"Voce non disp.";E.feedback.style.display=cfg.coach.on?"flex":"none"}
+function load(){try{const raw=localStorage.getItem(STORAGE);if(raw)cfg=mergeDeep(clone(DEFAULTS),JSON.parse(raw))}catch(e){cfg=clone(DEFAULTS)} normalize()}
+function save(){try{localStorage.setItem(STORAGE,JSON.stringify(cfg));return true}catch(e){showBanner("localStorage non disponibile: impostazioni non salvate");return false}}
+function normalize(){cfg.rounds=clamp(parseInt(cfg.rounds)||3,1,50);cfg.roundSec=clamp(Number(cfg.roundSec)||60,10,900);cfg.restSec=clamp(Number(cfg.restSec)||0,0,600);cfg.countSec=clamp(Number(cfg.countSec)||3,1,20);cfg.groupMin=clamp(Number(cfg.groupMin)||.5,.1,20);cfg.groupMax=clamp(Number(cfg.groupMax)||cfg.groupMin,.1,20);if(cfg.groupMax<cfg.groupMin)cfg.groupMax=cfg.groupMin;cfg.visibleSec=clamp(Number(cfg.visibleSec)||.6,.1,10);cfg.advanced.fakePct=clamp(Number(cfg.advanced.fakePct)||0,0,80);cfg.advanced.intraMin=clamp(Number(cfg.advanced.intraMin)||.2,.05,10);cfg.advanced.intraMax=clamp(Number(cfg.advanced.intraMax)||cfg.advanced.intraMin,.05,10);if(cfg.advanced.intraMax<cfg.advanced.intraMin)cfg.advanced.intraMax=cfg.advanced.intraMin; if(cfg.mode==="flow")cfg.flow.on=true}
+function modeName(){return MODES[cfg.mode]?.name||cfg.mode}
+function updateHeader(){E.subtitle.textContent=`Modalità: ${modeName()} • Livello: ${labelLevel(cfg.level)} • Flow: ${(cfg.flow.on||cfg.mode==="flow")?"ON":"OFF"} • Preset: ${cfg.activePreset||"—"}`;E.flowChip.textContent=(cfg.flow.on||cfg.mode==="flow")?`Flow ${cfg.flow.profile}`:"Flow OFF";E.roundTxt.textContent=`R${state.round+1}/${cfg.rounds}`;E.timeTxt.textContent=fmt(state.remain);E.voiceChip.textContent=Speech.ok()?`Voce ${cfg.audio.voiceOn?"ON":"OFF"}`:"Voce non disponibile"}
+function labelLevel(v){return {bambini:"Bambini",principianti:"Principianti",intermedio:"Intermedio",agonisti:"Agonisti",alto_livello:"Alto livello",personalizzato:"Personalizzato"}[v]||v}
 function setPhase(p){state.phase=p;E.phaseTxt.textContent={ready:"PRONTO",countdown:"COUNTDOWN",live:"ALLENAMENTO",rest:"RECUPERO",paused:"PAUSA",finished:"FINE"}[p]||p;E.phaseDot.className="dot "+(p==="live"?"live":p==="rest"?"rest":p==="paused"?"pause":p==="ready"||p==="finished"?"stop":"pause");buttons()}
-function buttons(){const active=["countdown","live","rest","paused"].includes(state.phase);E.startBtn.disabled=active||!activePool().length;E.pauseBtn.disabled=!(state.phase==="live"||state.phase==="rest"||state.phase==="paused");E.stopBtn.disabled=!active;let s=E.pauseBtn.querySelector("span");if(s)s.textContent=state.phase==="paused"?"RIPRENDI":"PAUSA"}
-function renderStats(){$("stStim").textContent=state.stats.stim;$("stSit").textContent=state.stats.sit;$("stSeq").textContent=state.stats.seq;$("stFake").textContent=state.stats.fake;$("stRep").textContent=state.stats.rep;$("stErr").textContent=state.stats.err}
+function buttons(){const active=["countdown","live","rest","paused"].includes(state.phase);E.startBtn.disabled=active||!pool(false).length;E.pauseBtn.disabled=!(state.phase==="live"||state.phase==="rest"||state.phase==="paused");E.stopBtn.disabled=!active;E.pauseBtn.querySelector("span").textContent=state.phase==="paused"?"RIPRENDI":"PAUSA"}
+function renderStats(){E.stStim.textContent=state.stats.stim;E.stSeq.textContent=state.stats.seq;E.stCombo.textContent=state.stats.combo;E.stFake.textContent=state.stats.fake;E.stRep.textContent=state.stats.rep;E.stBreath.textContent=state.stats.breath}
 function clearTimers(){for(const t of Array.from(state.timers)){clearTimeout(t);state.timers.delete(t)}}
 function later(fn,ms){const t=setTimeout(()=>{state.timers.delete(t);fn()},ms);state.timers.add(t);return t}
-
-const Audio=(()=>{let ctx=null,unlocked=false;function ensure(){try{if(!ctx){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;ctx=new AC({latencyHint:"interactive"})}return ctx}catch(e){return null}}async function unlock(){const c=ensure();if(!c){E.audioChip.textContent="Audio non disp.";return false}try{if(c.state!=="running")await c.resume();unlocked=true;E.audioChip.textContent="Audio pronto";return true}catch(e){E.audioChip.textContent="Audio bloccato";return false}}function beep(freq=900,dur=.075,type="square",gain=.11,delay=0){const c=ctx;if(!c||c.state!=="running")return;try{const t=c.currentTime+delay,o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.setValueAtTime(freq,t);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(gain,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+dur+.03)}catch(e){}}return{unlock,high:()=>beep(980,.075,"square"),low:()=>beep(240,.095,"sine",.12),double:()=>{beep(920,.06,"square");beep(1120,.06,"square",.1,.1)}}})();
-const Speech=(()=>{const ok=()=>("speechSynthesis" in window)&&("SpeechSynthesisUtterance" in window);function cancel(){try{speechSynthesis.cancel()}catch(e){}}function speak(text){if(!ok()||!cfg.audio.voiceOn)return;let t=String(text||"").trim();if(!t)return;try{cancel();const u=new SpeechSynthesisUtterance(t);const voices=speechSynthesis.getVoices? speechSynthesis.getVoices():[];const v=voices.find(x=>(x.lang||"").toLowerCase().startsWith("it"))||voices[0];if(v)u.voice=v;u.lang=v?.lang||"it-IT";u.rate=Number(cfg.audio.rate)||1;u.pitch=Number(cfg.audio.pitch)||1;u.volume=Number(cfg.audio.vol)||1;speechSynthesis.speak(u)}catch(e){}}return{ok,cancel,speak}})();
-
+const Audio=(()=>{let ctx=null,unlocked=false;function ensure(){try{if(!ctx){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;ctx=new AC({latencyHint:"interactive"})}return ctx}catch(e){return null}}async function unlock(){const c=ensure();if(!c){E.audioChip.textContent="Audio non disponibile";return false}try{if(c.state!=="running")await c.resume();unlocked=true;E.audioChip.textContent="Audio pronto";return true}catch(e){E.audioChip.textContent="Audio bloccato";return false}}function beep(freq=900,dur=.075,type="square",gain=.11,delay=0){const c=ctx;if(!c||c.state!=="running")return;try{const t=c.currentTime+delay,o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.setValueAtTime(freq,t);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(gain,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+dur+.03)}catch(e){}}return{unlock,get unlocked(){return unlocked},high:()=>beep(980,.075,"square"),low:()=>beep(240,.095,"sine",.12),double:()=>{beep(920,.06,"square");beep(1120,.06,"square",.1,.1)}}})();
+const Speech=(()=>{const ok=()=>("speechSynthesis" in window)&&("SpeechSynthesisUtterance" in window);function cancel(){try{speechSynthesis.cancel()}catch(e){}}function speak(text){if(!ok()||!cfg.audio.voiceOn)return;const t=String(text||"").trim();if(!t)return;try{cancel();const u=new SpeechSynthesisUtterance(t);const voices=speechSynthesis.getVoices? speechSynthesis.getVoices():[];const v=voices.find(x=>(x.lang||"").toLowerCase().startsWith("it"))||voices[0];if(v)u.voice=v;u.lang=v?.lang||"it-IT";u.rate=Number(cfg.audio.rate)||1;u.pitch=Number(cfg.audio.pitch)||1;u.volume=Number(cfg.audio.vol)||1;speechSynthesis.speak(u)}catch(e){}}return{ok,cancel,speak}})();
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
-function displayReady(){E.stimulus.innerHTML='<div class="mainStim">PRONTO</div><div class="infoLine">Situazione → Soluzione tecnica</div>';E.stimulus.style.background="rgba(5,7,11,.45)";E.cue.className="cue";E.cue.textContent="Premi INIZIA oppure scegli un preset"}
-function blank(){E.stimulus.innerHTML='<div class="mainStim"></div>';E.stimulus.style.background="rgba(0,0,0,.70)"}
-function activePool(){let p=cfg.situations.filter(s=>s.active&&s.difficulty<=Number(cfg.level)+1);if(!cfg.allowFake)p=p.filter(s=>!s.fake);return p.length?p:cfg.situations.filter(s=>s.active)}
-function fakePool(){return activePool().filter(s=>s.fake)}
-function realPool(){return activePool().filter(s=>!s.fake)}
-function shouldShow(field){if(cfg.level==="1")return true;if(cfg.level==="2")return field!=="solution" ? cfg.visual[field] : cfg.visual.showSolution;if(cfg.level==="3")return field==="after"&&cfg.visual.showAfter;if(cfg.level==="4")return false;return cfg.visual[field]}
-function renderSituation(s){
- let scale=cfg.visual.textScale/100;
- let html="";
- if(s.type==="color"){
-   html+=`<div class="colorBlock" style="background:${s.color};width:min(${cfg.visual.colorScale}%,980px)"></div>`;
-   html+=`<div class="stimName" style="font-size:calc(clamp(18px,4vw,38px)*${scale})">${escapeHtml(s.value)}</div>`;
- }else if(s.type==="number"){
-   html+=`<div class="mainStim" style="font-size:calc(clamp(80px,22vw,280px)*${scale})">${escapeHtml(s.value)}</div>`;
- }else if(s.type==="arrow"){
-   html+=`<div class="mainStim" style="font-size:calc(clamp(76px,20vw,260px)*${scale})">${escapeHtml(s.value)}</div>`;
- }else{
-   html+=`<div class="mainStim" style="font-size:calc(clamp(48px,12vw,180px)*${scale})">${escapeHtml(s.value)}</div>`;
- }
- if(shouldShow("showSituation")) html+=`<div class="infoLine">${escapeHtml(s.name)}</div>`;
- if(shouldShow("showOpponent")) html+=`<div class="infoLine small">Avversario: ${escapeHtml(s.opponent||"—")}</div>`;
- if(shouldShow("solution")) html+=`<div class="badgeLine"><span class="decisionBadge">${escapeHtml(s.solutionType||"soluzione")}</span><span class="decisionBadge">${escapeHtml(s.solution||"")}</span></div>`;
- E.stimulus.innerHTML=html;E.stimulus.style.background="rgba(5,7,11,.45)";
- if(shouldShow("after") && cfg.visual.showAfter){E.cue.className=s.fake?"cue flow":"cue";E.cue.textContent=s.after||""}else{E.cue.textContent=""}
-}
-function speakSituation(s){let parts=[];if(cfg.audio.speakStim)parts.push(s.value);if(cfg.audio.speakSolution)parts.push(s.solution);Speech.speak(parts.filter(Boolean).join(". "))}
-function audioSituation(s,combo){if(cfg.audio.beepOn){if(s.fake&&cfg.audio.fakeBeep)Audio.low();else if(combo&&cfg.audio.comboBeep)Audio.double();else Audio.high()}speakSituation(s)}
-function visibleMs(s){let base=cfg.rhythm.visibleSec;if(cfg.mode==="reazione"||cfg.mode==="finale"||cfg.mode==="alto")base*=.78;if(cfg.mode==="attenzione"||cfg.mode==="recupero")base*=1.18;if(s.fake)base*=1.08;return Math.round(clamp(base*rand(.82,1.18),.08,10)*1000)}
-function nextPauseMs(){let r=cfg.rhythm, p=Math.random()*100, sec;if(p<r.burstPct){sec=rand(.16,Math.max(.22,r.pauseMin*.75))}else if(p<r.burstPct+r.longPausePct){sec=rand(Math.max(r.pauseMax*.75,r.pauseMin),Math.min(4.5,r.pauseMax*1.55))}else{let x=Math.random();x=x*x*(3-2*x);sec=r.pauseMin+(r.pauseMax-r.pauseMin)*x}return Math.round(clamp(sec,.08,20)*1000)}
-function chooseSituation(seq=[]){
- let pool=realPool(), fake=fakePool();
- if(cfg.allowFake&&fake.length&&Math.random()*100<cfg.fakePct)return pick(fake);
- let last=state.last;
- if(cfg.rhythm.allowRepeats&&last&&Math.random()*100<cfg.rhythm.repeatPct){
-   let candidate=pool.find(s=>s.id===last.id);
-   if(candidate&&state.streak<cfg.rhythm.maxRepeats)return candidate;
- }
- if(!pool.length)pool=activePool();
- if(!cfg.rhythm.smartRandom)return pick(pool);
- let weights=pool.map(s=>{
-   let w=1;
-   let recent=state.recent.slice(-8).filter(id=>id===s.id).length;
-   if(recent)w*=.70;if(recent>1)w*=.42;if(recent>2)w*=.20;
-   if(last&&s.id===last.id){
-     if(!cfg.rhythm.allowRepeats||state.streak>=cfg.rhythm.maxRepeats)w=0;
-     else w*=.85;
-   }
-   if(cfg.mode==="anticipo"&&s.solutionType==="anticipo")w*=2;
-   if(cfg.mode==="contrattacco"&&s.solutionType==="contrattacco")w*=2;
-   if(cfg.mode==="finte"&&s.fake)w*=2;
-   if(cfg.mode==="pressione"&&s.solutionType==="pressione")w*=2;
-   if(cfg.mode==="uscite"&&s.solutionType==="uscita")w*=2;
-   if(cfg.mode==="continuita"&&/continua|seconda/i.test(s.after+" "+s.solution))w*=1.8;
-   return Math.max(0,w);
- });
- let total=weights.reduce((a,b)=>a+b,0);if(total<=0)return pick(pool);
- let r=Math.random()*total;for(let i=0;i<pool.length;i++){r-=weights[i];if(r<=0)return pool[i]}return pool[0];
-}
-function sequenceLength(){let max=Number(cfg.rhythm.maxSeq)||1;if(max<=1)return 1;if(["attenzione","tecnica","recupero"].includes(cfg.mode))return 1;if(["combattimento","finale","resistenza","alto"].includes(cfg.mode)){return Math.min(max,Math.random()<.25?1:Math.random()<.58?2:Math.random()<.82?3:Math.random()<.94?4:5)}if(cfg.mode==="continuita")return Math.min(max,Math.random()<.35?1:Math.random()<.75?2:3);return Math.min(max,Math.random()<.55?1:2)}
-function buildSequence(){let n=sequenceLength(),seq=[];for(let i=0;i<n;i++)seq.push(chooseSituation(seq));return seq.filter(Boolean)}
-function record(s,seqLen){state.stats.stim++;state.stats.sit++;if(seqLen>1)state.stats.seq++;if(s.fake)state.stats.fake++;if(state.last&&state.last.id===s.id){state.stats.rep++;state.streak++}else state.streak=1;state.last=s;state.recent.push(s.id);while(state.recent.length>16)state.recent.shift();renderStats()}
-function playSequence(seq){if(state.phase!=="live")return;let i=0;function step(){if(state.phase!=="live")return;if(i>=seq.length){blank();later(nextGroup,nextPauseMs());return}let s=seq[i];renderSituation(s);record(s,seq.length);audioSituation(s,seq.length>1&&i===0);let vm=visibleMs(s);i++;later(()=>{if(state.phase!=="live")return;blank();let gap=i<seq.length?Math.round(rand(.18,.75)*1000):0;later(step,gap)},vm)}step()}
-function nextGroup(){if(state.phase==="live")playSequence(buildSequence())}
-
+function displayReady(){E.stimulus.innerHTML='<div class="stimText" style="font-size:clamp(44px,7vw,86px)">PRONTO</div>';E.stimulus.style.background="rgba(5,7,11,.45)";E.cue.className="cue";E.cue.textContent="Premi INIZIA"}
+function blank(){E.stimulus.innerHTML='<div class="stimText"></div>';E.stimulus.style.background="rgba(0,0,0,.7)"}
+function renderStim(s){E.cue.className="cue";const tech=(s.technique||"").trim();if(s.type==="color"){E.stimulus.innerHTML=`<div class="colorBlock" style="background:${s.value||"#777"}"></div>`}else if(s.type==="number"){E.stimulus.innerHTML=`<div class="stimText numText">${escapeHtml(s.value||s.name)}</div>`}else if(s.type==="arrow"){E.stimulus.innerHTML=`<div class="stimText arrowText">${s.label}</div>`}else{E.stimulus.innerHTML=`<div class="stimText">${escapeHtml((s.value||s.name||"").toUpperCase())}</div>`}E.stimulus.style.background="rgba(5,7,11,.45)";E.cue.textContent=tech}
+function pool(includeFake=true){let all=[...cfg.stimuli.colors,...cfg.stimuli.numbers,...cfg.stimuli.words,...cfg.stimuli.arrows].filter(x=>x.active);return includeFake?all:all.filter(x=>!x.fake)}
+function fakePool(){return [...cfg.stimuli.colors,...cfg.stimuli.words].filter(x=>x.active&&x.fake)}
+function shape(min,max,bias){if(max<min)[min,max]=[max,min];let r=Math.random(),x;if(bias==="burst")x=r<.55?Math.pow(Math.random(),2)*.35:.35+Math.random()*.65;else if(bias==="flow")x=r<.22?Math.random()*.22:r<.82?.22+Math.random()*.55:.77+Math.random()*.23;else if(bias==="control")x=.35+Math.random()*.65;else x=Math.random();return min+(max-min)*x}
+function seqLen(){let m=cfg.mode,a=cfg.advanced,max=Number(a.maxCombo)||3;if(m==="base_tecnica"||m==="recupero")return 1;if(m==="controllo")return Math.min(max,Math.random()<.78?1:2);if(m==="reazione_rapida")return Math.min(max,Math.random()<.44?1:Math.random()<.82?2:3);if(m==="decision_making")return Math.min(max,Math.random()<.35?1:Math.random()<.68?2:Math.random()<.9?3:4);if(m==="combattimento"||m==="sparring"||m==="resistenza")return Math.min(max,Math.random()<.22?1:Math.random()<.56?2:Math.random()<.82?3:Math.random()<.95?4:5);if(m==="flow"||cfg.flow.on)return Math.min(max,Math.random()<.28?1:Math.random()<.62?2:Math.random()<.86?3:Math.random()<.96?4:5);if(a.seqType==="singolo")return 1;if(a.seqType==="doppio")return Math.min(2,max);if(a.seqType==="triplo")return Math.min(3,max);return Math.min(max,Math.random()<.35?1:Math.random()<.72?2:3)}
+function choose(p,seq=[]){if(!p.length)return null;if(!cfg.advanced.smartRandom)return pick(p);let weights=p.map(x=>{let w=1;let recent=state.recent.slice(-8);let c=recent.filter(id=>id===x.id).length;if(c)w*=.75;if(c>1)w*=.45;if(c>2)w*=.2;if(seq.length){let last=seq[seq.length-1];if(last.id===x.id){if(!cfg.advanced.allowRepeats)w=0;else{let streak=1;for(let i=seq.length-2;i>=0;i--){if(seq[i].id===last.id)streak++;else break}if(streak>=Number(cfg.advanced.maxRepeats))w=0;else w*=.7}}}return Math.max(0,w)});let total=weights.reduce((a,b)=>a+b,0);if(total<=0)return pick(p);let r=Math.random()*total;for(let i=0;i<p.length;i++){r-=weights[i];if(r<=0)return p[i]}return p[0]}
+function buildSeq(){let real=pool(false), fake=fakePool();if(!real.length&&fake.length)return [pick(fake)];let fakePct=Number(cfg.advanced.fakePct)||0;if(cfg.mode==="base_tecnica")fakePct=Math.min(fakePct,5);if(cfg.mode==="controllo")fakePct=Math.min(fakePct,3);if(Math.random()*100<fakePct&&fake.length)return [pick(fake), ...(Math.random()<.45&&real.length&&cfg.mode!=="controllo"?[choose(real)]:[])].filter(Boolean);let n=seqLen(), seq=[];for(let i=0;i<n;i++){let s=choose(real,seq);if(s)seq.push(s)}return seq.length?seq:real.slice(0,1)}
+function visibleMs(s,n){let base=cfg.visibleSec,m=cfg.mode;if(m==="reazione_rapida")base*=.75;if(m==="controllo"||m==="recupero")base*=1.22;if(m==="flow"||cfg.flow.on)base*=cfg.flow.profile==="agonista"?.82:cfg.flow.profile==="gara"?.9:1;if(s.fake)base*=1.12;return Math.round(clamp(base*rand(.82,1.18),.08,10)*1000)}
+function intraMs(){let m=cfg.mode,b=(m==="reazione_rapida"||m==="combattimento"||m==="sparring")?"burst":(m==="flow"||cfg.flow.on)?"flow":(m==="controllo"||m==="recupero")?"control":"normal";return Math.round(shape(cfg.advanced.intraMin,cfg.advanced.intraMax,b)*1000)}
+function groupMs(){let m=cfg.mode,b=m==="reazione_rapida"?"burst":(m==="flow"||cfg.flow.on)?"flow":(m==="controllo"||m==="recupero")?"control":"normal";let sec=shape(cfg.groupMin,cfg.groupMax,b);if((m==="flow"||cfg.flow.on)&&cfg.flow.profile==="agonista"&&Math.random()<.25)sec*=.58;if(m==="controllo"||m==="recupero")sec=Math.max(sec,1.1);return Math.round(clamp(sec,.08,20)*1000)}
+function speakText(s){let parts=[];if(cfg.audio.speakStim)parts.push(s.type==="number"?s.value:s.name||s.value);let tech=(s.technique||"").trim();if(cfg.audio.speakTech&&tech)parts.push(tech);return parts.join(". ")}
+function audioStim(s,first,len){if(cfg.audio.beepOn){if(s.fake&&cfg.audio.fakeBeep)Audio.low();else if(first&&len>1&&cfg.audio.comboBeep)Audio.double();else Audio.high()}Speech.speak(speakText(s))}
+function record(s){state.stats.stim++;if(s.fake)state.stats.fake++;if(state.last===s.id)state.stats.rep++;state.last=s.id;state.recent.push(s.id);while(state.recent.length>16)state.recent.shift();renderStats()}
+function showBreathCue(force){let m=cfg.flow.breathMode;if(m!=="completa"&&!force)return;let f={bassa:.08,media:.16,alta:.26}[cfg.flow.breathFreq]||.14;if(!force&&Math.random()>f)return;let cue=pick(["respira","sciolto","fluido","non bloccare","continua","espira"]);state.stats.breath++;renderStats();E.cue.className="cue flow";E.cue.textContent=cue;Speech.speak(cue);later(()=>{if(state.phase==="live"&&E.cue.textContent===cue)E.cue.textContent=""},650)}
+function playSequence(seq){if(state.phase!=="live")return;state.stats.seq++;if(seq.length>1)state.stats.combo++;renderStats();let i=0;function step(){if(state.phase!=="live")return;if(i>=seq.length){blank();if(seq.length>=3&&(cfg.mode==="flow"||cfg.flow.on||cfg.mode==="sparring")&&Math.random()<.42){let c=pick(["Espira","Rilassa","Riparti fluido"]);state.stats.breath++;renderStats();E.cue.className="cue flow";E.cue.textContent=c;Speech.speak(c);later(()=>{if(state.phase==="live")nextGroup()},560)}else later(nextGroup,groupMs());return}let s=seq[i];renderStim(s);record(s);audioStim(s,i===0,seq.length);let vm=visibleMs(s,seq.length);i++;later(()=>{if(state.phase!=="live")return;blank();if(i<seq.length)later(step,intraMs());else{showBreathCue(false);later(step,0)}},vm)}step()}
+function nextGroup(){if(state.phase==="live")playSequence(buildSeq())}
 function startTick(){stopTick();state.lastTick=performance.now();state.tick=setInterval(()=>{let now=performance.now(),dt=Math.min(.25,(now-state.lastTick)/1000);state.lastTick=now;if(["countdown","live","rest"].includes(state.phase)){state.remain=Math.max(0,state.remain-dt);E.timeTxt.textContent=fmt(state.remain);if(state.remain<=0){if(state.phase==="live")endRound();else if(state.phase==="rest")nextRound()}}},80)}
 function stopTick(){if(state.tick){clearInterval(state.tick);state.tick=null}}
-function showCount(n){E.countdown.textContent=String(n);E.countdown.classList.add("show");E.cue.textContent=n===3?"Respira":n===2?"Preparati":"Pronto";Speech.speak(E.cue.textContent);later(()=>E.countdown.classList.remove("show"),180)}
+function showCount(n){E.countdown.textContent=String(n);E.countdown.classList.add("show");let bm=cfg.flow.breathMode;if(bm==="countdown_recupero"||bm==="completa"){let c=n===3?"Inspira":n===2?"Espira":n===1?"Pronto":"";if(c){E.cue.className="cue flow";E.cue.textContent=c;Speech.speak(c)}}later(()=>E.countdown.classList.remove("show"),180)}
 function countdown(){clearTimers();setPhase("countdown");state.remain=cfg.countSec;updateHeader();startTick();for(let i=cfg.countSec;i>=1;i--)later(()=>showCount(i),(cfg.countSec-i)*1000);later(beginRound,cfg.countSec*1000)}
-function beginRound(){clearTimers();setPhase("live");state.remain=cfg.roundSec;updateHeader();startTick();E.cue.textContent="Allenamento";later(nextGroup,250)}
-function endRound(){clearTimers();if(state.round>=cfg.rounds-1){finish();return}setPhase("rest");state.remain=cfg.restSec;updateHeader();E.stimulus.innerHTML='<div class="mainStim" style="font-size:clamp(40px,8vw,110px)">RECUPERO</div><div class="infoLine">Respira e prepara il prossimo round</div>';E.cue.className="cue flow";E.cue.textContent="Inspira • espira • resta lucido";Speech.speak("Recupero. Respira.");startTick()}
-function nextRound(){state.round++;beginRound()}
-async function start(){await Audio.unlock();Speech.cancel();clearTimers();state.round=0;state.remain=cfg.roundSec;state.recent=[];state.last=null;state.streak=0;countdown()}
-function pause(){if(state.phase==="paused"){setPhase(state.pausedWas||"live");state.lastTick=performance.now();startTick();nextGroup();return}if(state.phase==="live"||state.phase==="rest"){state.pausedWas=state.phase;setPhase("paused");stopTick();clearTimers();E.cue.textContent="Pausa"}}
+function beginRound(){clearTimers();setPhase("live");state.remain=cfg.roundSec;updateHeader();startTick();blank();later(nextGroup,100)}
+function endRound(){clearTimers();if(state.round>=cfg.rounds-1){finish();return}setPhase("rest");state.remain=cfg.restSec;updateHeader();E.stimulus.innerHTML='<div class="stimText" style="font-size:clamp(48px,8vw,120px)">RECUPERO</div>';restBreath(0)}
+function restBreath(i){if(state.phase!=="rest")return;let cues=["Inspira dal naso","Espira lungo","Rilassa spalle","Sciogli mandibola","Recupera senza irrigidirti"];let enabled=["recupero","countdown_recupero","completa"].includes(cfg.flow.breathMode);if(enabled){E.cue.className="cue flow";E.cue.textContent=cues[i%cues.length];state.stats.breath++;renderStats();Speech.speak(E.cue.textContent)}else{E.cue.className="cue";E.cue.textContent="Recupero"}later(()=>restBreath(i+1),2200)}
+function nextRound(){state.round++;if(state.round>=cfg.rounds){finish();return}countdown()}
+function finish(){clearTimers();stopTick();setPhase("finished");E.stimulus.innerHTML='<div class="stimText" style="font-size:clamp(54px,9vw,130px)">FINE</div>';E.cue.className="cue";E.cue.textContent=`Stimoli ${state.stats.stim} • Sequenze ${state.stats.seq} • Combo ${state.stats.combo}`;buttons()}
+async function start(){await Audio.unlock();if(!pool(false).length){showBanner("Attiva almeno uno stimolo reale");return}clearTimers();stopTick();Speech.cancel();state.round=0;state.remain=cfg.roundSec;state.stats={stim:0,seq:0,combo:0,fake:0,rep:0,breath:0};state.recent=[];state.last=null;renderStats();countdown()}
+function pause(){if(state.phase==="paused"){let p=state.pausedFrom||"live";setPhase(p);startTick();if(p==="live")later(nextGroup,100);else if(p==="rest")restBreath(0);return}if(state.phase==="live"||state.phase==="rest"){state.pausedFrom=state.phase;setPhase("paused");clearTimers();stopTick();Speech.cancel();E.cue.className="cue";E.cue.textContent="In pausa • Premi RIPRENDI"}}
 function stop(){clearTimers();stopTick();Speech.cancel();state.round=0;state.remain=cfg.roundSec;setPhase("ready");updateHeader();displayReady()}
-function finish(){clearTimers();stopTick();setPhase("finished");E.stimulus.innerHTML='<div class="mainStim" style="font-size:clamp(44px,9vw,130px)">FINE</div><div class="infoLine">Allenamento completato</div>';E.cue.className="cue";E.cue.textContent="Ottimo lavoro";Speech.speak("Allenamento completato")}
-function feedback(type){if(type==="err")state.stats.err++;if(type==="good")state.stats.good++;if(type==="hesitation")state.stats.hesitation++;if(type==="stop")state.stats.stop++;if(type==="guard")state.stats.guard++;if(type==="fake")state.stats.fakeErr++;if(cfg.coach.adaptive){if(type==="good"&&state.stats.good%5===0){cfg.rhythm.visibleSec=clamp(cfg.rhythm.visibleSec*.94,.16,10);toast("Difficoltà aumentata")}if(type==="err"||type==="hesitation"||type==="stop"){cfg.rhythm.visibleSec=clamp(cfg.rhythm.visibleSec*1.06,.1,10);toast("Difficoltà leggermente ridotta")}}renderStats()}
-function fullscreen(){let el=document.documentElement;let fn=el.requestFullscreen||el.webkitRequestFullscreen||el.msRequestFullscreen;if(fn){try{fn.call(el)}catch(e){toast("Fullscreen non disponibile")}}else toast("Su iPhone apri l’app dalla schermata Home per il vero fullscreen")}
-
-function openSettings(){draft=clone(cfg);fillForms();E.settings.style.display="block"}
-function closeSettings(){E.settings.style.display="none";draft=null}
-function commit(close){readForms();cfg=clone(draft);normalize();save();state.remain=cfg.roundSec;updateHeader();buttons();if(close)closeSettings();toast("Impostazioni salvate")}
-function fillSelectOptions(){let mode=$("mode");mode.innerHTML="";Object.entries(MODES).forEach(([k,v])=>{let o=document.createElement("option");o.value=k;o.textContent=v;mode.appendChild(o)});let ps=$("presetSelect");ps.innerHTML="";Object.keys(PRESETS).forEach(k=>{let o=document.createElement("option");o.value=k;o.textContent=k;ps.appendChild(o)});(draft.customPresets||[]).forEach(p=>{let o=document.createElement("option");o.value="custom:"+p.name;o.textContent="★ "+p.name;ps.appendChild(o)})}
-function fillForms(){
- fillSelectOptions();
- $("mode").value=draft.mode;$("level").value=draft.level;["rounds","roundSec","restSec","countSec"].forEach(id=>$(id).value=draft[id]);
- $("allowFake").checked=draft.allowFake;$("fakePct").value=draft.fakePct;
- let r=draft.rhythm;["visibleSec","pauseMin","pauseMax","burstPct","longPausePct","maxSeq","maxRepeats","repeatPct"].forEach(id=>$(id).value=r[id]);$("allowRepeats").checked=r.allowRepeats;$("smartRandom").checked=r.smartRandom;
- let v=draft.visual;["showSituation","showOpponent","showSolution","showAfter"].forEach(id=>$(id).checked=v[id]);$("colorScale").value=v.colorScale;$("textScale").value=v.textScale;
- $("coachOn").checked=draft.coach.on;$("adaptiveOn").checked=draft.coach.adaptive;$("coachGoal").value=draft.coach.goal;$("coachNote").value=draft.coach.note||"";
- let a=draft.audio;$("beepOn").checked=a.beepOn;$("fakeBeep").checked=a.fakeBeep;$("comboBeep").checked=a.comboBeep;$("voiceOn").checked=a.voiceOn;$("speakStim").checked=a.speakStim;$("speakSolution").checked=a.speakSolution;$("voiceRate").value=a.rate;$("voicePitch").value=a.pitch;$("voiceVol").value=a.vol;
- renderSituations();showPresetInfo();
+function full(){
+  const el=document.documentElement;
+  const isFs=document.fullscreenElement||document.webkitFullscreenElement;
+  try{
+    if(isFs){
+      if(document.exitFullscreen) return document.exitFullscreen();
+      if(document.webkitExitFullscreen) return document.webkitExitFullscreen();
+    }
+    const req=el.requestFullscreen||el.webkitRequestFullscreen||el.msRequestFullscreen;
+    if(req){
+      const r=req.call(el);
+      if(r&&r.catch)r.catch(()=>showBanner("Fullscreen non supportato qui. Su iPhone apri da Safari > Condividi > Aggiungi a Home."));
+      return;
+    }
+    showBanner("Su iPhone/Edge il fullscreen del browser è bloccato. Apri da schermata Home per usarla come app.");
+  }catch(e){
+    showBanner("Fullscreen non disponibile su questo browser. Su iPhone usa Aggiungi a Home.");
+  }
 }
-function readForms(){
- draft.mode=$("mode").value;draft.level=$("level").value;["rounds","roundSec","restSec","countSec"].forEach(id=>draft[id]=Number($(id).value));draft.allowFake=$("allowFake").checked;draft.fakePct=Number($("fakePct").value);
- let r=draft.rhythm;["visibleSec","pauseMin","pauseMax","burstPct","longPausePct","maxSeq","maxRepeats","repeatPct"].forEach(id=>r[id]=Number($(id).value));r.allowRepeats=$("allowRepeats").checked;r.smartRandom=$("smartRandom").checked;
- let v=draft.visual;["showSituation","showOpponent","showSolution","showAfter"].forEach(id=>v[id]=$(id).checked);v.colorScale=Number($("colorScale").value);v.textScale=Number($("textScale").value);
- draft.coach.on=$("coachOn").checked;draft.coach.adaptive=$("adaptiveOn").checked;draft.coach.goal=$("coachGoal").value;draft.coach.note=$("coachNote").value;
- let a=draft.audio;a.beepOn=$("beepOn").checked;a.fakeBeep=$("fakeBeep").checked;a.comboBeep=$("comboBeep").checked;a.voiceOn=$("voiceOn").checked;a.speakStim=$("speakStim").checked;a.speakSolution=$("speakSolution").checked;a.rate=Number($("voiceRate").value);a.pitch=Number($("voicePitch").value);a.vol=Number($("voiceVol").value);
+function fillModeSelect(){let s=$("mode");s.innerHTML="";Object.keys(MODES).forEach(k=>s.add(new Option(MODES[k].name,k)))}
+function fillPresetSelect(){let s=$("presetSelect");s.innerHTML="";Object.keys(PRESETS).forEach(k=>s.add(new Option(k,k)));(draft.customPresets||[]).forEach(p=>s.add(new Option("★ "+p.name,"custom:"+p.name)));let target=draft.activePreset||"";if(target){let val=PRESETS[target]?target:"custom:"+target;for(let i=0;i<s.options.length;i++){if(s.options[i].value===val){s.value=val;break}}}}
+function applyPresetObj(p,name){
+ let keepStim=clone(draft.stimuli), keepCustom=clone(draft.customPresets||[]);
+ mergeDeep(draft,p||{});
+ draft.stimuli=keepStim;
+ draft.customPresets=keepCustom;
+ if(name)draft.activePreset=name;
+ configureStimuliForPreset(draft);
+ normalizeDraft();
+ cfg=clone(draft);
+ normalize();
+ save();
+ state.remain=cfg.roundSec;
+ updateHeader();
+ buttons();
+ fillForm();
+ showPresetInfo();
+ showBanner('Preset applicato e salvato');
+ later(()=>showBanner(''),1000)
 }
-function situationCard(s,idx){
- let div=document.createElement("div");div.className="situationCard";
- div.innerHTML=`
- <label class="toggle full"><input data-active type="checkbox" ${s.active?"checked":""}><div><b>Attiva</b> — ${escapeHtml(s.value)} / ${escapeHtml(s.name)}</div></label>
- <div><div class="label">Tipo</div><select data-type><option value="color">Colore</option><option value="number">Numero</option><option value="word">Parola</option><option value="arrow">Freccia</option></select></div>
- <div><div class="label">Valore visualizzato</div><input data-value type="text" value="${escapeHtml(s.value||"")}"></div>
- <div><div class="label">Colore</div><input data-color type="color" value="${escapeHtml(s.color||"#ffffff")}"></div>
- <div><div class="label">Difficoltà</div><select data-diff><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
- <div class="full"><div class="label">Nome situazione</div><input data-name type="text" value="${escapeHtml(s.name||"")}"></div>
- <div class="full"><div class="label">Descrizione situazione</div><input data-desc type="text" value="${escapeHtml(s.description||"")}"></div>
- <div><div class="label">Tecnica avversario</div><input data-opp type="text" value="${escapeHtml(s.opponent||"")}"></div>
- <div><div class="label">Distanza</div><input data-dist type="text" value="${escapeHtml(s.distance||"")}"></div>
- <div><div class="label">Fase</div><input data-phase type="text" value="${escapeHtml(s.phase||"")}"></div>
- <div><div class="label">Tipo soluzione</div><input data-stype type="text" value="${escapeHtml(s.solutionType||"")}"></div>
- <div class="full"><div class="label">Soluzione tecnica</div><input data-sol type="text" value="${escapeHtml(s.solution||"")}"></div>
- <div class="full"><div class="label">Comando successivo</div><input data-after type="text" value="${escapeHtml(s.after||"")}"></div>
- <label class="toggle"><input data-fake type="checkbox" ${s.fake?"checked":""}><div><b>È una finta</b></div></label>
- <button class="btn btnDanger">Elimina</button>`;
- div.querySelector("[data-type]").value=s.type;div.querySelector("[data-diff]").value=s.difficulty;
- div.querySelector("[data-active]").onchange=e=>s.active=e.target.checked;div.querySelector("[data-type]").onchange=e=>s.type=e.target.value;div.querySelector("[data-value]").oninput=e=>s.value=e.target.value;div.querySelector("[data-color]").oninput=e=>s.color=e.target.value;div.querySelector("[data-diff]").onchange=e=>s.difficulty=Number(e.target.value);
- div.querySelector("[data-name]").oninput=e=>s.name=e.target.value;div.querySelector("[data-desc]").oninput=e=>s.description=e.target.value;div.querySelector("[data-opp]").oninput=e=>s.opponent=e.target.value;div.querySelector("[data-dist]").oninput=e=>s.distance=e.target.value;div.querySelector("[data-phase]").oninput=e=>s.phase=e.target.value;div.querySelector("[data-stype]").oninput=e=>s.solutionType=e.target.value;div.querySelector("[data-sol]").oninput=e=>s.solution=e.target.value;div.querySelector("[data-after]").oninput=e=>s.after=e.target.value;div.querySelector("[data-fake]").onchange=e=>s.fake=e.target.checked;
- div.querySelector("button").onclick=()=>{draft.situations.splice(idx,1);renderSituations()};
- return div;
+function configureStimuliForPreset(s){
+ const mode=s.mode, level=s.level, age=s.ageBand;
+ const easy=(mode==='base_tecnica'||mode==='controllo'||mode==='recupero'||age==='5_7'||age==='8_10');
+ const decision=(mode==='decision_making'||mode==='combattimento'||mode==='sparring'||mode==='flow'||mode==='resistenza');
+ s.stimuli.colors.forEach(c=>{
+   const n=(c.name||'').toLowerCase();
+   if(c.fake)c.active=!easy && Number(s.advanced.fakePct)>0;
+   else c.active=['rosso','blu'].includes(n) || (!easy && ['verde','giallo'].includes(n)) || (decision && ['arancione','viola','azzurro','rosa'].includes(n));
+ });
+ s.stimuli.numbers.forEach((n,i)=>{ n.active= easy ? i<2 : decision ? i<6 : i<4; });
+ s.stimuli.words.forEach(w=>{
+   const v=(w.value||w.name||'').toUpperCase();
+   if(w.fake)w.active=!easy && Number(s.advanced.fakePct)>0;
+   else w.active= decision ? ['ATTACCA','DIFENDI','CONTRATTACCA','ENTRA','ESCI','CAMBIA GUARDIA'].includes(v) : ['ATTACCA'].includes(v);
+ });
+ s.stimuli.arrows.forEach((a,i)=>{ a.active= decision ? i<8 : (!easy && i<4); });
 }
-function renderSituations(){let list=$("situationList");list.innerHTML="";draft.situations.forEach((s,i)=>list.appendChild(situationCard(s,i)))}
-function showPresetInfo(){let v=$("presetSelect")?.value||draft?.activePreset||"";let key=v.startsWith("custom:")?v.slice(7):v;let p=PRESETS[key];let txt=p?`${key}: modalità ${MODES[p.mode]}; livello ${p.level}; round ${p.rounds} x ${p.roundSec}s; finte ${p.fakePct}%; ritmo variabile con raffiche ${p.rhythm?.burstPct??0}%.`:"Preset personale salvato dall’utente.";if($("presetInfo"))$("presetInfo").textContent=txt}
-function applyPreset(){
- let v=$("presetSelect").value;
- if(v.startsWith("custom:")){let p=(draft.customPresets||[]).find(x=>x.name===v.slice(7));if(p){draft=mergeDeep(clone(draft),clone(p.data));draft.activePreset=p.name}}
- else if(PRESETS[v]){draft=mergeDeep(clone(draft),clone(PRESETS[v]));draft.activePreset=v}
- fillForms();toast("Preset applicato");
+function normalizeDraft(){let old=cfg;cfg=draft;normalize();draft=cfg;cfg=old}
+function bindForms(){fillModeSelect();document.querySelectorAll(".tabBtn").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tabBtn").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.querySelector(`[data-panel="${b.dataset.tab}"]`).classList.add("active")});
+ $("openSettings").onclick=openSettings;$("closeSet").onclick=()=>E.settings.style.display="none";$("saveSet").onclick=()=>{if(applyForm()){showBanner("Salvato");later(()=>showBanner(""),900)}};$("saveBack").onclick=()=>{if(applyForm())E.settings.style.display="none"};$("resetSet").onclick=()=>{draft=clone(DEFAULTS);fillForm();showBanner("Reset impostazioni")};$("resetAll").onclick=()=>{draft=clone(DEFAULTS);fillForm()};
+ $("resetStats").onclick=()=>{state.stats={stim:0,seq:0,combo:0,fake:0,rep:0,breath:0};renderStats()};
+ $("mode").onchange=()=>{if(draft){draft.mode=$("mode").value;$("modeInfo").textContent=MODES[draft.mode]?.desc||""}};
+ $("applyPreset").onclick=()=>{let v=$("presetSelect").value;if(v.startsWith("custom:")){let p=draft.customPresets.find(x=>x.name===v.slice(7));if(p)applyPresetObj(p.config,p.name)}else applyPresetObj(PRESETS[v]||{},v)};
+ $("presetSelect").onchange=showPresetInfo;$("restorePresets").onclick=()=>{draft.customPresets=[];fillPresetSelect();showBanner("Preset standard ripristinati")};
+ $("savePreset").onclick=()=>{let name=$("customPresetName").value.trim();if(!name){showBanner("Inserisci un nome preset");return}applyFormToDraft();draft.customPresets=draft.customPresets||[];let idx=draft.customPresets.findIndex(p=>p.name===name);let data=clone(draft);delete data.customPresets;if(idx>=0)draft.customPresets[idx]={name,config:data};else draft.customPresets.push({name,config:data});fillPresetSelect();showBanner("Preset personale salvato")};
+ $("deletePreset").onclick=()=>{let v=$("presetSelect").value;if(!v.startsWith("custom:")){showBanner("Puoi eliminare solo preset personali");return}let name=v.slice(7);draft.customPresets=(draft.customPresets||[]).filter(p=>p.name!==name);fillPresetSelect();showBanner("Preset personale eliminato")};
+ $("addColor").onclick=()=>{draft.stimuli.colors.push({id:"color_"+uid(),type:"color",name:"Nuovo colore",value:"#ffffff",active:true,custom:true,technique:""});renderStimuliForms()};
+ $("addNumber").onclick=()=>{draft.stimuli.numbers.push({id:"num_"+uid(),type:"number",name:"0",value:"0",active:true,custom:true,technique:""});renderStimuliForms()};
+ $("addWord").onclick=()=>{draft.stimuli.words.push({id:"word_"+uid(),type:"word",name:"Nuova parola",value:"NUOVA PAROLA",active:true,custom:true,technique:""});renderStimuliForms()};
+ $("makeNums").onclick=()=>{let a=parseInt($("numFrom").value),b=parseInt($("numTo").value);if(isNaN(a)||isNaN(b)){showBanner("Inserisci range numerico valido");return}if(b<a)[a,b]=[b,a];if(b-a>99){showBanner("Massimo 100 numeri per volta");return}draft.stimuli.numbers=[];for(let n=a;n<=b;n++)draft.stimuli.numbers.push({id:"num_"+n+"_"+uid(),type:"number",name:String(n),value:String(n),active:true,custom:true,technique:""});renderStimuliForms()};
+ $("testBeep").onclick=async()=>{await Audio.unlock();Audio.high();setTimeout(()=>Audio.low(),140)};$("testVoice").onclick=async()=>{await Audio.unlock();Speech.speak(Speech.ok()?"Test voce pronto":"")};
+ E.startBtn.onclick=start;E.pauseBtn.onclick=pause;E.stopBtn.onclick=stop;$("fullBtn").onclick=full;$("fullTop").onclick=full;$("audioBtn").onclick=async()=>{await Audio.unlock();Audio.double();Speech.speak("Audio pronto")};document.addEventListener("pointerdown",()=>Audio.unlock(),{once:true,passive:true});
+ document.addEventListener("keydown",e=>{if(e.code==="Space"){e.preventDefault();if(state.phase==="ready"||state.phase==="finished")start();else pause()}else if(e.code==="Escape"){e.preventDefault();stop();E.settings.style.display="none"}});
+ document.addEventListener("visibilitychange",()=>{if(document.hidden&&(state.phase==="live"||state.phase==="rest"))pause()});
 }
-function savePreset(){readForms();let name=$("customPresetName").value.trim();if(!name){showBanner("Inserisci un nome per il preset");return}draft.customPresets=draft.customPresets||[];draft.customPresets=draft.customPresets.filter(p=>p.name!==name);draft.customPresets.push({name,data:clone(draft)});draft.activePreset=name;fillForms();toast("Preset personale salvato")}
-function deletePreset(){let v=$("presetSelect").value;if(!v.startsWith("custom:")){showBanner("Puoi eliminare solo preset personali");return}let name=v.slice(7);draft.customPresets=(draft.customPresets||[]).filter(p=>p.name!==name);fillForms();toast("Preset eliminato")}
-
-function bind(){
- document.querySelectorAll(".tabBtn").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tabBtn").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.querySelector(`[data-panel="${b.dataset.tab}"]`).classList.add("active")});
- $("openSettings").onclick=openSettings;$("saveSet").onclick=()=>commit(false);$("saveBack").onclick=()=>commit(true);$("closeSet").onclick=closeSettings;$("resetSet").onclick=()=>{draft=clone(DEFAULTS);fillForms();toast("Impostazioni ripristinate")};
- $("startBtn").onclick=start;$("pauseBtn").onclick=pause;$("stopBtn").onclick=stop;$("fullBtn").onclick=fullscreen;$("fullTop").onclick=fullscreen;
- $("audioBtn").onclick=async()=>{await Audio.unlock();Audio.high();Speech.speak("Audio pronto")};$("testBeep").onclick=()=>{Audio.unlock().then(()=>Audio.double())};$("testVoice").onclick=()=>Speech.speak("Test voce. Stimolo e soluzione tecnica.");
- $("applyPreset").onclick=applyPreset;$("savePreset").onclick=savePreset;$("deletePreset").onclick=deletePreset;$("restoreDefaults").onclick=()=>{draft=clone(DEFAULTS);fillForms();toast("Standard ripristinati")};$("presetSelect").onchange=showPresetInfo;
- $("addSituation").onclick=()=>{draft.situations.push({id:uid(),type:"color",value:"NUOVO",color:"#ffffff",name:"Nuova situazione",description:"",opponent:"",distance:"media",phase:"",solution:"",solutionType:"",after:"",difficulty:1,active:true,fake:false});renderSituations()};
- document.querySelectorAll("[data-fb]").forEach(b=>b.onclick=()=>feedback(b.dataset.fb));
-}
-load();bind();state.remain=cfg.roundSec;setPhase("ready");updateHeader();renderStats();displayReady();buttons();
+function showBanner(t){E.banner.textContent=t;E.banner.classList.toggle("hidden",!t)}
+function openSettings(){draft=clone(cfg);fillForm();E.settings.style.display="block";showBanner("")}
+function fillForm(){fillPresetSelect();["level","ageBand","mode","activePreset","rounds","roundSec","restSec","countSec","groupMin","groupMax","visibleSec"].forEach(id=>$(id).value=draft[id]);$("fakePctA").value=draft.advanced.fakePct;$("flowOn").checked=!!draft.flow.on;$("flowProfile").value=draft.flow.profile;$("breathMode").value=draft.flow.breathMode;$("breathFreq").value=draft.flow.breathFreq;$("kihap").value=draft.flow.kihap;$("beepOn").checked=!!draft.audio.beepOn;$("fakeBeep").checked=!!draft.audio.fakeBeep;$("comboBeep").checked=!!draft.audio.comboBeep;$("voiceOn").checked=!!draft.audio.voiceOn;$("speakStim").checked=!!draft.audio.speakStim;$("speakTech").checked=!!draft.audio.speakTech;$("voiceRate").value=draft.audio.rate;$("voicePitch").value=draft.audio.pitch;$("voiceVol").value=draft.audio.vol;$("seqType").value=draft.advanced.seqType;$("maxCombo").value=draft.advanced.maxCombo;$("intraMin").value=draft.advanced.intraMin;$("intraMax").value=draft.advanced.intraMax;$("smartRandom").checked=!!draft.advanced.smartRandom;$("allowRepeats").checked=!!draft.advanced.allowRepeats;$("maxRepeats").value=draft.advanced.maxRepeats;$("numFrom").value=1;$("numTo").value=10;$("modeInfo").textContent=MODES[draft.mode]?.desc||"";renderStimuliForms();showPresetInfo()}
+function applyFormToDraft(){["level","ageBand","mode","activePreset"].forEach(id=>draft[id]=$(id).value);["rounds","roundSec","restSec","countSec","groupMin","groupMax","visibleSec"].forEach(id=>draft[id]=Number($(id).value));draft.advanced.fakePct=Number($("fakePctA").value);draft.flow.on=$("flowOn").checked;draft.flow.profile=$("flowProfile").value;draft.flow.breathMode=$("breathMode").value;draft.flow.breathFreq=$("breathFreq").value;draft.flow.kihap=$("kihap").value;draft.audio.beepOn=$("beepOn").checked;draft.audio.fakeBeep=$("fakeBeep").checked;draft.audio.comboBeep=$("comboBeep").checked;draft.audio.voiceOn=$("voiceOn").checked;draft.audio.speakStim=$("speakStim").checked;draft.audio.speakTech=$("speakTech").checked;draft.audio.rate=Number($("voiceRate").value);draft.audio.pitch=Number($("voicePitch").value);draft.audio.vol=Number($("voiceVol").value);draft.advanced.seqType=$("seqType").value;draft.advanced.maxCombo=Number($("maxCombo").value);draft.advanced.intraMin=Number($("intraMin").value);draft.advanced.intraMax=Number($("intraMax").value);draft.advanced.smartRandom=$("smartRandom").checked;draft.advanced.allowRepeats=$("allowRepeats").checked;draft.advanced.maxRepeats=Number($("maxRepeats").value);if(draft.mode==="flow")draft.flow.on=true;normalizeDraft()}
+function applyForm(){applyFormToDraft();let active=Object.values(draft.stimuli).flat().filter(x=>x.active&&!x.fake).length;if(!active){showBanner("Attiva almeno uno stimolo reale");return false}cfg=clone(draft);normalize();save();state.remain=cfg.roundSec;updateHeader();buttons();return true}
+function stimCard(item,arr,idx,kind){let div=document.createElement("div");div.className="stimCard";let color=kind==="colors";let canDelete=item.custom!==false || kind==="numbers";div.innerHTML=`
+  ${color?`<input type="color" value="${item.value||"#ffffff"}">`:`<div class="swatchMini" style="display:grid;place-items:center;font-weight:950">${kind==="arrows"?item.label:escapeHtml(item.value||item.name)}</div>`}
+  <label class="toggle" style="padding:6px;border:0;background:transparent"><input type="checkbox" ${item.active?"checked":""}><b>Attivo</b></label>
+  ${canDelete&&kind!=="arrows"?`<button class="btn btnDanger" style="min-height:38px;padding:7px 9px">🗑</button>`:`<span></span>`}
+  <div class="full"><input type="text" value="${escapeHtml(item.name||"")}" placeholder="Nome"></div>
+  ${kind==="arrows"?"":`<div class="full"><input data-value type="text" value="${escapeHtml(item.value||"")}" placeholder="Valore visualizzato"></div>`}
+  <div class="full"><input data-tech type="text" value="${escapeHtml(item.technique||"")}" placeholder="Tecnica associata (facoltativa)"></div>`;
+let inputs=div.querySelectorAll("input");let p=0;if(color){inputs[p++].oninput=e=>{item.value=e.target.value}}inputs[p++].onchange=e=>{item.active=e.target.checked};inputs[p++].oninput=e=>{item.name=e.target.value;if(kind==="numbers")item.value=e.target.value};if(kind!=="arrows"){div.querySelector("[data-value]").oninput=e=>{item.value=e.target.value;if(kind==="words")item.value=e.target.value.toUpperCase()}}div.querySelector("[data-tech]").oninput=e=>{item.technique=e.target.value};let del=div.querySelector("button");if(del)del.onclick=()=>{arr.splice(idx,1);renderStimuliForms()};return div}
+function renderStimuliForms(){const lists={colors:$("colorList"),numbers:$("numberList"),words:$("wordList"),arrows:$("arrowList")};Object.values(lists).forEach(x=>x.innerHTML="");draft.stimuli.colors.forEach((it,i)=>lists.colors.appendChild(stimCard(it,draft.stimuli.colors,i,"colors")));draft.stimuli.numbers.forEach((it,i)=>lists.numbers.appendChild(stimCard(it,draft.stimuli.numbers,i,"numbers")));draft.stimuli.words.forEach((it,i)=>lists.words.appendChild(stimCard(it,draft.stimuli.words,i,"words")));draft.stimuli.arrows.forEach((it,i)=>lists.arrows.appendChild(stimCard(it,draft.stimuli.arrows,i,"arrows")))}
+function showPresetInfo(){let v=$("presetSelect")?.value||draft?.activePreset||"";let key=v.startsWith("custom:")?v.slice(7):v;let preset=PRESETS[key];let txt=preset?`${key}: ${MODES[preset.mode]?.desc||""} Livello: ${labelLevel(preset.level)}. Round: ${preset.rounds} x ${preset.roundSec}s. Finte: ${preset.advanced?.fakePct??0}%. Flow: ${(preset.flow?.on||preset.mode==="flow")?"ON":"OFF"}.`:"Preset personale salvato dall’utente.";if($("presetInfo"))$("presetInfo").textContent=txt}
+load();bindForms();state.remain=cfg.roundSec;setPhase("ready");updateHeader();renderStats();displayReady();buttons();
 })();
 </script>
 </body>
