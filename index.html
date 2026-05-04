@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#050608">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>TKD Reaction Trainer PRO 5.0</title>
+<style>
+:root{
+  --bg0:#050608;--bg1:#0b0d11;--text:#f3f6ff;--muted:#a7b1c3;
+  --border:#243044;--border2:#33435e;--panel:#111722;--panel2:#0d131d;
+  --good:#38d996;--warn:#ffd34d;--bad:#ff4d6d;--accent:#59a7ff;
+  --flow:#45f0b0;--shadow:0 14px 44px rgba(0,0,0,.55);
+  --radius:18px;--vh:100dvh;
+  --safeTop:env(safe-area-inset-top,0px);--safeBottom:env(safe-area-inset-bottom,0px);
+  --safeLeft:env(safe-area-inset-left,0px);--safeRight:env(safe-area-inset-right,0px);
+}
+@supports not (height:100dvh){:root{--vh:100vh}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;margin:0;overflow:hidden;color:var(--text);background:#000;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;-webkit-text-size-adjust:100%;text-size-adjust:100%;overscroll-behavior:none}
+body{
+  position:fixed;inset:0;touch-action:manipulation;
+  background:
+    radial-gradient(1200px 780px at 18% -10%,rgba(89,167,255,.13),transparent 55%),
+    radial-gradient(900px 620px at 96% 14%,rgba(69,240,176,.08),transparent 58%),
+    linear-gradient(180deg,var(--bg0),var(--bg1));
+}
+button,input,select{font:inherit}
+input,select{color:var(--text)}
+button{-webkit-user-select:none;user-select:none}
+.app{height:var(--vh);max-height:var(--vh);padding:calc(12px + var(--safeTop)) calc(12px + var(--safeRight)) calc(12px + var(--safeBottom)) calc(12px + var(--safeLeft));display:flex;flex-direction:column;gap:10px;overflow:hidden}
+.topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;min-height:0}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.badge{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,rgba(89,167,255,.25),rgba(69,240,176,.12));border:1px solid rgba(89,167,255,.30);box-shadow:0 12px 28px rgba(0,0,0,.36);display:grid;place-items:center;font-weight:1000}
+h1{font-size:clamp(16px,2.2vw,24px);line-height:1.05;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sub{display:block;color:var(--muted);font-size:clamp(11px,1.45vw,13px);font-weight:650;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.actions,.btnRow{display:flex;gap:9px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
+.btn{appearance:none;-webkit-appearance:none;border:1px solid var(--border);background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018));color:var(--text);border-radius:14px;min-height:48px;padding:11px 14px;font-weight:850;letter-spacing:.2px;display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;box-shadow:0 10px 18px rgba(0,0,0,.22)}
+.btn:active{transform:translateY(1px)}.btn[disabled]{opacity:.45;cursor:not-allowed;transform:none}
+.btnPrimary{border-color:rgba(89,167,255,.45);background:linear-gradient(180deg,rgba(89,167,255,.30),rgba(89,167,255,.08))}
+.btnWarn{border-color:rgba(255,211,77,.42);background:linear-gradient(180deg,rgba(255,211,77,.20),rgba(255,211,77,.055))}
+.btnDanger{border-color:rgba(255,77,109,.42);background:linear-gradient(180deg,rgba(255,77,109,.22),rgba(255,77,109,.06))}
+.btnFlow{border-color:rgba(69,240,176,.40);background:linear-gradient(180deg,rgba(69,240,176,.20),rgba(69,240,176,.05))}
+.card{border:1px solid var(--border);border-radius:var(--radius);background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.018));box-shadow:var(--shadow);overflow:hidden}
+.hud{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;padding:10px 12px}
+.hudGroup{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.hudGroup.center{justify-content:center}.hudGroup.right{justify-content:flex-end}
+.key{font-size:11px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.35px}
+.val{font-size:clamp(14px,2vw,19px);font-weight:950;font-variant-numeric:tabular-nums}
+.chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--border);background:rgba(16,23,34,.65);border-radius:999px;padding:6px 10px;font-size:12px;font-weight:850;white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:999px;background:var(--muted);box-shadow:0 0 0 3px rgba(167,177,195,.12)}
+.dot.live{background:var(--good);box-shadow:0 0 0 3px rgba(56,217,150,.18)}
+.dot.rest{background:var(--warn);box-shadow:0 0 0 3px rgba(255,211,77,.18)}
+.dot.pause{background:var(--accent);box-shadow:0 0 0 3px rgba(89,167,255,.18)}
+.dot.stop{background:var(--bad);box-shadow:0 0 0 3px rgba(255,77,109,.18)}
+.stage{position:relative;flex:1 1 auto;min-height:0;padding:14px;display:flex;align-items:center;justify-content:center;background:radial-gradient(900px 460px at 50% 28%,rgba(255,255,255,.045),transparent 62%),linear-gradient(180deg,rgba(15,20,30,.56),rgba(8,11,17,.36))}
+.stimWrap{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;min-height:0}
+.stimulus{width:min(1160px,100%);height:min(66dvh,720px);min-height:260px;border-radius:clamp(24px,3vw,38px);border:2px solid rgba(255,255,255,.15);background:rgba(5,7,11,.45);box-shadow:inset 0 2px 0 rgba(255,255,255,.08),0 24px 70px rgba(0,0,0,.55);padding:clamp(14px,2vw,24px);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.stimulus:before{content:"";position:absolute;inset:-2px;background:radial-gradient(720px 430px at 50% 15%,rgba(89,167,255,.20),transparent 60%);opacity:.30;pointer-events:none}
+.stimText{position:relative;z-index:1;font-weight:1000;letter-spacing:1.5px;line-height:.96;text-transform:uppercase;text-shadow:0 24px 70px rgba(0,0,0,.82);font-size:clamp(68px,15vw,260px);max-width:100%;word-break:break-word}
+.numText{font-size:clamp(160px,36vw,560px);line-height:.82;letter-spacing:0}
+.arrowText{font-size:clamp(130px,30vw,430px);line-height:.85}
+.colorBlock{position:relative;z-index:1;width:min(96%,1080px);height:min(92%,650px);min-height:230px;border-radius:clamp(28px,4vw,48px);border:3px solid rgba(255,255,255,.28);box-shadow:inset 0 4px 0 rgba(255,255,255,.18),0 28px 80px rgba(0,0,0,.55)}
+.cue{min-height:56px;max-width:min(1120px,100%);display:flex;align-items:center;justify-content:center;font-size:clamp(19px,3.5vw,38px);font-weight:900;letter-spacing:.2px;padding:10px 18px;border-radius:999px;border:1px solid rgba(39,50,70,.9);background:rgba(16,23,34,.56);box-shadow:0 12px 24px rgba(0,0,0,.24)}
+.cue.flow{border-color:rgba(69,240,176,.38);background:rgba(69,240,176,.10)}
+.overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;padding:18px}
+.countdown{font-size:clamp(90px,17vw,200px);font-weight:1000;text-shadow:0 20px 60px rgba(0,0,0,.8);opacity:0;transform:scale(.96);transition:opacity .12s ease,transform .12s ease;border:1px solid rgba(89,167,255,.24);border-radius:28px;padding:18px 40px;background:radial-gradient(400px 280px at 50% 50%,rgba(89,167,255,.16),transparent 62%)}
+.countdown.show{opacity:1;transform:scale(1)}
+.bottom{display:grid;grid-template-columns:1fr;gap:10px}
+.controls{padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.stats{padding:10px 12px;display:flex;gap:9px;flex-wrap:wrap;align-items:center;justify-content:center}
+.stat{display:flex;gap:7px;align-items:baseline;border:1px solid rgba(39,50,70,.9);background:rgba(16,23,34,.45);border-radius:14px;padding:8px 10px;font-variant-numeric:tabular-nums}
+.stat .k{font-size:11px;color:var(--muted);font-weight:750}.stat .v{font-size:18px;font-weight:950}
+.tiny{font-size:12px;color:var(--muted);font-weight:650}.sectionTitle{font-size:14px;font-weight:950;margin:0 0 10px;color:#fff}
+.settings{display:none;position:fixed;inset:0;z-index:50;padding:calc(12px + var(--safeTop)) calc(12px + var(--safeRight)) calc(12px + var(--safeBottom)) calc(12px + var(--safeLeft));background:rgba(5,6,8,.985);overflow:hidden}
+.settingsCard{height:100%;display:flex;flex-direction:column;min-height:0}
+.settingsHead{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;gap:12px;justify-content:space-between;align-items:flex-start}
+.settingsBody{display:flex;min-height:0;flex:1}
+.tabs{flex:0 0 240px;padding:12px;border-right:1px solid var(--border);overflow:auto;-webkit-overflow-scrolling:touch}
+.tabBtn{width:100%;justify-content:flex-start;margin-bottom:9px}.tabBtn.active{border-color:rgba(89,167,255,.45);background:rgba(89,167,255,.12)}
+.panels{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:12px;min-width:0}
+.panel{display:none}.panel.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.box{border:1px solid rgba(39,50,70,.9);background:rgba(16,23,34,.42);border-radius:16px;padding:12px;min-width:0}
+.label{font-size:12px;color:var(--muted);font-weight:800;margin-bottom:7px}
+input[type=text],input[type=number],select{width:100%;border:1px solid var(--border);background:rgba(8,13,21,.72);border-radius:12px;padding:12px;outline:none;min-height:46px}
+input[type=color]{width:56px;height:44px;border:1px solid var(--border);background:transparent;border-radius:10px;padding:2px}
+select{appearance:none;-webkit-appearance:none}
+.toggle{display:flex;gap:10px;align-items:center;border:1px solid rgba(39,50,70,.9);background:rgba(16,23,34,.35);border-radius:14px;padding:10px;min-height:48px}
+.toggle input{width:22px;height:22px;accent-color:var(--accent)}
+.stimList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.stimCard{border:1px solid rgba(39,50,70,.9);background:rgba(13,19,29,.55);border-radius:16px;padding:10px;display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center}
+.stimCard .full{grid-column:1/-1}.swatchMini{width:38px;height:38px;border-radius:10px;border:1px solid rgba(255,255,255,.18)}
+.warnBox{border:1px solid rgba(255,211,77,.35);background:rgba(255,211,77,.08);color:#ffe7a0;padding:10px 12px;border-radius:14px;font-size:13px;font-weight:800;margin-bottom:10px}
+.infoBox{border:1px solid rgba(89,167,255,.28);background:rgba(89,167,255,.08);color:#cfe6ff;padding:10px 12px;border-radius:14px;font-size:13px;font-weight:700;margin-bottom:10px;line-height:1.35}
+.hidden{display:none!important}
+@media(max-width:980px){.hud{grid-template-columns:1fr;align-items:stretch}.hudGroup,.hudGroup.right,.hudGroup.center{justify-content:center}.settingsBody{flex-direction:column}.tabs{flex:0 0 auto;border-right:0;border-bottom:1px solid var(--border);display:flex;gap:8px;overflow:auto}.tabBtn{width:auto;margin:0;white-space:nowrap}.grid,.stimList{grid-template-columns:1fr}.settingsHead{flex-direction:column}.actions .btn span,.controls .btn span{display:none}}
+@media(max-width:680px){.app{gap:8px;padding:calc(9px + var(--safeTop)) calc(9px + var(--safeRight)) calc(9px + var(--safeBottom)) calc(9px + var(--safeLeft))}.badge{width:38px;height:38px}.stimulus{height:min(58dvh,620px);min-height:220px}.cue{min-height:46px}.controls{justify-content:center}.btn{min-height:46px;padding:10px 12px}.stats{gap:6px}.stat{padding:7px 8px}.stat .v{font-size:16px}}
+@media(max-height:650px) and (orientation:landscape){.app{gap:7px}.hud,.controls,.stats{padding:7px 10px}.stage{padding:8px}.stimulus{height:min(55dvh,460px);min-height:180px}.colorBlock{min-height:165px}.cue{min-height:38px;font-size:clamp(16px,2.2vw,26px);padding:6px 12px}.btn{min-height:42px}.stat{padding:6px 8px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <section id="training" style="height:100%;display:flex;flex-direction:column;gap:10px;min-height:0">
+    <header class="topbar">
+      <div class="brand"><div class="badge">TKD</div><div style="min-width:0"><h1>TKD Reaction Trainer PRO</h1><span class="sub" id="subtitle">Modalità: — • Livello: — • Flow: OFF</span></div></div>
+      <div class="actions"><button class="btn" id="openSettings">⚙ <span>Impostazioni</span></button><button class="btn" id="fullTop">⛶ <span>Fullscreen</span></button></div>
+    </header>
+    <div class="card hud">
+      <div class="hudGroup"><span class="key">ROUND</span><span class="val" id="roundTxt">R1/3</span><span class="chip"><span class="dot stop" id="phaseDot"></span><span id="phaseTxt">PRONTO</span></span></div>
+      <div class="hudGroup center"><span class="key">TEMPO</span><span class="val" id="timeTxt" style="font-size:clamp(22px,3vw,32px)">60s</span></div>
+      <div class="hudGroup right"><span class="chip" id="flowChip">Flow OFF</span><span class="chip" id="audioChip">Audio bloccato</span><span class="chip" id="voiceChip">Voce OFF</span></div>
+    </div>
+    <main class="card stage">
+      <div class="stimWrap">
+        <div class="stimulus" id="stimulus"><div class="stimText" style="font-size:clamp(44px,7vw,86px)">PRONTO</div></div>
+        <div class="cue" id="cue">Premi INIZIA</div>
+      </div>
+      <div class="overlay"><div class="countdown" id="countdown">3</div></div>
+    </main>
+    <footer class="bottom">
+      <div class="card controls">
+        <div class="btnRow"><button class="btn btnPrimary" id="startBtn">▶ <span>INIZIA</span></button><button class="btn btnWarn" id="pauseBtn" disabled>⏸ <span>PAUSA</span></button><button class="btn btnDanger" id="stopBtn" disabled>⏹ <span>STOP</span></button></div>
+        <div class="btnRow"><button class="btn" id="audioBtn">🔈 <span>AUDIO TEST</span></button><button class="btn" id="fullBtn">⛶ <span>FULLSCREEN</span></button></div>
+      </div>
+      <div class="card stats">
+        <div class="stat"><span class="k">Stimoli</span><span class="v" id="stStim">0</span></div>
+        <div class="stat"><span class="k">Sequenze</span><span class="v" id="stSeq">0</span></div>
+        <div class="stat"><span class="k">Combo</span><span class="v" id="stCombo">0</span></div>
+        <div class="stat"><span class="k">Finte</span><span class="v" id="stFake">0</span></div>
+        <div class="stat"><span class="k">Ripetizioni</span><span class="v" id="stRep">0</span></div>
+        <div class="stat"><span class="k">Cue respiro</span><span class="v" id="stBreath">0</span></div>
+      </div>
+    </footer>
+  </section>
+</div>
+
+<section class="settings" id="settings">
+  <div class="card settingsCard">
+    <div class="settingsHead">
+      <div><div class="sectionTitle">Impostazioni</div><div class="tiny">Versione completa: fasce età, livelli, modalità operative, preset Taekwondo, stimoli dinamici, Flow reale e respirazione.</div></div>
+      <div class="btnRow"><button class="btn" id="saveSet">SALVA</button><button class="btn btnPrimary" id="saveBack">SALVA E TORNA</button><button class="btn btnWarn" id="closeSet">ANNULLA</button><button class="btn btnDanger" id="resetSet">RESET</button></div>
+    </div>
+    <div class="settingsBody">
+      <nav class="tabs">
+        <button class="btn tabBtn active" data-tab="allenamento">Allenamento</button>
+        <button class="btn tabBtn" data-tab="stimoli">Stimoli</button>
+        <button class="btn tabBtn" data-tab="flow">Flow</button>
+        <button class="btn tabBtn" data-tab="audio">Audio</button>
+        <button class="btn tabBtn" data-tab="preset">Preset</button>
+        <button class="btn tabBtn" data-tab="avanzate">Avanzate</button>
+      </nav>
+      <div class="panels">
+        <div id="banner" class="warnBox hidden"></div>
+
+        <div class="panel active" data-panel="allenamento">
+          <div class="sectionTitle">Allenamento</div>
+          <div class="infoBox" id="modeInfo">Seleziona modalità, fascia d’età e livello. Ogni modalità applica una logica diversa di stimoli, pause, raffiche e finte.</div>
+          <div class="grid">
+            <div class="box"><div class="label">Modalità allenamento</div><select id="mode"></select></div>
+            <div class="box"><div class="label">Livello atleta</div><select id="level"><option value="bambini">Bambini</option><option value="principianti">Principianti</option><option value="intermedio">Intermedio</option><option value="agonisti">Agonisti</option><option value="alto_livello">Alto livello</option><option value="personalizzato">Personalizzato</option></select></div>
+            <div class="box"><div class="label">Fascia età</div><select id="ageBand"><option value="5_7">Bambini 5–7 anni</option><option value="8_10">Bambini 8–10 anni</option><option value="11_13">Ragazzi 11–13 anni</option><option value="cadetti">Cadetti 12–14 anni</option><option value="junior">Junior 15–17 anni</option><option value="senior">Senior 18+</option><option value="master">Master/adulti</option><option value="personalizzato">Personalizzato</option></select></div>
+            <div class="box"><div class="label">Preset attivo</div><input id="activePreset" type="text" readonly></div>
+            <div class="box"><div class="label">Numero round</div><input id="rounds" type="number" min="1" max="50" step="1"></div>
+            <div class="box"><div class="label">Durata round (sec)</div><input id="roundSec" type="number" min="10" max="900" step="5"></div>
+            <div class="box"><div class="label">Pausa tra round (sec)</div><input id="restSec" type="number" min="0" max="600" step="5"></div>
+            <div class="box"><div class="label">Countdown iniziale (sec)</div><input id="countSec" type="number" min="1" max="20" step="1"></div>
+            <div class="box"><div class="label">Durata visibilità stimolo (sec)</div><input id="visibleSec" type="number" min="0.1" max="10" step="0.05"></div>
+            <div class="box"><div class="label">Pausa minima tra gruppi (sec)</div><input id="groupMin" type="number" min="0.1" max="20" step="0.1"></div>
+            <div class="box"><div class="label">Pausa massima tra gruppi (sec)</div><input id="groupMax" type="number" min="0.1" max="20" step="0.1"></div>
+            <div class="box"><div class="label">Percentuale finte</div><input id="fakePctA" type="number" min="0" max="80" step="1"></div>
+          </div>
+        </div>
+
+        <div class="panel" data-panel="stimoli">
+          <div class="sectionTitle">Stimoli dinamici</div>
+          <div class="infoBox">I campi tecnica sono vuoti di default. Se cancelli una tecnica, resta vuota e la voce non la pronuncia.</div>
+          <div class="grid">
+            <div class="box"><div class="label">Colori</div><button class="btn" id="addColor" style="width:100%">+ Aggiungi colore</button><div class="stimList" id="colorList" style="margin-top:10px"></div></div>
+            <div class="box"><div class="label">Numeri</div><div class="grid" style="grid-template-columns:1fr 1fr"><input id="numFrom" type="number" min="0" max="999" placeholder="Da"><input id="numTo" type="number" min="0" max="999" placeholder="A"></div><button class="btn" id="makeNums" style="width:100%;margin-top:8px">GENERA RANGE</button><button class="btn" id="addNumber" style="width:100%;margin-top:8px">+ Aggiungi numero</button><div class="stimList" id="numberList" style="margin-top:10px"></div></div>
+            <div class="box"><div class="label">Parole</div><button class="btn" id="addWord" style="width:100%">+ Aggiungi parola</button><div class="stimList" id="wordList" style="margin-top:10px"></div></div>
+            <div class="box"><div class="label">Frecce</div><div class="stimList" id="arrowList"></div></div>
+          </div>
+        </div>
+
+        <div class="panel" data-panel="flow">
+          <div class="sectionTitle">Flow e respirazione</div>
+          <div class="infoBox">Flow modifica realmente tempi, pause, sequenze, cue e gestione respiratoria. Non è solo un’etichetta grafica.</div>
+          <div class="grid">
+            <div class="box"><label class="toggle"><input id="flowOn" type="checkbox"><div><b>Flow ON/OFF</b><div class="tiny">Attiva logica fluida e meno meccanica.</div></div></label></div>
+            <div class="box"><div class="label">Profilo Flow</div><select id="flowProfile"><option value="base">Base</option><option value="gara">Gara</option><option value="agonista">Agonista</option></select></div>
+            <div class="box"><div class="label">Respirazione</div><select id="breathMode"><option value="off">OFF</option><option value="recupero">Solo recupero</option><option value="countdown_recupero">Countdown + recupero</option><option value="completa">Completa</option></select></div>
+            <div class="box"><div class="label">Frequenza cue respiratori</div><select id="breathFreq"><option value="bassa">Bassa</option><option value="media">Media</option><option value="alta">Alta</option></select></div>
+            <div class="box"><div class="label">Kihap</div><select id="kihap"><option value="libero">Libero</option><option value="decisivo">Solo azione decisiva</option><option value="non_forzato">Nessun kihap forzato</option></select></div>
+          </div>
+        </div>
+
+        <div class="panel" data-panel="audio">
+          <div class="sectionTitle">Audio e voce</div>
+          <div class="grid">
+            <div class="box"><label class="toggle"><input id="beepOn" type="checkbox"><div><b>Beep ON/OFF</b></div></label><label class="toggle" style="margin-top:8px"><input id="fakeBeep" type="checkbox"><div><b>Beep diverso per finta</b></div></label><label class="toggle" style="margin-top:8px"><input id="comboBeep" type="checkbox"><div><b>Doppio beep combo</b></div></label></div>
+            <div class="box"><label class="toggle"><input id="voiceOn" type="checkbox"><div><b>Voce ON/OFF</b></div></label><label class="toggle" style="margin-top:8px"><input id="speakStim" type="checkbox"><div><b>Pronuncia stimolo</b></div></label><label class="toggle" style="margin-top:8px"><input id="speakTech" type="checkbox"><div><b>Pronuncia tecnica solo se presente</b></div></label></div>
+            <div class="box"><div class="label">Velocità voce</div><input id="voiceRate" type="number" min="0.5" max="1.8" step="0.05"><div class="label" style="margin-top:8px">Tono voce</div><input id="voicePitch" type="number" min="0.5" max="1.5" step="0.05"><div class="label" style="margin-top:8px">Volume voce</div><input id="voiceVol" type="number" min="0" max="1" step="0.05"></div>
+            <div class="box"><button class="btn" id="testBeep" style="width:100%">TEST BEEP</button><button class="btn" id="testVoice" style="width:100%;margin-top:8px">TEST VOCE</button></div>
+          </div>
+        </div>
+
+        <div class="panel" data-panel="preset">
+          <div class="sectionTitle">Preset Taekwondo</div>
+          <div class="infoBox">I preset impostano automaticamente modalità, livello, fascia età, round, tempi, finte, Flow e respirazione. Puoi modificarli e salvare una copia personale.</div>
+          <div class="grid">
+            <div class="box"><div class="label">Preset standard e personali</div><select id="presetSelect"></select><button class="btn btnPrimary" id="applyPreset" style="width:100%;margin-top:8px">APPLICA PRESET</button><button class="btn btnWarn" id="restorePresets" style="width:100%;margin-top:8px">RIPRISTINA STANDARD</button></div>
+            <div class="box"><div class="label">Salva preset personale</div><input id="customPresetName" type="text" placeholder="Nome preset"><button class="btn" id="savePreset" style="width:100%;margin-top:8px">SALVA PRESET PERSONALE</button><button class="btn btnDanger" id="deletePreset" style="width:100%;margin-top:8px">ELIMINA PRESET PERSONALE</button></div>
+            <div class="box" style="grid-column:1/-1"><div class="label">Descrizione preset/modalità</div><div class="infoBox" id="presetInfo"></div></div>
+          </div>
+        </div>
+
+        <div class="panel" data-panel="avanzate">
+          <div class="sectionTitle">Avanzate</div>
+          <div class="grid">
+            <div class="box"><div class="label">Lunghezza sequenze</div><select id="seqType"><option value="singolo">Singolo</option><option value="doppio">Doppio</option><option value="triplo">Triplo</option><option value="misto">Misto</option></select></div>
+            <div class="box"><div class="label">Lunghezza massima sequenza</div><select id="maxCombo"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+            <div class="box"><div class="label">Pausa minima dentro sequenza (sec)</div><input id="intraMin" type="number" min="0.05" max="10" step="0.05"></div>
+            <div class="box"><div class="label">Pausa massima dentro sequenza (sec)</div><input id="intraMax" type="number" min="0.05" max="10" step="0.05"></div>
+            <div class="box"><label class="toggle"><input id="smartRandom" type="checkbox"><div><b>Smart random</b><div class="tiny">Evita pattern troppo prevedibili.</div></div></label></div>
+            <div class="box"><label class="toggle"><input id="allowRepeats" type="checkbox"><div><b>Permetti ripetizioni consecutive</b></div></label></div>
+            <div class="box"><div class="label">Massimo ripetizioni consecutive</div><select id="maxRepeats"><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
+            <div class="box"><button class="btn" id="resetStats" style="width:100%">RESET STATISTICHE</button></div>
+            <div class="box"><button class="btn btnDanger" id="resetAll" style="width:100%">RESET IMPOSTAZIONI</button></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(()=>{"use strict";
+const $=id=>document.getElementById(id), STORAGE="tkd-reaction-pro-5";
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+const clone=o=>JSON.parse(JSON.stringify(o));
+const clamp=(n,a,b)=>Math.min(b,Math.max(a,n));
+const rand=(a,b)=>a+Math.random()*(b-a);
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const fmt=s=>{s=Math.max(0,Math.floor(s));let m=Math.floor(s/60),r=s%60;return m?m+":"+String(r).padStart(2,"0"):r+"s"};
+const MODES={
+ base_tecnica:{name:"Base Tecnica",desc:"Riconoscimento stimolo → risposta corretta. Stimoli singoli, ritmo didattico, pause regolari, finte quasi assenti. Adatta a principianti, bambini pronti e riscaldamento tecnico."},
+ controllo:{name:"Controllo",desc:"Attenzione e comprensione senza ansia. Stimoli lenti, massimo 1–2 stimoli, pause lunghe, finte assenti o rare. Indicata per bambini piccoli, principianti e lavoro pulito."},
+ sequenze:{name:"Sequenze",desc:"Memoria breve e continuità. Sequenze 2–5 stimoli mostrati uno alla volta, pause interne variabili e possibilità di ripetizioni."},
+ reazione_rapida:{name:"Reazione Rapida",desc:"Riduzione del tempo di risposta. Stimoli brevi, ravvicinati e imprevedibili, micro-raffiche leggibili. Per intermedi pronti e agonisti."},
+ decision_making:{name:"Decision Making",desc:"Scelta corretta tra più possibilità. Stimoli misti, colori/numeri/parole/frecce, finte moderate, velocità senza perdere lucidità."},
+ combattimento:{name:"Combattimento",desc:"Simula ritmo reale: pause, raffiche, finte, ripetizioni e cambi improvvisi. Per preparazione gara e sparring."},
+ sparring:{name:"Sparring Simulation",desc:"Round realistico con studio, attacco, finta, contrattacco e uscita. Pressione mentale e variabilità alta."},
+ flow:{name:"Flow",desc:"Continuità, fluidità, respirazione e adattamento. Modifica realmente tempi e pause, evita ritmo meccanico e kihap forzato."},
+ resistenza:{name:"Resistenza Mentale",desc:"Lucidità sotto fatica. Round più lunghi, stimoli continui, finte e cue respiratori controllati."},
+ recupero:{name:"Recupero Attivo",desc:"Bassa intensità, stimoli lenti, respirazione e attenzione leggera. Per recupero tra blocchi e defaticamento."}
+};
+const DEFAULT_ARROWS=[
+ {id:"arrow_up",type:"arrow",label:"⬆️",name:"avanti",active:true,technique:""},
+ {id:"arrow_down",type:"arrow",label:"⬇️",name:"indietro",active:true,technique:""},
+ {id:"arrow_left",type:"arrow",label:"⬅️",name:"sinistra",active:true,technique:""},
+ {id:"arrow_right",type:"arrow",label:"➡️",name:"destra",active:true,technique:""},
+ {id:"arrow_ul",type:"arrow",label:"↖️",name:"diagonale avanti sinistra",active:false,technique:""},
+ {id:"arrow_ur",type:"arrow",label:"↗️",name:"diagonale avanti destra",active:false,technique:""},
+ {id:"arrow_dl",type:"arrow",label:"↙️",name:"diagonale indietro sinistra",active:false,technique:""},
+ {id:"arrow_dr",type:"arrow",label:"↘️",name:"diagonale indietro destra",active:false,technique:""}
+];
+const DEFAULTS={
+ activePreset:"Default",level:"principianti",ageBand:"8_10",mode:"base_tecnica",rounds:3,roundSec:60,restSec:20,countSec:3,groupMin:1.2,groupMax:2.5,visibleSec:.9,
+ flow:{on:false,profile:"base",breathMode:"countdown_recupero",breathFreq:"media",kihap:"non_forzato"},
+ audio:{beepOn:true,fakeBeep:true,comboBeep:true,voiceOn:false,speakStim:true,speakTech:true,rate:1,pitch:1,vol:1},
+ advanced:{fakePct:3,seqType:"singolo",maxCombo:1,intraMin:.6,intraMax:1.2,smartRandom:true,allowRepeats:true,maxRepeats:2},
+ stimuli:{
+  colors:[
+   {id:"red",type:"color",name:"Rosso",value:"#ff2f55",active:true,custom:false,technique:""},
+   {id:"blue",type:"color",name:"Blu",value:"#1689ff",active:true,custom:false,technique:""},
+   {id:"green",type:"color",name:"Verde",value:"#24d978",active:false,custom:false,technique:""},
+   {id:"yellow",type:"color",name:"Giallo",value:"#ffd21e",active:false,custom:false,technique:""},
+   {id:"orange",type:"color",name:"Arancione",value:"#ff8a1c",active:false,custom:false,technique:""},
+   {id:"purple",type:"color",name:"Viola",value:"#9c5cff",active:false,custom:false,technique:""},
+   {id:"cyan",type:"color",name:"Azzurro",value:"#22d3ee",active:false,custom:false,technique:""},
+   {id:"pink",type:"color",name:"Rosa",value:"#ff5ecb",active:false,custom:false,technique:""},
+   {id:"gray",type:"color",name:"Finta",value:"#8a93a8",active:true,custom:false,fake:true,technique:""}
+  ],
+  numbers:Array.from({length:10},(_,i)=>({id:"num_"+(i+1),type:"number",name:String(i+1),value:String(i+1),active:i<2,custom:false,technique:""})),
+  words:[
+   {id:"attack",type:"word",name:"Attacca",value:"ATTACCA",active:true,custom:false,technique:""},
+   {id:"defend",type:"word",name:"Difendi",value:"DIFENDI",active:false,custom:false,technique:""},
+   {id:"counter",type:"word",name:"Contrattacca",value:"CONTRATTACCA",active:false,custom:false,technique:""},
+   {id:"enter",type:"word",name:"Entra",value:"ENTRA",active:false,custom:false,technique:""},
+   {id:"exit",type:"word",name:"Esci",value:"ESCI",active:false,custom:false,technique:""},
+   {id:"guard",type:"word",name:"Cambia guardia",value:"CAMBIA GUARDIA",active:false,custom:false,technique:""},
+   {id:"stop",type:"word",name:"Stop",value:"STOP",active:true,custom:false,fake:true,technique:""},
+   {id:"fake",type:"word",name:"Finta",value:"FINTA",active:false,custom:false,fake:true,technique:""}
+  ],
+  arrows:clone(DEFAULT_ARROWS)
+ },
+ customPresets:[]
+};
+const PRESETS={
+ "Base Tecnica":{activePreset:"Base Tecnica",level:"principianti",ageBand:"8_10",mode:"base_tecnica",rounds:3,roundSec:60,restSec:20,countSec:3,groupMin:1.2,groupMax:2.5,visibleSec:.95,flow:{on:false},advanced:{fakePct:0,seqType:"singolo",maxCombo:1,intraMin:.6,intraMax:1.2,allowRepeats:true,maxRepeats:2}},
+ "Bambini 5–7":{activePreset:"Bambini 5–7",level:"bambini",ageBand:"5_7",mode:"controllo",rounds:2,roundSec:40,restSec:25,countSec:5,groupMin:2.2,groupMax:3.8,visibleSec:1.4,flow:{on:false,breathMode:"countdown_recupero"},advanced:{fakePct:0,seqType:"singolo",maxCombo:1,intraMin:1.0,intraMax:1.8,maxRepeats:1}},
+ "Bambini 8–10":{activePreset:"Bambini 8–10",level:"bambini",ageBand:"8_10",mode:"controllo",rounds:3,roundSec:50,restSec:25,countSec:4,groupMin:1.8,groupMax:3.2,visibleSec:1.15,flow:{on:false,breathMode:"countdown_recupero"},advanced:{fakePct:2,seqType:"misto",maxCombo:2,intraMin:.8,intraMax:1.8,maxRepeats:2}},
+ "Ragazzi 11–13":{activePreset:"Ragazzi 11–13",level:"intermedio",ageBand:"11_13",mode:"sequenze",rounds:3,roundSec:70,restSec:25,countSec:3,groupMin:1.0,groupMax:2.1,visibleSec:.78,flow:{on:false},advanced:{fakePct:5,seqType:"misto",maxCombo:3,intraMin:.45,intraMax:1.2,maxRepeats:2}},
+ "Cadetti":{activePreset:"Cadetti",level:"agonisti",ageBand:"cadetti",mode:"decision_making",rounds:3,roundSec:90,restSec:30,countSec:3,groupMin:.75,groupMax:1.8,visibleSec:.62,flow:{on:false},advanced:{fakePct:9,seqType:"misto",maxCombo:4,intraMin:.25,intraMax:.95,maxRepeats:2}},
+ "Junior":{activePreset:"Junior",level:"agonisti",ageBand:"junior",mode:"combattimento",rounds:3,roundSec:120,restSec:35,countSec:3,groupMin:.45,groupMax:1.8,visibleSec:.45,flow:{on:false},advanced:{fakePct:14,seqType:"misto",maxCombo:5,intraMin:.12,intraMax:.8,maxRepeats:3}},
+ "Senior":{activePreset:"Senior",level:"alto_livello",ageBand:"senior",mode:"sparring",rounds:3,roundSec:120,restSec:45,countSec:3,groupMin:.35,groupMax:2.3,visibleSec:.4,flow:{on:true,profile:"gara",breathMode:"completa",breathFreq:"media"},advanced:{fakePct:18,seqType:"misto",maxCombo:5,intraMin:.1,intraMax:.75,maxRepeats:3}},
+ "Master/Adulti":{activePreset:"Master/Adulti",level:"principianti",ageBand:"master",mode:"controllo",rounds:3,roundSec:60,restSec:25,countSec:3,groupMin:1.3,groupMax:2.6,visibleSec:1.0,flow:{on:true,profile:"base",breathMode:"countdown_recupero",breathFreq:"bassa"},advanced:{fakePct:3,seqType:"misto",maxCombo:2,intraMin:.7,intraMax:1.6,maxRepeats:2}},
+ "Principianti":{activePreset:"Principianti",level:"principianti",ageBand:"personalizzato",mode:"controllo",rounds:3,roundSec:60,restSec:25,countSec:3,groupMin:1.4,groupMax:2.8,visibleSec:1.0,flow:{on:false},advanced:{fakePct:3,seqType:"misto",maxCombo:2,intraMin:.7,intraMax:1.5,maxRepeats:2}},
+ "Intermedio":{activePreset:"Intermedio",level:"intermedio",ageBand:"personalizzato",mode:"sequenze",rounds:3,roundSec:90,restSec:30,countSec:3,groupMin:.8,groupMax:2.0,visibleSec:.65,flow:{on:false},advanced:{fakePct:8,seqType:"misto",maxCombo:4,intraMin:.35,intraMax:1.1,maxRepeats:2}},
+ "Agonisti":{activePreset:"Agonisti",level:"agonisti",ageBand:"personalizzato",mode:"combattimento",rounds:3,roundSec:120,restSec:35,countSec:3,groupMin:.4,groupMax:1.8,visibleSec:.42,flow:{on:false},advanced:{fakePct:16,seqType:"misto",maxCombo:5,intraMin:.12,intraMax:.8,maxRepeats:3}},
+ "Alto Livello":{activePreset:"Alto Livello",level:"alto_livello",ageBand:"personalizzato",mode:"flow",rounds:3,roundSec:120,restSec:45,countSec:3,groupMin:.25,groupMax:1.35,visibleSec:.32,flow:{on:true,profile:"agonista",breathMode:"completa",breathFreq:"alta",kihap:"non_forzato"},advanced:{fakePct:18,seqType:"misto",maxCombo:5,intraMin:.07,intraMax:.55,maxRepeats:3}},
+ "Reazione Rapida":{activePreset:"Reazione Rapida",level:"agonisti",ageBand:"personalizzato",mode:"reazione_rapida",rounds:3,roundSec:60,restSec:30,countSec:3,groupMin:.25,groupMax:1.0,visibleSec:.30,flow:{on:false},advanced:{fakePct:8,seqType:"misto",maxCombo:3,intraMin:.08,intraMax:.45,maxRepeats:3}},
+ "Combattimento":{activePreset:"Combattimento",level:"agonisti",ageBand:"personalizzato",mode:"combattimento",rounds:3,roundSec:120,restSec:35,countSec:3,groupMin:.3,groupMax:2.5,visibleSec:.45,flow:{on:false},advanced:{fakePct:20,seqType:"misto",maxCombo:5,intraMin:.1,intraMax:.9,maxRepeats:3}},
+ "Flow Base":{activePreset:"Flow Base",level:"intermedio",ageBand:"master",mode:"flow",rounds:3,roundSec:90,restSec:30,countSec:3,groupMin:.75,groupMax:2.2,visibleSec:.58,flow:{on:true,profile:"base",breathMode:"countdown_recupero",breathFreq:"bassa",kihap:"non_forzato"},advanced:{fakePct:6,seqType:"misto",maxCombo:3,intraMin:.3,intraMax:1.0,maxRepeats:2}},
+ "Flow Gara":{activePreset:"Flow Gara",level:"agonisti",ageBand:"junior",mode:"flow",rounds:3,roundSec:120,restSec:35,countSec:3,groupMin:.35,groupMax:1.8,visibleSec:.42,flow:{on:true,profile:"gara",breathMode:"completa",breathFreq:"media",kihap:"decisivo"},advanced:{fakePct:14,seqType:"misto",maxCombo:4,intraMin:.12,intraMax:.75,maxRepeats:3}},
+ "Flow Agonista":{activePreset:"Flow Agonista",level:"alto_livello",ageBand:"senior",mode:"flow",rounds:3,roundSec:120,restSec:40,countSec:3,groupMin:.25,groupMax:1.25,visibleSec:.32,flow:{on:true,profile:"agonista",breathMode:"completa",breathFreq:"alta",kihap:"non_forzato"},advanced:{fakePct:18,seqType:"misto",maxCombo:5,intraMin:.07,intraMax:.52,maxRepeats:3}},
+ "Sparring Simulation":{activePreset:"Sparring Simulation",level:"alto_livello",ageBand:"senior",mode:"sparring",rounds:3,roundSec:120,restSec:45,countSec:3,groupMin:.3,groupMax:2.8,visibleSec:.38,flow:{on:true,profile:"gara",breathMode:"completa",breathFreq:"media"},advanced:{fakePct:22,seqType:"misto",maxCombo:5,intraMin:.1,intraMax:.8,maxRepeats:3}},
+ "Decision Making":{activePreset:"Decision Making",level:"intermedio",ageBand:"cadetti",mode:"decision_making",rounds:3,roundSec:90,restSec:30,countSec:3,groupMin:.6,groupMax:1.8,visibleSec:.55,flow:{on:false},advanced:{fakePct:12,seqType:"misto",maxCombo:4,intraMin:.2,intraMax:1.0,maxRepeats:2}},
+ "Resistenza Mentale":{activePreset:"Resistenza Mentale",level:"agonisti",ageBand:"junior",mode:"resistenza",rounds:4,roundSec:150,restSec:30,countSec:3,groupMin:.4,groupMax:1.5,visibleSec:.45,flow:{on:true,profile:"gara",breathMode:"completa",breathFreq:"bassa"},advanced:{fakePct:15,seqType:"misto",maxCombo:5,intraMin:.15,intraMax:1.0,maxRepeats:3}},
+ "Recupero Attivo":{activePreset:"Recupero Attivo",level:"principianti",ageBand:"personalizzato",mode:"recupero",rounds:2,roundSec:90,restSec:15,countSec:3,groupMin:2.0,groupMax:4.0,visibleSec:1.4,flow:{on:true,profile:"base",breathMode:"completa",breathFreq:"alta"},advanced:{fakePct:0,seqType:"singolo",maxCombo:1,intraMin:1.0,intraMax:1.8,maxRepeats:1}}
+};
+let cfg=clone(DEFAULTS),draft=null;
+let state={phase:"ready",round:0,remain:60,tick:null,lastTick:0,timers:new Set(),pausedFrom:null,stats:{stim:0,seq:0,combo:0,fake:0,rep:0,breath:0},recent:[],last:null};
+const E={subtitle:$("subtitle"),roundTxt:$("roundTxt"),timeTxt:$("timeTxt"),phaseTxt:$("phaseTxt"),phaseDot:$("phaseDot"),flowChip:$("flowChip"),audioChip:$("audioChip"),voiceChip:$("voiceChip"),stimulus:$("stimulus"),cue:$("cue"),countdown:$("countdown"),stStim:$("stStim"),stSeq:$("stSeq"),stCombo:$("stCombo"),stFake:$("stFake"),stRep:$("stRep"),stBreath:$("stBreath"),startBtn:$("startBtn"),pauseBtn:$("pauseBtn"),stopBtn:$("stopBtn"),settings:$("settings"),banner:$("banner")};
+function mergeDeep(t,s){for(const k in s){if(s[k]&&typeof s[k]==="object"&&!Array.isArray(s[k])){if(!t[k])t[k]={};mergeDeep(t[k],s[k])}else t[k]=clone(s[k])}return t}
+function load(){try{const raw=localStorage.getItem(STORAGE);if(raw)cfg=mergeDeep(clone(DEFAULTS),JSON.parse(raw))}catch(e){cfg=clone(DEFAULTS)} normalize()}
+function save(){try{localStorage.setItem(STORAGE,JSON.stringify(cfg));return true}catch(e){showBanner("localStorage non disponibile: impostazioni non salvate");return false}}
+function normalize(){cfg.rounds=clamp(parseInt(cfg.rounds)||3,1,50);cfg.roundSec=clamp(Number(cfg.roundSec)||60,10,900);cfg.restSec=clamp(Number(cfg.restSec)||0,0,600);cfg.countSec=clamp(Number(cfg.countSec)||3,1,20);cfg.groupMin=clamp(Number(cfg.groupMin)||.5,.1,20);cfg.groupMax=clamp(Number(cfg.groupMax)||cfg.groupMin,.1,20);if(cfg.groupMax<cfg.groupMin)cfg.groupMax=cfg.groupMin;cfg.visibleSec=clamp(Number(cfg.visibleSec)||.6,.1,10);cfg.advanced.fakePct=clamp(Number(cfg.advanced.fakePct)||0,0,80);cfg.advanced.intraMin=clamp(Number(cfg.advanced.intraMin)||.2,.05,10);cfg.advanced.intraMax=clamp(Number(cfg.advanced.intraMax)||cfg.advanced.intraMin,.05,10);if(cfg.advanced.intraMax<cfg.advanced.intraMin)cfg.advanced.intraMax=cfg.advanced.intraMin; if(cfg.mode==="flow")cfg.flow.on=true}
+function modeName(){return MODES[cfg.mode]?.name||cfg.mode}
+function updateHeader(){E.subtitle.textContent=`Modalità: ${modeName()} • Livello: ${labelLevel(cfg.level)} • Flow: ${(cfg.flow.on||cfg.mode==="flow")?"ON":"OFF"} • Preset: ${cfg.activePreset||"—"}`;E.flowChip.textContent=(cfg.flow.on||cfg.mode==="flow")?`Flow ${cfg.flow.profile}`:"Flow OFF";E.roundTxt.textContent=`R${state.round+1}/${cfg.rounds}`;E.timeTxt.textContent=fmt(state.remain);E.voiceChip.textContent=Speech.ok()?`Voce ${cfg.audio.voiceOn?"ON":"OFF"}`:"Voce non disponibile"}
+function labelLevel(v){return {bambini:"Bambini",principianti:"Principianti",intermedio:"Intermedio",agonisti:"Agonisti",alto_livello:"Alto livello",personalizzato:"Personalizzato"}[v]||v}
+function setPhase(p){state.phase=p;E.phaseTxt.textContent={ready:"PRONTO",countdown:"COUNTDOWN",live:"ALLENAMENTO",rest:"RECUPERO",paused:"PAUSA",finished:"FINE"}[p]||p;E.phaseDot.className="dot "+(p==="live"?"live":p==="rest"?"rest":p==="paused"?"pause":p==="ready"||p==="finished"?"stop":"pause");buttons()}
+function buttons(){const active=["countdown","live","rest","paused"].includes(state.phase);E.startBtn.disabled=active||!pool(false).length;E.pauseBtn.disabled=!(state.phase==="live"||state.phase==="rest"||state.phase==="paused");E.stopBtn.disabled=!active;E.pauseBtn.querySelector("span").textContent=state.phase==="paused"?"RIPRENDI":"PAUSA"}
+function renderStats(){E.stStim.textContent=state.stats.stim;E.stSeq.textContent=state.stats.seq;E.stCombo.textContent=state.stats.combo;E.stFake.textContent=state.stats.fake;E.stRep.textContent=state.stats.rep;E.stBreath.textContent=state.stats.breath}
+function clearTimers(){for(const t of Array.from(state.timers)){clearTimeout(t);state.timers.delete(t)}}
+function later(fn,ms){const t=setTimeout(()=>{state.timers.delete(t);fn()},ms);state.timers.add(t);return t}
+const Audio=(()=>{let ctx=null,unlocked=false;function ensure(){try{if(!ctx){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;ctx=new AC({latencyHint:"interactive"})}return ctx}catch(e){return null}}async function unlock(){const c=ensure();if(!c){E.audioChip.textContent="Audio non disponibile";return false}try{if(c.state!=="running")await c.resume();unlocked=true;E.audioChip.textContent="Audio pronto";return true}catch(e){E.audioChip.textContent="Audio bloccato";return false}}function beep(freq=900,dur=.075,type="square",gain=.11,delay=0){const c=ctx;if(!c||c.state!=="running")return;try{const t=c.currentTime+delay,o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.setValueAtTime(freq,t);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(gain,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+dur+.03)}catch(e){}}return{unlock,get unlocked(){return unlocked},high:()=>beep(980,.075,"square"),low:()=>beep(240,.095,"sine",.12),double:()=>{beep(920,.06,"square");beep(1120,.06,"square",.1,.1)}}})();
+const Speech=(()=>{const ok=()=>("speechSynthesis" in window)&&("SpeechSynthesisUtterance" in window);function cancel(){try{speechSynthesis.cancel()}catch(e){}}function speak(text){if(!ok()||!cfg.audio.voiceOn)return;const t=String(text||"").trim();if(!t)return;try{cancel();const u=new SpeechSynthesisUtterance(t);const voices=speechSynthesis.getVoices? speechSynthesis.getVoices():[];const v=voices.find(x=>(x.lang||"").toLowerCase().startsWith("it"))||voices[0];if(v)u.voice=v;u.lang=v?.lang||"it-IT";u.rate=Number(cfg.audio.rate)||1;u.pitch=Number(cfg.audio.pitch)||1;u.volume=Number(cfg.audio.vol)||1;speechSynthesis.speak(u)}catch(e){}}return{ok,cancel,speak}})();
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
+function displayReady(){E.stimulus.innerHTML='<div class="stimText" style="font-size:clamp(44px,7vw,86px)">PRONTO</div>';E.stimulus.style.background="rgba(5,7,11,.45)";E.cue.className="cue";E.cue.textContent="Premi INIZIA"}
+function blank(){E.stimulus.innerHTML='<div class="stimText"></div>';E.stimulus.style.background="rgba(0,0,0,.7)"}
+function renderStim(s){E.cue.className="cue";const tech=(s.technique||"").trim();if(s.type==="color"){E.stimulus.innerHTML=`<div class="colorBlock" style="background:${s.value||"#777"}"></div>`}else if(s.type==="number"){E.stimulus.innerHTML=`<div class="stimText numText">${escapeHtml(s.value||s.name)}</div>`}else if(s.type==="arrow"){E.stimulus.innerHTML=`<div class="stimText arrowText">${s.label}</div>`}else{E.stimulus.innerHTML=`<div class="stimText">${escapeHtml((s.value||s.name||"").toUpperCase())}</div>`}E.stimulus.style.background="rgba(5,7,11,.45)";E.cue.textContent=tech}
+function pool(includeFake=true){let all=[...cfg.stimuli.colors,...cfg.stimuli.numbers,...cfg.stimuli.words,...cfg.stimuli.arrows].filter(x=>x.active);return includeFake?all:all.filter(x=>!x.fake)}
+function fakePool(){return [...cfg.stimuli.colors,...cfg.stimuli.words].filter(x=>x.active&&x.fake)}
+function shape(min,max,bias){if(max<min)[min,max]=[max,min];let r=Math.random(),x;if(bias==="burst")x=r<.55?Math.pow(Math.random(),2)*.35:.35+Math.random()*.65;else if(bias==="flow")x=r<.22?Math.random()*.22:r<.82?.22+Math.random()*.55:.77+Math.random()*.23;else if(bias==="control")x=.35+Math.random()*.65;else x=Math.random();return min+(max-min)*x}
+function seqLen(){let m=cfg.mode,a=cfg.advanced,max=Number(a.maxCombo)||3;if(m==="base_tecnica"||m==="recupero")return 1;if(m==="controllo")return Math.min(max,Math.random()<.78?1:2);if(m==="reazione_rapida")return Math.min(max,Math.random()<.44?1:Math.random()<.82?2:3);if(m==="decision_making")return Math.min(max,Math.random()<.35?1:Math.random()<.68?2:Math.random()<.9?3:4);if(m==="combattimento"||m==="sparring"||m==="resistenza")return Math.min(max,Math.random()<.22?1:Math.random()<.56?2:Math.random()<.82?3:Math.random()<.95?4:5);if(m==="flow"||cfg.flow.on)return Math.min(max,Math.random()<.28?1:Math.random()<.62?2:Math.random()<.86?3:Math.random()<.96?4:5);if(a.seqType==="singolo")return 1;if(a.seqType==="doppio")return Math.min(2,max);if(a.seqType==="triplo")return Math.min(3,max);return Math.min(max,Math.random()<.35?1:Math.random()<.72?2:3)}
+function choose(p,seq=[]){if(!p.length)return null;if(!cfg.advanced.smartRandom)return pick(p);let weights=p.map(x=>{let w=1;let recent=state.recent.slice(-8);let c=recent.filter(id=>id===x.id).length;if(c)w*=.75;if(c>1)w*=.45;if(c>2)w*=.2;if(seq.length){let last=seq[seq.length-1];if(last.id===x.id){if(!cfg.advanced.allowRepeats)w=0;else{let streak=1;for(let i=seq.length-2;i>=0;i--){if(seq[i].id===last.id)streak++;else break}if(streak>=Number(cfg.advanced.maxRepeats))w=0;else w*=.7}}}return Math.max(0,w)});let total=weights.reduce((a,b)=>a+b,0);if(total<=0)return pick(p);let r=Math.random()*total;for(let i=0;i<p.length;i++){r-=weights[i];if(r<=0)return p[i]}return p[0]}
+function buildSeq(){let real=pool(false), fake=fakePool();if(!real.length&&fake.length)return [pick(fake)];let fakePct=Number(cfg.advanced.fakePct)||0;if(cfg.mode==="base_tecnica")fakePct=Math.min(fakePct,5);if(cfg.mode==="controllo")fakePct=Math.min(fakePct,3);if(Math.random()*100<fakePct&&fake.length)return [pick(fake), ...(Math.random()<.45&&real.length&&cfg.mode!=="controllo"?[choose(real)]:[])].filter(Boolean);let n=seqLen(), seq=[];for(let i=0;i<n;i++){let s=choose(real,seq);if(s)seq.push(s)}return seq.length?seq:real.slice(0,1)}
+function visibleMs(s,n){let base=cfg.visibleSec,m=cfg.mode;if(m==="reazione_rapida")base*=.75;if(m==="controllo"||m==="recupero")base*=1.22;if(m==="flow"||cfg.flow.on)base*=cfg.flow.profile==="agonista"?.82:cfg.flow.profile==="gara"?.9:1;if(s.fake)base*=1.12;return Math.round(clamp(base*rand(.82,1.18),.08,10)*1000)}
+function intraMs(){let m=cfg.mode,b=(m==="reazione_rapida"||m==="combattimento"||m==="sparring")?"burst":(m==="flow"||cfg.flow.on)?"flow":(m==="controllo"||m==="recupero")?"control":"normal";return Math.round(shape(cfg.advanced.intraMin,cfg.advanced.intraMax,b)*1000)}
+function groupMs(){let m=cfg.mode,b=m==="reazione_rapida"?"burst":(m==="flow"||cfg.flow.on)?"flow":(m==="controllo"||m==="recupero")?"control":"normal";let sec=shape(cfg.groupMin,cfg.groupMax,b);if((m==="flow"||cfg.flow.on)&&cfg.flow.profile==="agonista"&&Math.random()<.25)sec*=.58;if(m==="controllo"||m==="recupero")sec=Math.max(sec,1.1);return Math.round(clamp(sec,.08,20)*1000)}
+function speakText(s){let parts=[];if(cfg.audio.speakStim)parts.push(s.type==="number"?s.value:s.name||s.value);let tech=(s.technique||"").trim();if(cfg.audio.speakTech&&tech)parts.push(tech);return parts.join(". ")}
+function audioStim(s,first,len){if(cfg.audio.beepOn){if(s.fake&&cfg.audio.fakeBeep)Audio.low();else if(first&&len>1&&cfg.audio.comboBeep)Audio.double();else Audio.high()}Speech.speak(speakText(s))}
+function record(s){state.stats.stim++;if(s.fake)state.stats.fake++;if(state.last===s.id)state.stats.rep++;state.last=s.id;state.recent.push(s.id);while(state.recent.length>16)state.recent.shift();renderStats()}
+function showBreathCue(force){let m=cfg.flow.breathMode;if(m!=="completa"&&!force)return;let f={bassa:.08,media:.16,alta:.26}[cfg.flow.breathFreq]||.14;if(!force&&Math.random()>f)return;let cue=pick(["respira","sciolto","fluido","non bloccare","continua","espira"]);state.stats.breath++;renderStats();E.cue.className="cue flow";E.cue.textContent=cue;Speech.speak(cue);later(()=>{if(state.phase==="live"&&E.cue.textContent===cue)E.cue.textContent=""},650)}
+function playSequence(seq){if(state.phase!=="live")return;state.stats.seq++;if(seq.length>1)state.stats.combo++;renderStats();let i=0;function step(){if(state.phase!=="live")return;if(i>=seq.length){blank();if(seq.length>=3&&(cfg.mode==="flow"||cfg.flow.on||cfg.mode==="sparring")&&Math.random()<.42){let c=pick(["Espira","Rilassa","Riparti fluido"]);state.stats.breath++;renderStats();E.cue.className="cue flow";E.cue.textContent=c;Speech.speak(c);later(()=>{if(state.phase==="live")nextGroup()},560)}else later(nextGroup,groupMs());return}let s=seq[i];renderStim(s);record(s);audioStim(s,i===0,seq.length);let vm=visibleMs(s,seq.length);i++;later(()=>{if(state.phase!=="live")return;blank();if(i<seq.length)later(step,intraMs());else{showBreathCue(false);later(step,0)}},vm)}step()}
+function nextGroup(){if(state.phase==="live")playSequence(buildSeq())}
+function startTick(){stopTick();state.lastTick=performance.now();state.tick=setInterval(()=>{let now=performance.now(),dt=Math.min(.25,(now-state.lastTick)/1000);state.lastTick=now;if(["countdown","live","rest"].includes(state.phase)){state.remain=Math.max(0,state.remain-dt);E.timeTxt.textContent=fmt(state.remain);if(state.remain<=0){if(state.phase==="live")endRound();else if(state.phase==="rest")nextRound()}}},80)}
+function stopTick(){if(state.tick){clearInterval(state.tick);state.tick=null}}
+function showCount(n){E.countdown.textContent=String(n);E.countdown.classList.add("show");let bm=cfg.flow.breathMode;if(bm==="countdown_recupero"||bm==="completa"){let c=n===3?"Inspira":n===2?"Espira":n===1?"Pronto":"";if(c){E.cue.className="cue flow";E.cue.textContent=c;Speech.speak(c)}}later(()=>E.countdown.classList.remove("show"),180)}
+function countdown(){clearTimers();setPhase("countdown");state.remain=cfg.countSec;updateHeader();startTick();for(let i=cfg.countSec;i>=1;i--)later(()=>showCount(i),(cfg.countSec-i)*1000);later(beginRound,cfg.countSec*1000)}
+function beginRound(){clearTimers();setPhase("live");state.remain=cfg.roundSec;updateHeader();startTick();blank();later(nextGroup,100)}
+function endRound(){clearTimers();if(state.round>=cfg.rounds-1){finish();return}setPhase("rest");state.remain=cfg.restSec;updateHeader();E.stimulus.innerHTML='<div class="stimText" style="font-size:clamp(48px,8vw,120px)">RECUPERO</div>';restBreath(0)}
+function restBreath(i){if(state.phase!=="rest")return;let cues=["Inspira dal naso","Espira lungo","Rilassa spalle","Sciogli mandibola","Recupera senza irrigidirti"];let enabled=["recupero","countdown_recupero","completa"].includes(cfg.flow.breathMode);if(enabled){E.cue.className="cue flow";E.cue.textContent=cues[i%cues.length];state.stats.breath++;renderStats();Speech.speak(E.cue.textContent)}else{E.cue.className="cue";E.cue.textContent="Recupero"}later(()=>restBreath(i+1),2200)}
+function nextRound(){state.round++;if(state.round>=cfg.rounds){finish();return}countdown()}
+function finish(){clearTimers();stopTick();setPhase("finished");E.stimulus.innerHTML='<div class="stimText" style="font-size:clamp(54px,9vw,130px)">FINE</div>';E.cue.className="cue";E.cue.textContent=`Stimoli ${state.stats.stim} • Sequenze ${state.stats.seq} • Combo ${state.stats.combo}`;buttons()}
+async function start(){await Audio.unlock();if(!pool(false).length){showBanner("Attiva almeno uno stimolo reale");return}clearTimers();stopTick();Speech.cancel();state.round=0;state.remain=cfg.roundSec;state.stats={stim:0,seq:0,combo:0,fake:0,rep:0,breath:0};state.recent=[];state.last=null;renderStats();countdown()}
+function pause(){if(state.phase==="paused"){let p=state.pausedFrom||"live";setPhase(p);startTick();if(p==="live")later(nextGroup,100);else if(p==="rest")restBreath(0);return}if(state.phase==="live"||state.phase==="rest"){state.pausedFrom=state.phase;setPhase("paused");clearTimers();stopTick();Speech.cancel();E.cue.className="cue";E.cue.textContent="In pausa • Premi RIPRENDI"}}
+function stop(){clearTimers();stopTick();Speech.cancel();state.round=0;state.remain=cfg.roundSec;setPhase("ready");updateHeader();displayReady()}
+function full(){if(document.fullscreenElement)document.exitFullscreen?.();else document.documentElement.requestFullscreen?.().catch(()=>showBanner("Fullscreen non supportato su questo browser"))}
+function fillModeSelect(){let s=$("mode");s.innerHTML="";Object.keys(MODES).forEach(k=>s.add(new Option(MODES[k].name,k)))}
+function fillPresetSelect(){let s=$("presetSelect");s.innerHTML="";Object.keys(PRESETS).forEach(k=>s.add(new Option(k,k)));(draft.customPresets||[]).forEach(p=>s.add(new Option("★ "+p.name,"custom:"+p.name)));let target=draft.activePreset||"";if(target){let val=PRESETS[target]?target:"custom:"+target;for(let i=0;i<s.options.length;i++){if(s.options[i].value===val){s.value=val;break}}}}
+function applyPresetObj(p,name){
+ let keepStim=clone(draft.stimuli), keepCustom=clone(draft.customPresets||[]);
+ mergeDeep(draft,p||{});
+ draft.stimuli=keepStim;
+ draft.customPresets=keepCustom;
+ if(name)draft.activePreset=name;
+ configureStimuliForPreset(draft);
+ normalizeDraft();
+ cfg=clone(draft);
+ normalize();
+ save();
+ state.remain=cfg.roundSec;
+ updateHeader();
+ buttons();
+ fillForm();
+ showPresetInfo();
+ showBanner('Preset applicato e salvato');
+ later(()=>showBanner(''),1000)
+}
+function configureStimuliForPreset(s){
+ const mode=s.mode, level=s.level, age=s.ageBand;
+ const easy=(mode==='base_tecnica'||mode==='controllo'||mode==='recupero'||age==='5_7'||age==='8_10');
+ const decision=(mode==='decision_making'||mode==='combattimento'||mode==='sparring'||mode==='flow'||mode==='resistenza');
+ s.stimuli.colors.forEach(c=>{
+   const n=(c.name||'').toLowerCase();
+   if(c.fake)c.active=!easy && Number(s.advanced.fakePct)>0;
+   else c.active=['rosso','blu'].includes(n) || (!easy && ['verde','giallo'].includes(n)) || (decision && ['arancione','viola','azzurro','rosa'].includes(n));
+ });
+ s.stimuli.numbers.forEach((n,i)=>{ n.active= easy ? i<2 : decision ? i<6 : i<4; });
+ s.stimuli.words.forEach(w=>{
+   const v=(w.value||w.name||'').toUpperCase();
+   if(w.fake)w.active=!easy && Number(s.advanced.fakePct)>0;
+   else w.active= decision ? ['ATTACCA','DIFENDI','CONTRATTACCA','ENTRA','ESCI','CAMBIA GUARDIA'].includes(v) : ['ATTACCA'].includes(v);
+ });
+ s.stimuli.arrows.forEach((a,i)=>{ a.active= decision ? i<8 : (!easy && i<4); });
+}
+function normalizeDraft(){let old=cfg;cfg=draft;normalize();draft=cfg;cfg=old}
+function bindForms(){fillModeSelect();document.querySelectorAll(".tabBtn").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tabBtn").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.querySelector(`[data-panel="${b.dataset.tab}"]`).classList.add("active")});
+ $("openSettings").onclick=openSettings;$("closeSet").onclick=()=>E.settings.style.display="none";$("saveSet").onclick=()=>{if(applyForm()){showBanner("Salvato");later(()=>showBanner(""),900)}};$("saveBack").onclick=()=>{if(applyForm())E.settings.style.display="none"};$("resetSet").onclick=()=>{draft=clone(DEFAULTS);fillForm();showBanner("Reset impostazioni")};$("resetAll").onclick=()=>{draft=clone(DEFAULTS);fillForm()};
+ $("resetStats").onclick=()=>{state.stats={stim:0,seq:0,combo:0,fake:0,rep:0,breath:0};renderStats()};
+ $("mode").onchange=()=>{if(draft){draft.mode=$("mode").value;$("modeInfo").textContent=MODES[draft.mode]?.desc||""}};
+ $("applyPreset").onclick=()=>{let v=$("presetSelect").value;if(v.startsWith("custom:")){let p=draft.customPresets.find(x=>x.name===v.slice(7));if(p)applyPresetObj(p.config,p.name)}else applyPresetObj(PRESETS[v]||{},v)};
+ $("presetSelect").onchange=showPresetInfo;$("restorePresets").onclick=()=>{draft.customPresets=[];fillPresetSelect();showBanner("Preset standard ripristinati")};
+ $("savePreset").onclick=()=>{let name=$("customPresetName").value.trim();if(!name){showBanner("Inserisci un nome preset");return}applyFormToDraft();draft.customPresets=draft.customPresets||[];let idx=draft.customPresets.findIndex(p=>p.name===name);let data=clone(draft);delete data.customPresets;if(idx>=0)draft.customPresets[idx]={name,config:data};else draft.customPresets.push({name,config:data});fillPresetSelect();showBanner("Preset personale salvato")};
+ $("deletePreset").onclick=()=>{let v=$("presetSelect").value;if(!v.startsWith("custom:")){showBanner("Puoi eliminare solo preset personali");return}let name=v.slice(7);draft.customPresets=(draft.customPresets||[]).filter(p=>p.name!==name);fillPresetSelect();showBanner("Preset personale eliminato")};
+ $("addColor").onclick=()=>{draft.stimuli.colors.push({id:"color_"+uid(),type:"color",name:"Nuovo colore",value:"#ffffff",active:true,custom:true,technique:""});renderStimuliForms()};
+ $("addNumber").onclick=()=>{draft.stimuli.numbers.push({id:"num_"+uid(),type:"number",name:"0",value:"0",active:true,custom:true,technique:""});renderStimuliForms()};
+ $("addWord").onclick=()=>{draft.stimuli.words.push({id:"word_"+uid(),type:"word",name:"Nuova parola",value:"NUOVA PAROLA",active:true,custom:true,technique:""});renderStimuliForms()};
+ $("makeNums").onclick=()=>{let a=parseInt($("numFrom").value),b=parseInt($("numTo").value);if(isNaN(a)||isNaN(b)){showBanner("Inserisci range numerico valido");return}if(b<a)[a,b]=[b,a];if(b-a>99){showBanner("Massimo 100 numeri per volta");return}draft.stimuli.numbers=[];for(let n=a;n<=b;n++)draft.stimuli.numbers.push({id:"num_"+n+"_"+uid(),type:"number",name:String(n),value:String(n),active:true,custom:true,technique:""});renderStimuliForms()};
+ $("testBeep").onclick=async()=>{await Audio.unlock();Audio.high();setTimeout(()=>Audio.low(),140)};$("testVoice").onclick=async()=>{await Audio.unlock();Speech.speak(Speech.ok()?"Test voce pronto":"")};
+ E.startBtn.onclick=start;E.pauseBtn.onclick=pause;E.stopBtn.onclick=stop;$("fullBtn").onclick=full;$("fullTop").onclick=full;$("audioBtn").onclick=async()=>{await Audio.unlock();Audio.double();Speech.speak("Audio pronto")};document.addEventListener("pointerdown",()=>Audio.unlock(),{once:true,passive:true});
+ document.addEventListener("keydown",e=>{if(e.code==="Space"){e.preventDefault();if(state.phase==="ready"||state.phase==="finished")start();else pause()}else if(e.code==="Escape"){e.preventDefault();stop();E.settings.style.display="none"}});
+ document.addEventListener("visibilitychange",()=>{if(document.hidden&&(state.phase==="live"||state.phase==="rest"))pause()});
+}
+function showBanner(t){E.banner.textContent=t;E.banner.classList.toggle("hidden",!t)}
+function openSettings(){draft=clone(cfg);fillForm();E.settings.style.display="block";showBanner("")}
+function fillForm(){fillPresetSelect();["level","ageBand","mode","activePreset","rounds","roundSec","restSec","countSec","groupMin","groupMax","visibleSec"].forEach(id=>$(id).value=draft[id]);$("fakePctA").value=draft.advanced.fakePct;$("flowOn").checked=!!draft.flow.on;$("flowProfile").value=draft.flow.profile;$("breathMode").value=draft.flow.breathMode;$("breathFreq").value=draft.flow.breathFreq;$("kihap").value=draft.flow.kihap;$("beepOn").checked=!!draft.audio.beepOn;$("fakeBeep").checked=!!draft.audio.fakeBeep;$("comboBeep").checked=!!draft.audio.comboBeep;$("voiceOn").checked=!!draft.audio.voiceOn;$("speakStim").checked=!!draft.audio.speakStim;$("speakTech").checked=!!draft.audio.speakTech;$("voiceRate").value=draft.audio.rate;$("voicePitch").value=draft.audio.pitch;$("voiceVol").value=draft.audio.vol;$("seqType").value=draft.advanced.seqType;$("maxCombo").value=draft.advanced.maxCombo;$("intraMin").value=draft.advanced.intraMin;$("intraMax").value=draft.advanced.intraMax;$("smartRandom").checked=!!draft.advanced.smartRandom;$("allowRepeats").checked=!!draft.advanced.allowRepeats;$("maxRepeats").value=draft.advanced.maxRepeats;$("numFrom").value=1;$("numTo").value=10;$("modeInfo").textContent=MODES[draft.mode]?.desc||"";renderStimuliForms();showPresetInfo()}
+function applyFormToDraft(){["level","ageBand","mode","activePreset"].forEach(id=>draft[id]=$(id).value);["rounds","roundSec","restSec","countSec","groupMin","groupMax","visibleSec"].forEach(id=>draft[id]=Number($(id).value));draft.advanced.fakePct=Number($("fakePctA").value);draft.flow.on=$("flowOn").checked;draft.flow.profile=$("flowProfile").value;draft.flow.breathMode=$("breathMode").value;draft.flow.breathFreq=$("breathFreq").value;draft.flow.kihap=$("kihap").value;draft.audio.beepOn=$("beepOn").checked;draft.audio.fakeBeep=$("fakeBeep").checked;draft.audio.comboBeep=$("comboBeep").checked;draft.audio.voiceOn=$("voiceOn").checked;draft.audio.speakStim=$("speakStim").checked;draft.audio.speakTech=$("speakTech").checked;draft.audio.rate=Number($("voiceRate").value);draft.audio.pitch=Number($("voicePitch").value);draft.audio.vol=Number($("voiceVol").value);draft.advanced.seqType=$("seqType").value;draft.advanced.maxCombo=Number($("maxCombo").value);draft.advanced.intraMin=Number($("intraMin").value);draft.advanced.intraMax=Number($("intraMax").value);draft.advanced.smartRandom=$("smartRandom").checked;draft.advanced.allowRepeats=$("allowRepeats").checked;draft.advanced.maxRepeats=Number($("maxRepeats").value);if(draft.mode==="flow")draft.flow.on=true;normalizeDraft()}
+function applyForm(){applyFormToDraft();let active=Object.values(draft.stimuli).flat().filter(x=>x.active&&!x.fake).length;if(!active){showBanner("Attiva almeno uno stimolo reale");return false}cfg=clone(draft);normalize();save();state.remain=cfg.roundSec;updateHeader();buttons();return true}
+function stimCard(item,arr,idx,kind){let div=document.createElement("div");div.className="stimCard";let color=kind==="colors";let canDelete=item.custom!==false || kind==="numbers";div.innerHTML=`
+  ${color?`<input type="color" value="${item.value||"#ffffff"}">`:`<div class="swatchMini" style="display:grid;place-items:center;font-weight:950">${kind==="arrows"?item.label:escapeHtml(item.value||item.name)}</div>`}
+  <label class="toggle" style="padding:6px;border:0;background:transparent"><input type="checkbox" ${item.active?"checked":""}><b>Attivo</b></label>
+  ${canDelete&&kind!=="arrows"?`<button class="btn btnDanger" style="min-height:38px;padding:7px 9px">🗑</button>`:`<span></span>`}
+  <div class="full"><input type="text" value="${escapeHtml(item.name||"")}" placeholder="Nome"></div>
+  ${kind==="arrows"?"":`<div class="full"><input data-value type="text" value="${escapeHtml(item.value||"")}" placeholder="Valore visualizzato"></div>`}
+  <div class="full"><input data-tech type="text" value="${escapeHtml(item.technique||"")}" placeholder="Tecnica associata (facoltativa)"></div>`;
+let inputs=div.querySelectorAll("input");let p=0;if(color){inputs[p++].oninput=e=>{item.value=e.target.value}}inputs[p++].onchange=e=>{item.active=e.target.checked};inputs[p++].oninput=e=>{item.name=e.target.value;if(kind==="numbers")item.value=e.target.value};if(kind!=="arrows"){div.querySelector("[data-value]").oninput=e=>{item.value=e.target.value;if(kind==="words")item.value=e.target.value.toUpperCase()}}div.querySelector("[data-tech]").oninput=e=>{item.technique=e.target.value};let del=div.querySelector("button");if(del)del.onclick=()=>{arr.splice(idx,1);renderStimuliForms()};return div}
+function renderStimuliForms(){const lists={colors:$("colorList"),numbers:$("numberList"),words:$("wordList"),arrows:$("arrowList")};Object.values(lists).forEach(x=>x.innerHTML="");draft.stimuli.colors.forEach((it,i)=>lists.colors.appendChild(stimCard(it,draft.stimuli.colors,i,"colors")));draft.stimuli.numbers.forEach((it,i)=>lists.numbers.appendChild(stimCard(it,draft.stimuli.numbers,i,"numbers")));draft.stimuli.words.forEach((it,i)=>lists.words.appendChild(stimCard(it,draft.stimuli.words,i,"words")));draft.stimuli.arrows.forEach((it,i)=>lists.arrows.appendChild(stimCard(it,draft.stimuli.arrows,i,"arrows")))}
+function showPresetInfo(){let v=$("presetSelect")?.value||draft?.activePreset||"";let key=v.startsWith("custom:")?v.slice(7):v;let preset=PRESETS[key];let txt=preset?`${key}: ${MODES[preset.mode]?.desc||""} Livello: ${labelLevel(preset.level)}. Round: ${preset.rounds} x ${preset.roundSec}s. Finte: ${preset.advanced?.fakePct??0}%. Flow: ${(preset.flow?.on||preset.mode==="flow")?"ON":"OFF"}.`:"Preset personale salvato dall’utente.";if($("presetInfo"))$("presetInfo").textContent=txt}
+load();bindForms();state.remain=cfg.roundSec;setPhase("ready");updateHeader();renderStats();displayReady();buttons();
+})();
+</script>
+</body>
+</html>
