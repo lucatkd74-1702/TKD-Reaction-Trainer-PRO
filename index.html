@@ -163,6 +163,11 @@
             background: linear-gradient(180deg, rgba(255, 77, 109, .22), rgba(255, 77, 109, .06));
         }
 
+        .btnSuccess {
+            border-color: rgba(36, 217, 120, .45);
+            background: linear-gradient(180deg, rgba(36, 217, 120, .28), rgba(36, 217, 120, .08));
+        }
+
         .card {
             border: 1px solid var(--border);
             border-radius: 20px;
@@ -281,9 +286,11 @@
             height: 100%;
             min-height: 0;
             border-radius: clamp(24px, 3vw, 38px);
-            border: 2px solid rgba(255, 255, 255, .15);
-            background: rgba(5, 7, 11, .45);
-            box-shadow: inset 0 2px 0 rgba(255, 255, 255, .08), 0 24px 70px rgba(0, 0, 0, .55);
+            border: 2px solid rgba(255, 255, 255, .12);
+            background: rgba(12, 16, 26, .35);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: inset 0 2px 0 rgba(255, 255, 255, .08), 0 24px 70px rgba(0, 0, 0, .45);
             padding: clamp(14px, 2vw, 24px);
             display: flex;
             align-items: center;
@@ -292,27 +299,44 @@
             position: relative;
         }
 
+        @keyframes popIn {
+            0% { transform: scale(0.75); opacity: 0; filter: brightness(2); }
+            50% { transform: scale(1.08); opacity: 1; filter: brightness(1.2); }
+            100% { transform: scale(1); opacity: 1; filter: brightness(1); }
+        }
+
+        .popIn {
+            animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            will-change: transform, opacity;
+        }
+
         .stimText {
             font-weight: 1000;
             letter-spacing: 1.2px;
             line-height: .95;
             text-transform: uppercase;
-            text-shadow: 0 24px 70px rgba(0, 0, 0, .82);
+            text-shadow: 0 0 20px rgba(255, 255, 255, .2), 0 10px 40px rgba(0, 0, 0, .82);
             font-size: clamp(58px, 14vw, 230px);
             max-width: 100%;
             word-break: break-word;
         }
 
         .numText {
-            font-size: clamp(140px, 34vw, 520px);
-            line-height: .82;
+            font-size: clamp(160px, 36vmin, 620px);
+            line-height: 0.85;
+            letter-spacing: -0.04em;
+            text-align: center;
+            white-space: nowrap;
         }
 
+        .numDigits1 { font-size: clamp(180px, 44vmin, 760px); }
+        .numDigits2 { font-size: clamp(150px, 36vmin, 620px); }
+        .numDigits3 { font-size: clamp(110px, 28vmin, 480px); }
+
         .colorBlock {
-            width: min(96%, 1080px);
-            height: min(92%, 650px);
-            min-height: 180px;
-            border-radius: clamp(28px, 4vw, 48px);
+            width: 100%;
+            height: 100%;
+            border-radius: clamp(24px, 3vw, 48px);
             border: 3px solid rgba(255, 255, 255, .28);
             box-shadow: inset 0 4px 0 rgba(255, 255, 255, .18), 0 28px 80px rgba(0, 0, 0, .55);
         }
@@ -440,11 +464,11 @@
         }
 
         .info {
-            min-height: 64px;
+            min-height: 54px;
             text-align: center;
             display: grid;
             place-items: center;
-            gap: 5px;
+            gap: 4px;
         }
 
         .action {
@@ -992,6 +1016,28 @@
                 scroll-behavior: auto !important;
             }
         }
+        @media (orientation: portrait) and (max-width: 760px) {
+            .numText {
+                font-size: clamp(120px, 42vw, 360px);
+                line-height: 0.85;
+            }
+        }
+
+        @media (orientation: landscape) and (max-height: 560px) {
+            .numText {
+                font-size: clamp(90px, 42svh, 300px);
+                line-height: 0.8;
+            }
+            .numDigits1 { font-size: clamp(100px, 48svh, 320px); }
+            .numDigits2 { font-size: clamp(85px, 40svh, 260px); }
+            .numDigits3 { font-size: clamp(70px, 32svh, 220px); }
+        }
+
+        @media (min-width: 1200px) and (min-height: 700px) {
+            .numText {
+                font-size: clamp(260px, 42vmin, 760px);
+            }
+        }
     </style>
 </head>
 
@@ -1079,7 +1125,19 @@
                 </div>
             </div>
 
-            <div class="card stats">
+            <div class="card controls" id="coachPanelCard" style="display: none; margin-top: 10px; border-color: rgba(138,147,168,0.3);">
+                <div style="text-align: center; font-size: 12px; font-weight: bold; padding: 8px 0 0 0; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px;">Modalità Coach</div>
+                <div class="btnRow" style="padding-top: 4px;">
+                    <button class="btn btnSuccess" id="fbCorrectBtn" style="flex:1; font-size: 13px; min-height: 38px;">✓ Corretto</button>
+                    <button class="btn btnDanger" id="fbErrorBtn" style="flex:1; font-size: 13px; min-height: 38px;">✗ Errore</button>
+                </div>
+                <div class="btnRow">
+                    <button class="btn btnWarn" id="fbFeintBtn" style="flex:1; font-size: 13px; min-height: 38px;">Partito su finta</button>
+                    <button class="btn btnPrimary" id="fbSlowBtn" style="flex:1; font-size: 13px; min-height: 38px;">Lento</button>
+                </div>
+            </div>
+
+            <div class="card stats" style="margin-top: 10px;">
                 <div class="stat"><span class="k">Stimoli</span><span class="v" id="stStim">0</span></div>
                 <div class="stat"><span class="k">Finte</span><span class="v" id="stFake">0</span></div>
                 <div class="stat"><span class="k">Movimenti</span><span class="v" id="stMove">0</span></div>
@@ -1114,13 +1172,15 @@
             <div class="settingsBody">
 
                 <nav class="tabs">
-                    <button class="btn tabBtn active" data-tab="allenamento">Allenamento</button>
+                    <button class="btn tabBtn active" data-tab="allenamento">Modalità</button>
                     <button class="btn tabBtn" data-tab="stimoli">Stimoli</button>
                     <button class="btn tabBtn" data-tab="ottagono">Ottagono</button>
                     <button class="btn tabBtn" data-tab="ia">IA Avversario</button>
-                    <button class="btn tabBtn" data-tab="flow">Flow</button>
-                    <button class="btn tabBtn" data-tab="audio">Audio</button>
+                    <button class="btn tabBtn" data-tab="coach">Coach Mode</button>
+                    <button class="btn tabBtn" data-tab="flow">Flow / Audio</button>
                     <button class="btn tabBtn" data-tab="preset">Preset</button>
+                    <button class="btn tabBtn" data-tab="stats">Statistiche</button>
+                    <button class="btn tabBtn" data-tab="avanzate">Avanzate</button>
                 </nav>
 
                 <div class="panels">
@@ -1449,7 +1509,36 @@
                             </div>
 
                             <div class="box">
-                                <button class="btn btnDanger" id="resetAll" style="width:100%">RESET COMPLETO</button>
+                                <div class="label">Descrizione preset</div>
+                                <div class="infoBox" id="presetInfo"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel" data-panel="coach">
+                        <div class="sectionTitle">Coach Mode</div>
+                        <div class="infoBox">La difficoltà si adatta in tempo reale in base ai tuoi feedback durante l'allenamento (tramite i pulsanti Corretto, Errore, Finta, Lento).</div>
+                        <div class="grid">
+                            <div class="box">
+                                <div class="label">Livello Difficoltà Adattiva</div>
+                                <div class="v" id="coachDiffDisplay" style="font-size:24px; text-align:center; font-weight: bold; color: var(--accent);">Base</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel" data-panel="stats">
+                        <div class="sectionTitle">Statistiche Globali</div>
+                        <div class="infoBox">Le statistiche verranno registrate automaticamente durante l'allenamento.</div>
+                    </div>
+
+                    <div class="panel" data-panel="avanzate">
+                        <div class="sectionTitle">Avanzate</div>
+                        <div class="grid">
+                            <div class="box">
+                                <label class="label"><input type="checkbox" id="showCoachPanelCb"> Mostra Pannello Coach Mode UI</label>
+                            </div>
+                            <div class="box">
+                                <button class="btn btnDanger" id="resetAll" style="width:100%">RESET COMPLETO STORAGE</button>
                             </div>
                         </div>
                     </div>
@@ -1481,54 +1570,29 @@
             };
 
             const MODES = {
-                classic_base: {
-                    name: "Classica Base",
-                    kind: "classic",
-                    ai: false,
-                    desc: "Stimoli classici: colore, numero o parola a schermo."
-                },
-                classic_sequence: {
-                    name: "Classica Sequenze",
-                    kind: "classic",
-                    ai: false,
-                    desc: "Stimoli classici con sequenze, ripetizioni e tempi variabili."
-                },
-                classic_lactate: {
-                    name: "Classica Lattato",
-                    kind: "classic",
-                    ai: false,
-                    desc: "Stimoli classici molto ravvicinati e ad alta frequenza."
-                },
-                octagon_base: {
-                    name: "Ottagono Base",
-                    kind: "octagon",
-                    ai: false,
-                    desc: "Cerchietto nello spazio, ingresso nella zona tiro e risposta al colore."
-                },
-                octagon_feint: {
-                    name: "Ottagono Finte",
-                    kind: "octagon",
-                    ai: false,
-                    desc: "Il cerchietto finge di entrare nella zona tiro, poi scappa o cambia angolo."
-                },
-                octagon_fight: {
-                    name: "Ottagono Combattimento",
-                    kind: "octagon",
-                    ai: false,
-                    desc: "Cambi angolo, ingressi improvvisi, finte e ritmo realistico."
-                },
-                octagon_lactate: {
-                    name: "Ottagono Lattato",
-                    kind: "octagon",
-                    ai: false,
-                    desc: "Ingressi ravvicinati, velocità alta e poco recupero."
-                },
-                ai_opponent: {
-                    name: "PRO IA Avversario",
-                    kind: "octagon",
-                    ai: true,
-                    desc: "Simula un avversario reale: pressione, attesa, finte, cambio ritmo e ingressi."
-                }
+                classic_base: { name: "Classica Base", kind: "classic", defaultLevel: "principianti", ai: false, desc: "Stimoli classici a schermo." },
+                classic_sequence: { name: "Classica Sequenze", kind: "classic", defaultLevel: "intermedio", ai: false, desc: "Sequenze e ripetizioni." },
+                classic_lactate: { name: "Classica Lattato", kind: "classic", defaultLevel: "agonisti", ai: false, desc: "Alta frequenza." },
+                octagon_base: { name: "Ottagono Base", kind: "octagon", defaultLevel: "principianti", ai: false, desc: "Ingresso nella zona tiro." },
+                octagon_feint: { name: "Ottagono Finte", kind: "octagon", defaultLevel: "intermedio", ai: false, desc: "Finte e scatti." },
+                octagon_fight: { name: "Ottagono Combattimento", kind: "octagon", defaultLevel: "agonisti", ai: false, desc: "Ritmo realistico." },
+                octagon_lactate: { name: "Ottagono Lattato", kind: "octagon", defaultLevel: "agonisti", ai: false, desc: "Alta intensità e poco recupero." },
+                ai_opponent: { name: "PRO IA Avversario", kind: "octagon", defaultLevel: "agonisti", ai: true, desc: "Simula avversario reale." },
+                anticipation: { name: "Anticipo", kind: "octagon", defaultLevel: "intermedio", ai: true, desc: "Parti prima dell'attacco reale." },
+                counterattack: { name: "Contrattacco", kind: "octagon", defaultLevel: "intermedio", ai: true, desc: "Uscita + risposta." },
+                no_feint: { name: "Non partire sulla finta", kind: "octagon", defaultLevel: "alto_livello", ai: true, desc: "Controllo e pazienza." },
+                distance: { name: "Gestione Distanza", kind: "octagon", defaultLevel: "intermedio", ai: true, desc: "Distanza lunga, media e corta." },
+                pressure: { name: "Pressione Gara", kind: "octagon", defaultLevel: "agonisti", ai: true, desc: "Pressione costante." },
+                last_10s: { name: "Ultimi 10 Secondi", kind: "octagon", defaultLevel: "agonisti", ai: true, desc: "Intensità altissima." },
+                golden_point: { name: "Golden Point", kind: "octagon", defaultLevel: "alto_livello", ai: true, desc: "Singola azione decisiva." },
+                forced_combo: { name: "Combo Obbligata", kind: "classic", defaultLevel: "intermedio", ai: false, desc: "Sequenze prestabilite." },
+                defense_only: { name: "Solo Difesa e Uscita", kind: "octagon", defaultLevel: "intermedio", ai: true, desc: "Nessun attacco diretto." },
+                lactate_pro: { name: "Lattato PRO", kind: "octagon", defaultLevel: "agonisti", ai: true, desc: "Blocchi brevi ad alta intensità." },
+                visual_only: { name: "Visual Only", kind: "octagon", defaultLevel: "intermedio", ai: true, desc: "Nessun cue audio." },
+                audio_only: { name: "Audio Only", kind: "classic", defaultLevel: "intermedio", ai: false, desc: "Reazione uditiva pura." },
+                decision_making: { name: "Decision Making", kind: "octagon", defaultLevel: "alto_livello", ai: true, desc: "Scelta corretta sotto pressione." },
+                sparring: { name: "Sparring Simulation", kind: "octagon", defaultLevel: "agonisti", ai: true, desc: "Combattimento completo." },
+                coach_mode: { name: "Coach Mode Agonisti", kind: "octagon", defaultLevel: "agonisti", ai: true, desc: "Adattamento dinamico con pulsanti Coach." }
             };
 
             const DEFAULTS = {
@@ -1544,6 +1608,18 @@
                 groupMax: 2.3,
                 maxCombo: 1,
                 fakePct: 5,
+                showCoachPanel: false,
+
+                advanced: {
+                    lactatePro: { workBlockSec: 20, restBlockSec: 10, blockCount: 6, stimulusDensity: 1.5 },
+                    comboObbligata: { comboSequence: ["blue", "red", "green"], intraStimulusDelay: 0.3, repeatCombo: true },
+                    audioOnly: { visualStimulusEnabled: false, beepPatternEnabled: true },
+                    visualOnly: { audioEnabled: false, voiceEnabled: false },
+                    goldenPoint: { singleActionMode: true, longPauseProbability: 0.8 },
+                    gestioneDistanza: { trackDistances: true },
+                    decisionMaking: { decisionRules: ["lento=anticipo", "rapido=uscita"] },
+                    soloDifesa: { defenseOnly: true, noDirectAttack: true }
+                },
 
                 movement: {
                     targetSize: 34,
@@ -1610,246 +1686,24 @@
             };
 
             const PRESETS = {
-                "Classica Base": {
-                    activePreset: "Classica Base",
-                    mode: "classic_base",
-                    level: "principianti",
-                    rounds: 3,
-                    roundSec: 60,
-                    restSec: 20,
-                    countSec: 3,
-                    activeSec: .95,
-                    groupMin: 1.2,
-                    groupMax: 2.5,
-                    maxCombo: 1,
-                    fakePct: 0
-                },
-                "Classica Sequenze": {
-                    activePreset: "Classica Sequenze",
-                    mode: "classic_sequence",
-                    level: "intermedio",
-                    rounds: 3,
-                    roundSec: 75,
-                    restSec: 25,
-                    countSec: 3,
-                    activeSec: .65,
-                    groupMin: .7,
-                    groupMax: 1.8,
-                    maxCombo: 3,
-                    fakePct: 6
-                },
-                "Classica Lattato": {
-                    activePreset: "Classica Lattato",
-                    mode: "classic_lactate",
-                    level: "agonisti",
-                    rounds: 4,
-                    roundSec: 45,
-                    restSec: 20,
-                    countSec: 3,
-                    activeSec: .34,
-                    groupMin: .18,
-                    groupMax: .75,
-                    maxCombo: 4,
-                    fakePct: 8
-                },
-                "Ottagono Base": {
-                    activePreset: "Ottagono Base",
-                    mode: "octagon_base",
-                    level: "principianti",
-                    rounds: 3,
-                    roundSec: 60,
-                    restSec: 20,
-                    countSec: 3,
-                    activeSec: .75,
-                    groupMin: 1.0,
-                    groupMax: 2.3,
-                    maxCombo: 1,
-                    fakePct: 5,
-                    movement: {
-                        moveMin: .26,
-                        moveMax: .72,
-                        targetSize: 36,
-                        oppSize: 14,
-                        nearFeintPct: 65,
-                        feintHoldMs: 240,
-                        freeMove: true
-                    }
-                },
-                "Ottagono Finte": {
-                    activePreset: "Ottagono Finte",
-                    mode: "octagon_feint",
-                    level: "intermedio",
-                    rounds: 3,
-                    roundSec: 75,
-                    restSec: 25,
-                    countSec: 3,
-                    activeSec: .62,
-                    groupMin: .75,
-                    groupMax: 1.8,
-                    maxCombo: 2,
-                    fakePct: 24,
-                    movement: {
-                        moveMin: .18,
-                        moveMax: .62,
-                        targetSize: 35,
-                        oppSize: 13.5,
-                        nearFeintPct: 85,
-                        feintHoldMs: 230,
-                        freeMove: true
-                    }
-                },
-                "Ottagono Agonisti": {
-                    activePreset: "Ottagono Agonisti",
-                    mode: "octagon_fight",
-                    level: "agonisti",
-                    rounds: 3,
-                    roundSec: 120,
-                    restSec: 35,
-                    countSec: 3,
-                    activeSec: .42,
-                    groupMin: .35,
-                    groupMax: 1.45,
-                    maxCombo: 3,
-                    fakePct: 20,
-                    movement: {
-                        moveMin: .09,
-                        moveMax: .44,
-                        targetSize: 32,
-                        oppSize: 12.5,
-                        nearFeintPct: 80,
-                        feintHoldMs: 170,
-                        freeMove: true
-                    }
-                },
-                "PRO IA Aggressivo": {
-                    activePreset: "PRO IA Aggressivo",
-                    mode: "ai_opponent",
-                    level: "agonisti",
-                    rounds: 3,
-                    roundSec: 120,
-                    restSec: 35,
-                    countSec: 3,
-                    activeSec: .38,
-                    groupMin: .25,
-                    groupMax: 1.25,
-                    maxCombo: 4,
-                    fakePct: 18,
-                    movement: {
-                        moveMin: .07,
-                        moveMax: .42,
-                        targetSize: 32,
-                        oppSize: 12.5,
-                        nearFeintPct: 82,
-                        feintHoldMs: 150,
-                        freeMove: true
-                    },
-                    ai: {
-                        style: "aggressive",
-                        pressure: 78,
-                        feints: 24,
-                        attacks: 68,
-                        rhythm: 70,
-                        adapt: true,
-                        momentum: 0
-                    }
-                },
-                "PRO IA Attendista": {
-                    activePreset: "PRO IA Attendista",
-                    mode: "ai_opponent",
-                    level: "intermedio",
-                    rounds: 3,
-                    roundSec: 90,
-                    restSec: 30,
-                    countSec: 3,
-                    activeSec: .55,
-                    groupMin: .6,
-                    groupMax: 2.2,
-                    maxCombo: 2,
-                    fakePct: 26,
-                    movement: {
-                        moveMin: .16,
-                        moveMax: .66,
-                        targetSize: 34,
-                        oppSize: 13,
-                        nearFeintPct: 88,
-                        feintHoldMs: 260,
-                        freeMove: true
-                    },
-                    ai: {
-                        style: "counter",
-                        pressure: 35,
-                        feints: 42,
-                        attacks: 30,
-                        rhythm: 45,
-                        adapt: true,
-                        momentum: 0
-                    }
-                },
-                "PRO IA Tecnico": {
-                    activePreset: "PRO IA Tecnico",
-                    mode: "ai_opponent",
-                    level: "alto_livello",
-                    rounds: 3,
-                    roundSec: 120,
-                    restSec: 40,
-                    countSec: 3,
-                    activeSec: .42,
-                    groupMin: .35,
-                    groupMax: 1.7,
-                    maxCombo: 3,
-                    fakePct: 28,
-                    movement: {
-                        moveMin: .10,
-                        moveMax: .58,
-                        targetSize: 33,
-                        oppSize: 12.5,
-                        nearFeintPct: 92,
-                        feintHoldMs: 210,
-                        freeMove: true
-                    },
-                    ai: {
-                        style: "technical",
-                        pressure: 52,
-                        feints: 50,
-                        attacks: 46,
-                        rhythm: 62,
-                        adapt: true,
-                        momentum: 0
-                    }
-                },
-                "PRO IA Chaos": {
-                    activePreset: "PRO IA Chaos",
-                    mode: "ai_opponent",
-                    level: "alto_livello",
-                    rounds: 3,
-                    roundSec: 90,
-                    restSec: 35,
-                    countSec: 3,
-                    activeSec: .34,
-                    groupMin: .18,
-                    groupMax: 1.65,
-                    maxCombo: 5,
-                    fakePct: 30,
-                    movement: {
-                        moveMin: .06,
-                        moveMax: .70,
-                        targetSize: 31,
-                        oppSize: 12,
-                        nearFeintPct: 80,
-                        feintHoldMs: 130,
-                        freeMove: true
-                    },
-                    ai: {
-                        style: "chaos",
-                        pressure: 65,
-                        feints: 45,
-                        attacks: 60,
-                        rhythm: 90,
-                        adapt: false,
-                        momentum: 0
-                    }
-                }
+                "Classica Base": { mode: "classic_base", level: "principianti", rounds: 3, roundSec: 60, restSec: 20, countSec: 3, activeSec: .95, groupMin: 1.2, groupMax: 2.5, maxCombo: 1, fakePct: 0 },
+                "Bambini Base": { mode: "classic_base", level: "bambini", rounds: 3, roundSec: 45, restSec: 30, countSec: 3, activeSec: 1.5, groupMin: 2.0, groupMax: 4.0, maxCombo: 1, fakePct: 0 },
+                "Principianti Colori": { mode: "octagon_base", level: "principianti", rounds: 3, roundSec: 60, restSec: 20, countSec: 3, activeSec: 1.0, groupMin: 1.5, groupMax: 3.0, maxCombo: 1, fakePct: 5 },
+                "Controllo Finte": { mode: "no_feint", level: "intermedio", rounds: 3, roundSec: 60, restSec: 20, countSec: 3, activeSec: .75, groupMin: 1.0, groupMax: 2.3, maxCombo: 1, fakePct: 75, ai: { pressure: 40, feints: 80, attacks: 20, rhythm: 50, adapt: true } },
+                "Anticipo Cadetti": { mode: "anticipation", level: "intermedio", rounds: 3, roundSec: 75, restSec: 25, countSec: 3, activeSec: .65, groupMin: 1.0, groupMax: 2.5, maxCombo: 1, fakePct: 45, ai: { pressure: 60, feints: 45, attacks: 55, rhythm: 65, adapt: true } },
+                "Contrattacco Junior": { mode: "counterattack", level: "intermedio", rounds: 3, roundSec: 75, restSec: 25, countSec: 3, activeSec: .6, groupMin: .8, groupMax: 2.2, maxCombo: 2, fakePct: 20, ai: { pressure: 65, feints: 30, attacks: 60, rhythm: 60, adapt: true } },
+                "Gestione Distanza": { mode: "distance", level: "intermedio", rounds: 3, roundSec: 90, restSec: 30, countSec: 3, activeSec: .7, groupMin: 1.0, groupMax: 2.5, maxCombo: 1, fakePct: 15, ai: { pressure: 50, feints: 40, attacks: 40, rhythm: 55, adapt: true }, advanced: { gestioneDistanza: { trackDistances: true } } },
+                "Pressione Gara": { mode: "pressure", level: "agonisti", rounds: 3, roundSec: 120, restSec: 40, countSec: 3, activeSec: .4, groupMin: .3, groupMax: 1.2, maxCombo: 3, fakePct: 35, ai: { pressure: 85, feints: 35, attacks: 60, rhythm: 80, adapt: false } },
+                "Ultimi 10 Secondi": { mode: "last_10s", level: "agonisti", rounds: 5, roundSec: 15, restSec: 10, countSec: 3, activeSec: .25, groupMin: .15, groupMax: .5, maxCombo: 4, fakePct: 10, ai: { pressure: 100, feints: 15, attacks: 90, rhythm: 100, adapt: false } },
+                "Golden Point": { mode: "golden_point", level: "alto_livello", rounds: 3, roundSec: 60, restSec: 30, countSec: 3, activeSec: .6, groupMin: 2.0, groupMax: 6.0, maxCombo: 1, fakePct: 40, ai: { pressure: 30, feints: 50, attacks: 20, rhythm: 40, adapt: false }, advanced: { goldenPoint: { singleActionMode: true, longPauseProbability: 0.8 } } },
+                "Combo Obbligata": { mode: "forced_combo", level: "intermedio", rounds: 3, roundSec: 60, restSec: 20, countSec: 3, activeSec: .6, groupMin: 1.0, groupMax: 2.5, maxCombo: 4, fakePct: 0, advanced: { comboObbligata: { comboSequence: ["blue", "red", "green"], intraStimulusDelay: 0.3, repeatCombo: true } } },
+                "Solo Difesa": { mode: "defense_only", level: "intermedio", rounds: 3, roundSec: 90, restSec: 30, countSec: 3, activeSec: .6, groupMin: 1.0, groupMax: 2.0, maxCombo: 1, fakePct: 50, ai: { pressure: 70, feints: 60, attacks: 30, rhythm: 65, adapt: true }, advanced: { soloDifesa: { defenseOnly: true, noDirectAttack: true } } },
+                "Lattato PRO": { mode: "lactate_pro", level: "agonisti", rounds: 6, roundSec: 20, restSec: 10, countSec: 3, activeSec: .3, groupMin: .2, groupMax: .6, maxCombo: 3, fakePct: 15, ai: { pressure: 90, feints: 20, attacks: 80, rhythm: 95, adapt: false }, advanced: { lactatePro: { workBlockSec: 20, restBlockSec: 10, blockCount: 6, stimulusDensity: 1.5 } } },
+                "Decision Making": { mode: "decision_making", level: "alto_livello", rounds: 3, roundSec: 90, restSec: 30, countSec: 3, activeSec: .45, groupMin: .5, groupMax: 1.8, maxCombo: 2, fakePct: 35, ai: { pressure: 60, feints: 45, attacks: 50, rhythm: 75, adapt: true }, advanced: { decisionMaking: { decisionRules: ["lento=anticipo", "rapido=uscita"] } } },
+                "Sparring Simulation": { mode: "sparring", level: "agonisti", rounds: 3, roundSec: 120, restSec: 40, countSec: 3, activeSec: .45, groupMin: .4, groupMax: 1.6, maxCombo: 3, fakePct: 25, ai: { pressure: 65, feints: 35, attacks: 55, rhythm: 70, adapt: true } },
+                "Coach Mode Agonisti": { mode: "coach_mode", level: "agonisti", rounds: 3, roundSec: 120, restSec: 30, countSec: 3, activeSec: .45, groupMin: .4, groupMax: 1.5, maxCombo: 3, fakePct: 20, showCoachPanel: true, ai: { pressure: 60, feints: 30, attacks: 50, rhythm: 60, adapt: true } }
             };
+            for (let k in PRESETS) PRESETS[k].activePreset = k;
 
             let cfg = clone(DEFAULTS);
             let draft = null;
@@ -1868,7 +1722,13 @@
                     move: 0,
                     combo: 0,
                     pressure: 0,
-                    breath: 0
+                    breath: 0,
+                    distanceChanges: 0,
+                    correct: 0,
+                    errors: 0,
+                    falseStarts: 0,
+                    slow: 0,
+                    stimulusDensity: 0
                 },
                 recent: [],
                 last: null,
@@ -1915,7 +1775,27 @@
                 let dx = physics.x - 50;
                 let dy = physics.y - 50;
                 let dist = Math.hypot(dx, dy);
-                let entering = dist <= rZone;
+                let hit = dist <= (rZone - rOpp * 0.35);
+                let feintMargin = rZone * 0.25;
+                let nearFeintZone = dist > rZone && dist <= (rZone + feintMargin);
+                
+                // Stat tracking for distances
+                if (dist > rZone * 2.2) state.currentDist = "long";
+                else if (dist > rZone * 1.2) state.currentDist = "medium";
+                else state.currentDist = "short";
+                
+                if (state.currentDist !== state.lastDist) {
+                    if (state.lastDist) state.stats.distanceChanges++;
+                    state.lastDist = state.currentDist;
+                }
+
+                if (cfg.mode === "anticipation" && nearFeintZone && !inZone && !state.anticipationTriggered) {
+                    E.octCue.textContent = "PREPARATI";
+                    E.octCue.className = "cue warn";
+                    state.anticipationTriggered = true;
+                }
+
+                let entering = hit;
                 if (entering && !inZone) {
                     inZone = true;
                     if (pendingStimulus) {
@@ -1928,6 +1808,7 @@
                     }
                 } else if (!entering && inZone) {
                     inZone = false;
+                    state.anticipationTriggered = false; // reset when leaving
                 }
             }
 
@@ -2018,7 +1899,10 @@
                 pauseBtn: $("pauseBtn"),
                 stopBtn: $("stopBtn"),
                 settings: $("settings"),
-                banner: $("banner")
+                banner: $("banner"),
+                coachDiffDisplay: $("coachDiffDisplay"),
+                coachPanelCard: $("coachPanelCard"),
+                showCoachPanelCb: $("showCoachPanelCb")
             };
 
             function mergeDeep(t, s) {
@@ -2031,6 +1915,42 @@
                     }
                 }
                 return t;
+            }
+
+            function autoFitText(el, container) {
+                if (!el || !container) return;
+                
+                // Salva stili per non romperli
+                const oldWidth = el.style.width;
+                const oldHeight = el.style.height;
+                const oldDisplay = el.style.display;
+                const oldMaxWidth = el.style.maxWidth;
+                
+                // Forza inline per misurare l'ingombro reale del testo
+                el.style.width = 'max-content';
+                el.style.height = 'max-content';
+                el.style.display = 'inline-block';
+                el.style.maxWidth = 'none';
+
+                let min = 10, max = 800, fit = 50;
+                while (min <= max) {
+                    const mid = Math.floor((min + max) / 2);
+                    el.style.fontSize = mid + "px";
+                    if (el.scrollWidth <= container.clientWidth * 0.95 && el.scrollHeight <= container.clientHeight * 0.95) {
+                        fit = mid;
+                        min = mid + 1;
+                    } else {
+                        max = mid - 1;
+                    }
+                }
+                
+                el.style.fontSize = fit + "px";
+                
+                // Ripristina stili
+                el.style.width = oldWidth;
+                el.style.height = oldHeight;
+                el.style.display = oldDisplay;
+                el.style.maxWidth = oldMaxWidth;
             }
 
             function load() {
@@ -2379,21 +2299,37 @@
                 return seq.length ? seq : [];
             }
 
-            function groupMs() {
-                let a = cfg.groupMin;
-                let b = cfg.groupMax;
-                let x = Math.random();
+            function getRhythmFactor(rhythmProfile) {
+                switch (rhythmProfile) {
+                    case "agonisti": return 0.6 + Math.random() * 0.5; // 0.6 - 1.1
+                    case "lactate": return 0.35 + Math.random() * 0.45; // 0.35 - 0.8
+                    case "flow": return 0.8 + Math.random() * 0.6; // 0.8 - 1.4
+                    case "chaos": return 0.4 + Math.random() * 1.2; // 0.4 - 1.6
+                    default: return 0.9 + Math.random() * 0.3; // 0.9 - 1.2 base
+                }
+            }
 
-                if (cfg.mode.includes("lactate")) x = Math.pow(x, 2);
+            function stochasticDelay(min, max, rhythmProfile = "base") {
+                const base = min + Math.random() * (max - min);
+                const factor = getRhythmFactor(rhythmProfile);
+                return base * factor;
+            }
+
+            function groupMs() {
+                let rp = "base";
+                if (cfg.level === "agonisti" || cfg.level === "alto_livello") rp = "agonisti";
+                if (cfg.mode.includes("lactate") || cfg.mode === "lactate_pro") rp = "lactate";
+                if (cfg.mode === "chaos" || cfg.mode === "last_10s") rp = "chaos";
+
+                let baseSec = stochasticDelay(cfg.groupMin, cfg.groupMax, rp);
 
                 if (isAI()) {
                     let rhythm = cfg.ai.rhythm / 100;
                     let tempo = state.aiMemory.tempo || 1;
-                    let base = a + (b - a) * (1 - rhythm * Math.random());
-                    return Math.round(clamp(base * tempo, .08, 20) * 1000);
+                    baseSec = baseSec * (1.5 - rhythm) * tempo;
                 }
-
-                return Math.round((a + (b - a) * x) * 1000);
+                
+                return Math.round(clamp(baseSec, .08, 20) * 1000);
             }
 
             function speechText(s) {
@@ -2432,16 +2368,23 @@
 
             function renderClassicStim(s) {
                 if (s.type === "color") {
-                    E.classicStimulus.innerHTML = `<div class="colorBlock" style="background:${s.value}"></div>`;
+                    E.classicStimulus.innerHTML = `<div class="colorBlock popIn" style="background:${s.value}"></div>`;
                 } else if (s.type === "number") {
-                    E.classicStimulus.innerHTML = `<div class="stimText numText">${escapeHtml(s.value || s.name)}</div>`;
+                    E.classicStimulus.innerHTML = `<div class="stimText numText popIn">${escapeHtml(s.value || s.name)}</div>`;
                 } else {
-                    E.classicStimulus.innerHTML = `<div class="stimText">${escapeHtml((s.value || s.name || "").toUpperCase())}</div>`;
+                    E.classicStimulus.innerHTML = `<div class="stimText popIn">${escapeHtml((s.value || s.name || "").toUpperCase())}</div>`;
                 }
 
                 E.classicAction.textContent = s.type === "color" ? s.name : (s.value || s.name);
-                E.classicCue.className = "cue";
+                E.classicCue.className = "cue popIn";
                 E.classicCue.textContent = (s.technique || "").trim() || "Reagisci";
+
+                if (navigator.vibrate) navigator.vibrate(25);
+
+                requestAnimationFrame(() => {
+                    const textEl = E.classicStimulus.querySelector('.stimText');
+                    if (textEl) autoFitText(textEl, E.classicStimulus);
+                });
             }
 
             function blankClassic() {
@@ -2562,7 +2505,6 @@
 
             function moveTo(p, kind = "normal") {
                 state.at = p;
-                clearStimulus();
 
                 const sec = moveSpeed(kind);
 
@@ -2986,30 +2928,130 @@
             function playAI() {
                 if (state.phase !== "live") return;
 
+                if (cfg.mode === "sparring") return playSparringAI();
+                if (cfg.mode === "anticipation") return playAnticipationAI();
+                if (cfg.mode === "counterattack") return playCounterattackAI();
+                if (cfg.mode === "no_feint") return playNoFeintAI();
+                if (cfg.mode === "distance") return playDistanceAI();
+                if (cfg.mode === "pressure") return playPressureAI();
+                if (cfg.mode === "golden_point") return playGoldenPointAI();
+                if (cfg.mode === "defense_only") return playDefenseOnlyAI();
+                if (cfg.mode === "lactate_pro") return playLactateProAI();
+
                 const action = aiDecideAction();
                 aiRemember(action);
 
-                if (action === "pressure") {
-                    aiPressure(() => later(nextGroup, groupMs()));
-                    return;
-                }
-
-                if (action === "feint") {
-                    nearFeint(() => later(nextGroup, groupMs()));
-                    return;
-                }
-
-                if (action === "attack") {
-                    aiAttack(() => later(nextGroup, groupMs()));
-                    return;
-                }
-
-                if (action === "rhythm") {
-                    aiRhythmChange(() => later(nextGroup, groupMs()));
-                    return;
-                }
-
+                if (action === "pressure") return aiPressure(() => later(nextGroup, groupMs()));
+                if (action === "feint") return nearFeint(() => later(nextGroup, groupMs()));
+                if (action === "attack") return aiAttack(() => later(nextGroup, groupMs()));
+                if (action === "rhythm") return aiRhythmChange(() => later(nextGroup, groupMs()));
                 aiStudy(() => later(nextGroup, groupMs()));
+            }
+
+            function playSparringAI() {
+                let st = state.aiMemory.sparringState || "study";
+                let nextAction = "study";
+                let r = Math.random();
+                if (st === "study") {
+                    if (r < 0.4) nextAction = "pressure";
+                    else if (r < 0.65) nextAction = "feint";
+                    else if (r < 0.85) nextAction = "attack";
+                    else nextAction = "study";
+                } else if (st === "pressure") {
+                    if (r < 0.45) nextAction = "attack";
+                    else if (r < 0.8) nextAction = "feint";
+                    else nextAction = "escape";
+                } else if (st === "feint") {
+                    if (r < 0.3) nextAction = "attack";
+                    else nextAction = "escape";
+                } else if (st === "attack") {
+                    if (r < 0.4) nextAction = "combo";
+                    else nextAction = "escape";
+                } else {
+                    nextAction = "study";
+                }
+                
+                state.aiMemory.sparringState = nextAction;
+                
+                if (nextAction === "study") aiStudy(() => later(nextGroup, groupMs()));
+                else if (nextAction === "pressure") aiPressure(() => later(nextGroup, groupMs()));
+                else if (nextAction === "feint") nearFeint(() => later(nextGroup, groupMs()));
+                else if (nextAction === "attack" || nextAction === "combo") aiAttack(() => later(nextGroup, groupMs()));
+                else if (nextAction === "escape") {
+                    moveTo(pointFor("escape"), "escape");
+                    later(nextGroup, groupMs());
+                }
+            }
+
+            function playAnticipationAI() {
+                let r = Math.random() * 100;
+                if (r < cfg.fakePct) return nearFeint(() => later(nextGroup, groupMs()));
+                return aiAttack(() => later(nextGroup, groupMs()));
+            }
+
+            function playCounterattackAI() {
+                let s = chooseStim();
+                if (!s) return later(nextGroup, groupMs());
+                
+                moveTo(pointFor("inside"), "attack");
+                armStimulus(s, () => {
+                    if (state.phase !== "live") return;
+                    setTimeout(() => audioFor(s, true), rand(100, 300));
+                    later(() => {
+                        resetOctagon();
+                        moveTo(pointFor("escape"), "escape");
+                        later(nextGroup, groupMs());
+                    }, cfg.activeSec * 1000);
+                });
+            }
+
+            function playNoFeintAI() {
+                let r = Math.random() * 100;
+                if (r < cfg.fakePct) {
+                    moveTo(pointFor("near"), "feint");
+                    later(() => {
+                        resetOctagon();
+                        moveTo(pointFor("escape"), "escape");
+                        later(nextGroup, groupMs());
+                    }, rand(150, 450));
+                } else {
+                    aiAttack(() => later(nextGroup, groupMs()));
+                }
+            }
+
+            function playDistanceAI() {
+                let r = Math.random();
+                let dest = r < 0.33 ? "outside" : (r < 0.66 ? "near" : "inside");
+                moveTo(pointFor(dest), "drift");
+                if (dest === "inside") aiAttack(() => later(nextGroup, groupMs()));
+                else later(nextGroup, groupMs());
+            }
+
+            function playPressureAI() {
+                let r = Math.random() * 100;
+                if (r < 60) return aiPressure(() => later(nextGroup, groupMs()));
+                if (r < 80) return nearFeint(() => later(nextGroup, groupMs()));
+                return aiAttack(() => later(nextGroup, groupMs()));
+            }
+
+            function playGoldenPointAI() {
+                let r = Math.random() * 100;
+                if (r < 40) return aiStudy(() => later(nextGroup, groupMs()));
+                if (r < 80) return nearFeint(() => later(nextGroup, groupMs()));
+                return aiAttack(() => later(nextGroup, groupMs() * 2));
+            }
+
+            function playDefenseOnlyAI() {
+                // Focus on fast escapes/feints rather than deep attacks
+                let r = Math.random();
+                if (r < 0.5) return nearFeint(() => later(nextGroup, groupMs()));
+                return aiAttack(() => later(nextGroup, groupMs()));
+            }
+
+            function playLactateProAI() {
+                let r = Math.random() * 100;
+                if (r < 15) return nearFeint(() => later(nextGroup, groupMs()));
+                return aiAttack(() => later(nextGroup, groupMs()));
             }
 
             function nextGroup() {
@@ -3197,7 +3239,13 @@
                 if (isOctagon()) {
                     resetOctagon();
                     E.octAction.textContent = "FINE";
-                    E.octCue.textContent = `Stimoli ${state.stats.stim} • Finte ${state.stats.fake} • Pressione ${state.stats.pressure}`;
+                    if (cfg.mode === "coach_mode") {
+                        E.octCue.textContent = `Corretti ${state.stats.correct} • Errori ${state.stats.errors} • Finte Extra ${state.stats.falseStarts}`;
+                    } else if (cfg.mode === "distance") {
+                        E.octCue.textContent = `Cambi Distanza ${state.stats.distanceChanges} • Pressione ${state.stats.pressure}`;
+                    } else {
+                        E.octCue.textContent = `Stimoli ${state.stats.stim} • Finte ${state.stats.fake} • Pressione ${state.stats.pressure}`;
+                    }
                 } else {
                     E.classicStimulus.innerHTML = '<div class="stimText">FINE</div>';
                     E.classicAction.textContent = "FINE";
@@ -3222,15 +3270,19 @@
 
                 state.round = 0;
                 state.remain = cfg.roundSec;
-                state.stats = { stim: 0, fake: 0, move: 0, combo: 0, pressure: 0, breath: 0 };
+                state.stats = { stim: 0, fake: 0, move: 0, combo: 0, pressure: 0, breath: 0, distanceChanges: 0, correct: 0, errors: 0, falseStarts: 0, slow: 0, stimulusDensity: 0 };
                 state.recent = [];
                 state.last = null;
                 state.aiMemory = {
                     lastActions: [],
                     pressureLevel: 0,
                     tempo: 1,
-                    sameSide: 0
+                    sameSide: 0,
+                    sparringState: "study"
                 };
+                state.currentDist = null;
+                state.lastDist = null;
+                state.anticipationTriggered = false;
 
                 renderStats();
                 countdown();
@@ -3365,6 +3417,7 @@
 
                 $("freeMove").checked = !!draft.movement.freeMove;
                 $("showTrace").checked = !!draft.movement.showTrace;
+                $("showCoachPanelCb").checked = !!draft.showCoachPanel;
 
                 $("aiStyle").value = draft.ai.style;
                 $("aiPressure").value = draft.ai.pressure;
@@ -3407,6 +3460,7 @@
 
                 draft.movement.freeMove = $("freeMove").checked;
                 draft.movement.showTrace = $("showTrace").checked;
+                draft.showCoachPanel = $("showCoachPanelCb").checked;
 
                 draft.ai.style = $("aiStyle").value;
                 draft.ai.pressure = Number($("aiPressure").value);
@@ -3437,6 +3491,16 @@
                 cfg = old;
             }
 
+            function updateCoachPanelVisibility() {
+                if (E.coachPanelCard) {
+                    if (cfg.mode === "coach_mode" || cfg.showCoachPanel) {
+                        E.coachPanelCard.style.display = "block";
+                    } else {
+                        E.coachPanelCard.style.display = "none";
+                    }
+                }
+            }
+
             function applyForm() {
                 applyFormToDraft();
 
@@ -3457,6 +3521,7 @@
 
                 updateHeader();
                 buttons();
+                updateCoachPanelVisibility();
 
                 return true;
             }
@@ -3696,6 +3761,44 @@
                     Speech.speak("Audio pronto");
                 };
 
+                function applyCoachFeedback() {
+                    let score = state.stats.correct * 1.0 - state.stats.errors * 1.2 - state.stats.falseStarts * 1.5 - state.stats.slow * 0.8;
+                    let base = 5;
+                    let diffLevel = clamp(base + score / 10, 1, 10);
+                    let mult = diffLevel / 5; // 1 = normal, >1 harder, <1 easier
+                    
+                    cfg.ai.pressure = clamp(Math.round(DEFAULTS.ai.pressure * mult), 0, 100);
+                    cfg.ai.rhythm = clamp(Math.round(DEFAULTS.ai.rhythm * mult), 0, 100);
+                    cfg.maxCombo = clamp(Math.round(DEFAULTS.maxCombo * mult), 1, 5);
+                    cfg.fakePct = clamp(Math.round(DEFAULTS.fakePct * (1 + state.stats.falseStarts * 0.1)), 0, 80);
+                    cfg.ai.feints = clamp(Math.round(DEFAULTS.ai.feints * (1 + state.stats.falseStarts * 0.1)), 0, 100);
+
+                    if (E.coachDiffDisplay) {
+                        E.coachDiffDisplay.textContent = diffLevel.toFixed(1) + " / 10.0";
+                    }
+                }
+
+                $("fbCorrectBtn").onclick = () => {
+                    state.stats.correct++;
+                    applyCoachFeedback();
+                    banner("Corretto: Livello +");
+                };
+                $("fbErrorBtn").onclick = () => {
+                    state.stats.errors++;
+                    applyCoachFeedback();
+                    banner("Errore registrato");
+                };
+                $("fbFeintBtn").onclick = () => {
+                    state.stats.falseStarts++;
+                    applyCoachFeedback();
+                    banner("Finte aumentate");
+                };
+                $("fbSlowBtn").onclick = () => {
+                    state.stats.slow++;
+                    applyCoachFeedback();
+                    banner("Lento: Complessità ridotta");
+                };
+
                 document.addEventListener("pointerdown", () => Audio.unlock(), { once: true, passive: true });
 
                 document.addEventListener("keydown", e => {
@@ -3713,6 +3816,13 @@
                 document.addEventListener("visibilitychange", () => {
                     if (document.hidden && (state.phase === "live" || state.phase === "rest")) pause();
                 });
+
+                window.addEventListener("resize", () => {
+                    if (E.classicStimulus.style.display !== "none") {
+                        const textEl = E.classicStimulus.querySelector('.stimText');
+                        if (textEl) autoFitText(textEl, E.classicStimulus);
+                    }
+                });
             }
 
             load();
@@ -3721,6 +3831,7 @@
             setPhase("ready");
             updateHeader();
             renderStats();
+            updateCoachPanelVisibility();
             resetClassic();
             resetOctagon();
             moveTo([50, 14], "drift");
