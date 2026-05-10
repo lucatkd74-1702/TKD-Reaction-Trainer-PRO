@@ -2058,8 +2058,8 @@
                             </div>
                             <div class="box">
                                 <div class="label">IP / host PC server Node</div>
-                                <input id="tkServerHost" type="text" placeholder="127.0.0.1 oppure 192.168.1.50">
-                                <div class="tiny" style="margin-top:6px">Se usi tablet nella stessa rete, inserisci l’IP del PC dove è avviato node server.js.</div>
+                                <input id="tkServerHost" type="text" placeholder="auto oppure IP PC, es. 192.168.1.50">
+                                <div class="tiny" style="margin-top:6px">Usa auto se apri l’app da http://IP_PC:PORTA. Da tablet puoi anche inserire manualmente l’IP del PC.</div>
                             </div>
                             <div class="box">
                                 <div class="label">Porta server Node</div>
@@ -2203,7 +2203,7 @@
                     bodyPoints: 2,
                     headPoints: 3,
                     windowSec: 1.0,
-                    serverHost: "127.0.0.1",
+                    serverHost: "auto",
                     serverPort: 3000,
                     resetOnStart: true,
                     blueScore: 0,
@@ -2638,7 +2638,7 @@
                 cfg.tkstrike.bodyPoints = clamp(Number(cfg.tkstrike.bodyPoints) || 2, 1, 10);
                 cfg.tkstrike.headPoints = clamp(Number(cfg.tkstrike.headPoints) || 3, 1, 10);
                 cfg.tkstrike.windowSec = clamp(Number(cfg.tkstrike.windowSec) || 1.0, 0.1, 5);
-                cfg.tkstrike.serverHost = String(cfg.tkstrike.serverHost || "127.0.0.1").trim() || "127.0.0.1";
+                cfg.tkstrike.serverHost = normalizeTkBridgeHost(cfg.tkstrike.serverHost || "auto");
                 cfg.tkstrike.serverPort = clamp(parseInt(cfg.tkstrike.serverPort, 10) || 3000, 1, 65535);
                 cfg.tkstrike.blueScore = Number(cfg.tkstrike.blueScore) || 0;
                 cfg.tkstrike.redScore = Number(cfg.tkstrike.redScore) || 0;
@@ -2751,16 +2751,38 @@
 
             let tkWs = null;
 
+            function normalizeTkBridgeHost(raw) {
+                let host = String(raw || "auto").trim();
+                if (!host || host.toLowerCase() === "auto") return "auto";
+                host = host.replace(/^https?:\/\//i, "").replace(/^wss?:\/\//i, "").split("/")[0];
+                if (host.includes(":")) host = host.split(":")[0];
+                return host || "auto";
+            }
+
+            function effectiveTkBridgeHost() {
+                let host = normalizeTkBridgeHost(cfg.tkstrike?.serverHost);
+                if (host === "auto" || host === "0.0.0.0") {
+                    host = window.location.hostname || "127.0.0.1";
+                }
+                // Se l'app viene aperta da tablet tramite http://IP_PC:3000,
+                // non deve provare a collegarsi a 127.0.0.1 del tablet.
+                if ((host === "127.0.0.1" || host === "localhost") && window.location.hostname && !["127.0.0.1", "localhost"].includes(window.location.hostname)) {
+                    host = window.location.hostname;
+                }
+                return host;
+            }
+
             function tkBridgeHttpUrl() {
-                const host = String(cfg.tkstrike?.serverHost || "127.0.0.1").trim() || "127.0.0.1";
+                const host = effectiveTkBridgeHost();
                 const port = parseInt(cfg.tkstrike?.serverPort, 10) || 3000;
                 return `http://${host}:${port}`;
             }
 
             function tkBridgeWsUrl() {
-                const host = String(cfg.tkstrike?.serverHost || "127.0.0.1").trim() || "127.0.0.1";
+                const host = effectiveTkBridgeHost();
                 const port = parseInt(cfg.tkstrike?.serverPort, 10) || 3000;
-                return `ws://${host}:${port}`;
+                const proto = window.location.protocol === "https:" ? "wss" : "ws";
+                return `${proto}://${host}:${port}`;
             }
 
             function connectTkstrikeBridge() {
@@ -2807,7 +2829,7 @@
                 const el = $("tkBridgeInfo");
                 if (!el || !cfg.tkstrike) return;
                 el.textContent = cfg.tkstrike.connected
-                    ? `Bridge collegato a ${tkBridgeHttpUrl()}. TKStrike può inviare eventi.`
+                    ? `Bridge collegato a ${tkBridgeHttpUrl()} (WebSocket: ${tkBridgeWsUrl()}). TKStrike può inviare eventi.`
                     : `Bridge non collegato. Avvia server.js sul PC e configura TKStrike su ${tkBridgeHttpUrl()}`;
             }
 
@@ -4526,7 +4548,7 @@
                     $("tkBodyPoints").value = draft.tkstrike.bodyPoints || 2;
                     $("tkHeadPoints").value = draft.tkstrike.headPoints || 3;
                     $("tkWindowSec").value = draft.tkstrike.windowSec || 1.0;
-                    if ($("tkServerHost")) $("tkServerHost").value = draft.tkstrike.serverHost || "127.0.0.1";
+                    if ($("tkServerHost")) $("tkServerHost").value = draft.tkstrike.serverHost || "auto";
                     if ($("tkServerPort")) $("tkServerPort").value = draft.tkstrike.serverPort || 3000;
                     $("tkResetOnStart").checked = !!draft.tkstrike.resetOnStart;
                 }
@@ -4582,7 +4604,7 @@
                 draft.tkstrike.bodyPoints = Number($("tkBodyPoints").value) || 2;
                 draft.tkstrike.headPoints = Number($("tkHeadPoints").value) || 3;
                 draft.tkstrike.windowSec = Number($("tkWindowSec").value) || 1.0;
-                if ($("tkServerHost")) draft.tkstrike.serverHost = ($("tkServerHost").value || "127.0.0.1").trim() || "127.0.0.1";
+                if ($("tkServerHost")) draft.tkstrike.serverHost = normalizeTkBridgeHost($("tkServerHost").value || "auto");
                 if ($("tkServerPort")) draft.tkstrike.serverPort = Number($("tkServerPort").value) || 3000;
                 draft.tkstrike.resetOnStart = $("tkResetOnStart").checked;
 
@@ -4637,6 +4659,9 @@
                     return false;
                 }
 
+                const oldTkHost = cfg.tkstrike?.serverHost;
+                const oldTkPort = cfg.tkstrike?.serverPort;
+
                 cfg = clone(draft);
                 normalize();
                 save();
@@ -4646,6 +4671,12 @@
                 updateHeader();
                 buttons();
                 updateCoachPanelVisibility();
+                renderTkstrikeScore();
+                updateTkBridgeInfo();
+
+                if (oldTkHost !== cfg.tkstrike?.serverHost || oldTkPort !== cfg.tkstrike?.serverPort) {
+                    connectTkstrikeBridge();
+                }
 
                 return true;
             }
@@ -4832,6 +4863,29 @@
                         draft.tkstrike.redOutReactions = [];
                     }
                     banner("Punteggio TKStrike azzerato");
+                };
+
+                function applyTkServerFieldsToDraft() {
+                    if (!draft) draft = clone(cfg);
+                    if (!draft.tkstrike) draft.tkstrike = clone(DEFAULTS.tkstrike);
+                    const hostEl = $("tkServerHost");
+                    const portEl = $("tkServerPort");
+                    if (hostEl) draft.tkstrike.serverHost = normalizeTkBridgeHost(hostEl.value || "auto");
+                    if (portEl) draft.tkstrike.serverPort = Number(portEl.value) || 3000;
+                }
+
+                if ($("tkReconnect")) $("tkReconnect").onclick = () => {
+                    applyTkServerFieldsToDraft();
+                    cfg.tkstrike.serverHost = draft.tkstrike.serverHost;
+                    cfg.tkstrike.serverPort = draft.tkstrike.serverPort;
+                    normalize();
+                    save();
+                    updateHeader();
+                    renderTkstrikeScore();
+                    updateTkBridgeInfo();
+                    connectTkstrikeBridge();
+                    banner("Connessione TKStrike aggiornata: " + tkBridgeHttpUrl());
+                    later(() => banner(""), 1600);
                 };
 
                 $("addColor").onclick = () => {
