@@ -1,4 +1,4 @@
-<!doctype html>
+        <!doctype html>
 <html lang="it">
 
 <head>
@@ -771,6 +771,147 @@
             display: none !important;
         }
 
+
+        .tkScorePanel {
+            margin-top: 8px;
+            padding: 10px;
+            display: grid;
+            grid-template-columns: minmax(64px, .6fr) minmax(0, 2fr) minmax(0, 2fr) minmax(80px, .75fr) minmax(80px, .75fr);
+            gap: 8px;
+            align-items: stretch;
+            justify-content: center;
+            border-color: rgba(89, 167, 255, .28);
+        }
+
+        .tkScoreBox {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            border: 1px solid rgba(39, 50, 70, .9);
+            background: rgba(16, 23, 34, .55);
+            border-radius: 16px;
+            padding: 7px 10px;
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+            min-width: 0;
+            min-height: 58px;
+        }
+
+        .tkScoreBox .k {
+            max-width: 100%;
+            font-size: clamp(10px, 1.45vw, 15px);
+            color: var(--muted);
+            font-weight: 1000;
+            text-transform: uppercase;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .tkScoreBox .v {
+            font-size: clamp(18px, 2.4vw, 32px);
+            font-weight: 1000;
+            line-height: .9;
+        }
+
+        .tkScoreBox:nth-child(2),
+        .tkScoreBox:nth-child(3) {
+            min-height: clamp(82px, 11svh, 150px);
+            border-width: 2px;
+            box-shadow: inset 0 3px 0 rgba(255,255,255,.16), 0 12px 32px rgba(0,0,0,.35);
+        }
+
+        .tkScoreBox:nth-child(2) {
+            background: linear-gradient(180deg, rgba(22,137,255,.92), rgba(0,50,150,.92));
+            border-color: rgba(89,167,255,.75);
+        }
+
+        .tkScoreBox:nth-child(3) {
+            background: linear-gradient(180deg, rgba(255,47,85,.92), rgba(142,0,24,.92));
+            border-color: rgba(255,107,130,.75);
+        }
+
+        .tkScoreBox:nth-child(2) .k,
+        .tkScoreBox:nth-child(3) .k {
+            color: rgba(255,255,255,.86);
+            font-size: clamp(15px, 2.3vw, 34px);
+            letter-spacing: .3px;
+        }
+
+        .tkScoreBox:nth-child(2) .v,
+        .tkScoreBox:nth-child(3) .v {
+            color: #fff;
+            font-size: clamp(64px, 10vw, 150px);
+            text-shadow: 0 8px 28px rgba(0,0,0,.55);
+        }
+
+        .tkBlue { color: #59a7ff; }
+        .tkRed { color: #ff6b82; }
+        .tkGood { color: var(--good); }
+        .tkBad { color: var(--bad); }
+
+        .tkReactionPanel {
+            margin-top: 8px;
+            padding: 8px 10px;
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 8px;
+            border-color: rgba(69, 240, 176, .24);
+        }
+
+        .tkReactionPanel .tkScoreBox {
+            min-height: 54px;
+        }
+
+        .tkReactionPanel .tkScoreBox .v {
+            font-size: clamp(14px, 1.8vw, 24px);
+            line-height: 1.05;
+            text-align: center;
+            white-space: normal;
+        }
+
+        @media(max-width:760px) {
+            .tkScorePanel,
+            .tkReactionPanel {
+                grid-template-columns: 1fr 1fr;
+            }
+            .tkScoreBox:first-child,
+            .tkScoreBox:nth-child(4),
+            .tkScoreBox:nth-child(5) {
+                min-height: 42px;
+            }
+            .tkScoreBox:nth-child(2),
+            .tkScoreBox:nth-child(3) {
+                min-height: 96px;
+            }
+        }
+
+        @media(orientation:landscape) and (max-height:560px) {
+            .tkScorePanel {
+                padding: 5px 7px;
+                gap: 5px;
+                grid-template-columns: minmax(52px,.55fr) minmax(0,2fr) minmax(0,2fr) minmax(64px,.7fr) minmax(64px,.7fr);
+            }
+            .tkScoreBox {
+                min-height: 34px;
+                padding: 4px 6px;
+                border-radius: 12px;
+            }
+            .tkScoreBox:nth-child(2),
+            .tkScoreBox:nth-child(3) {
+                min-height: 54px;
+            }
+            .tkScoreBox:nth-child(2) .v,
+            .tkScoreBox:nth-child(3) .v {
+                font-size: clamp(38px, 12svh, 72px);
+            }
+            .tkScoreBox:nth-child(2) .k,
+            .tkScoreBox:nth-child(3) .k {
+                font-size: clamp(10px, 3svh, 16px);
+            }
+        }
+
         @media(max-width:980px) {
             .settingsBody {
                 flex-direction: column;
@@ -1036,6 +1177,357 @@
                 font-size: clamp(260px, 42vmin, 760px);
             }
         }
+    
+
+        /* === OTTIMIZZAZIONE LAYOUT TKSTRIKE - SOLO CSS, nessuna modifica alla logica === */
+        .app {
+            gap: 6px;
+            grid-template-rows: auto auto minmax(0, 1fr) auto;
+        }
+
+        .hud {
+            padding: 5px 8px;
+        }
+
+        .stage {
+            padding: 6px;
+        }
+
+        .bottom {
+            gap: 5px;
+        }
+
+        .controls {
+            padding: 5px 8px;
+            min-height: 38px;
+        }
+
+        .btn {
+            min-height: 38px;
+            padding: 7px 10px;
+            border-radius: 12px;
+        }
+
+        .stats {
+            margin-top: 4px !important;
+            padding: 4px 6px;
+            gap: 5px;
+            min-height: 32px;
+        }
+
+        .stat {
+            padding: 4px 6px;
+            border-radius: 11px;
+            gap: 4px;
+        }
+
+        .stat .k {
+            font-size: 8.5px;
+        }
+
+        .stat .v {
+            font-size: 13px;
+        }
+
+        .tkScorePanel {
+            margin-top: 4px;
+            padding: 5px 7px;
+            gap: 6px;
+            grid-template-columns: minmax(54px, .55fr) minmax(0, 1.65fr) minmax(0, 1.65fr) minmax(64px, .7fr) minmax(64px, .7fr);
+        }
+
+        .tkScoreBox {
+            min-height: 34px;
+            padding: 4px 6px;
+            border-radius: 12px;
+            gap: 2px;
+        }
+
+        .tkScoreBox .k {
+            font-size: clamp(8px, 1.05vw, 12px);
+        }
+
+        .tkScoreBox .v {
+            font-size: clamp(14px, 1.6vw, 24px);
+        }
+
+        .tkScoreBox:nth-child(2),
+        .tkScoreBox:nth-child(3) {
+            min-height: clamp(54px, 7svh, 92px);
+        }
+
+        .tkScoreBox:nth-child(2) .k,
+        .tkScoreBox:nth-child(3) .k {
+            font-size: clamp(11px, 1.6vw, 22px);
+        }
+
+        .tkScoreBox:nth-child(2) .v,
+        .tkScoreBox:nth-child(3) .v {
+            font-size: clamp(46px, 7.2vw, 110px);
+        }
+
+        .tkReactionPanel {
+            margin-top: 4px;
+            padding: 4px 6px;
+            gap: 5px;
+        }
+
+        .tkReactionPanel .tkScoreBox {
+            min-height: 34px;
+            padding: 4px 5px;
+        }
+
+        .tkReactionPanel .tkScoreBox .v {
+            font-size: clamp(10px, 1.2vw, 17px);
+        }
+
+        @media(orientation:landscape) and (max-height:760px) {
+            .topbar { gap: 6px; }
+            h1 { font-size: clamp(15px, 2.2vw, 23px); }
+            .sub { font-size: clamp(9px, 1.2vw, 12px); }
+            .hud { min-height: 32px; padding: 3px 6px; }
+            .key { font-size: 8px; }
+            #timeTxt { font-size: clamp(19px, 3.1vw, 34px); }
+            .chip { font-size: 9px; padding: 3px 6px; }
+            .classicWrap, .octagonWrap { gap: 4px; }
+            .info { min-height: 34px; }
+            .action { font-size: clamp(18px, 4vw, 42px); }
+            .cue { font-size: clamp(11px, 1.8vw, 17px); min-height: 18px; }
+            .controls { min-height: 30px; padding: 3px 6px; }
+            .btn { min-height: 30px; padding: 4px 8px; }
+            .stats { min-height: 24px; padding: 2px 5px; }
+            .stat { padding: 2px 5px; }
+            .stat .k { font-size: 7.5px; }
+            .stat .v { font-size: 11px; }
+            .tkScorePanel { padding: 3px 5px; gap: 4px; }
+            .tkScoreBox { min-height: 26px; padding: 2px 4px; }
+            .tkScoreBox:nth-child(2), .tkScoreBox:nth-child(3) { min-height: 44px; }
+            .tkScoreBox:nth-child(2) .v, .tkScoreBox:nth-child(3) .v { font-size: clamp(34px, 8svh, 66px); }
+            .tkReactionPanel { padding: 2px 5px; gap: 4px; }
+            .tkReactionPanel .tkScoreBox { min-height: 26px; }
+            .tkReactionPanel .tkScoreBox .v { font-size: clamp(9px, 1.7svh, 13px); }
+        }
+
+        @media(max-width:760px) {
+            .tkScorePanel,
+            .tkReactionPanel {
+                grid-template-columns: 1fr 1fr;
+            }
+            .tkScoreBox:nth-child(2),
+            .tkScoreBox:nth-child(3) {
+                min-height: 64px;
+            }
+            .tkScoreBox:nth-child(2) .v,
+            .tkScoreBox:nth-child(3) .v {
+                font-size: clamp(42px, 14vw, 84px);
+            }
+        }
+
+    
+
+        /* === LAYOUT PROPORZIONATO: più spazio agli stimoli, statistiche dettagliate solo a fine round === */
+        .app {
+            grid-template-rows: auto auto minmax(0, 1fr) auto;
+            gap: 6px;
+        }
+
+        .topbar {
+            min-height: 0;
+        }
+
+        .hud {
+            padding: 5px 8px;
+            min-height: 38px;
+        }
+
+        .stage {
+            padding: 8px;
+            min-height: 0;
+        }
+
+        .classicWrap,
+        .octagonWrap {
+            grid-template-rows: minmax(0, 1fr) auto;
+            gap: 6px;
+        }
+
+        .classicStimulus {
+            min-height: 0;
+        }
+
+        .octagon {
+            width: min(100%, 100cqh);
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .bottom {
+            gap: 5px;
+        }
+
+        .controls {
+            padding: 5px 8px;
+            min-height: 38px;
+        }
+
+        .btn {
+            min-height: 38px;
+            padding: 7px 10px;
+        }
+
+        /* Le statistiche complete non rubano più spazio allo stimolo durante l'allenamento */
+        .stats,
+        #tkReactionPanel {
+            display: none !important;
+        }
+
+        #tkScorePanel {
+            margin-top: 4px;
+            padding: 5px 7px;
+            gap: 6px;
+            grid-template-columns: minmax(54px, .55fr) minmax(0, 1.7fr) minmax(0, 1.7fr) minmax(58px, .55fr) minmax(58px, .55fr);
+        }
+
+        #tkScorePanel .tkScoreBox {
+            min-height: 34px;
+            padding: 4px 6px;
+        }
+
+        #tkScorePanel .tkScoreBox:nth-child(2),
+        #tkScorePanel .tkScoreBox:nth-child(3) {
+            min-height: clamp(50px, 7svh, 86px);
+        }
+
+        #tkScorePanel .tkScoreBox:nth-child(2) .v,
+        #tkScorePanel .tkScoreBox:nth-child(3) .v {
+            font-size: clamp(44px, 7.2vw, 106px);
+            line-height: .85;
+        }
+
+        #tkScorePanel .tkScoreBox:nth-child(2) .k,
+        #tkScorePanel .tkScoreBox:nth-child(3) .k {
+            font-size: clamp(10px, 1.4vw, 20px);
+        }
+
+        .endStatsOverlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 90;
+            padding: calc(12px + var(--safeTop)) calc(12px + var(--safeRight)) calc(12px + var(--safeBottom)) calc(12px + var(--safeLeft));
+            background: rgba(5, 6, 8, .97);
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .endStatsOverlay.show {
+            display: block;
+        }
+
+        .endStatsCard {
+            max-width: 1180px;
+            margin: 0 auto;
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.018));
+            box-shadow: var(--shadow);
+            padding: 14px;
+        }
+
+        .endStatsHead {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+            margin-bottom: 12px;
+        }
+
+        .endStatsTitle {
+            font-size: clamp(20px, 4vw, 34px);
+            font-weight: 1000;
+            line-height: 1;
+        }
+
+        .endStatsGrid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .endStatsBox {
+            border: 1px solid rgba(39, 50, 70, .9);
+            background: rgba(16, 23, 34, .55);
+            border-radius: 18px;
+            padding: 12px;
+            min-width: 0;
+        }
+
+        .endStatsBox h3 {
+            margin: 0 0 10px;
+            font-size: clamp(15px, 2.4vw, 22px);
+        }
+
+        .endStatsLine {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            border-top: 1px solid rgba(255,255,255,.08);
+            padding: 8px 0;
+            font-size: clamp(13px, 2vw, 18px);
+            font-weight: 800;
+        }
+
+        .endStatsLine:first-of-type {
+            border-top: 0;
+        }
+
+        .endStatsLine span:first-child {
+            color: var(--muted);
+        }
+
+        .endStatsLine span:last-child {
+            text-align: right;
+            font-weight: 1000;
+        }
+
+        @media(orientation:landscape) and (max-height:760px) {
+            .app { gap: 4px; padding-top: calc(5px + var(--safeTop)); padding-bottom: calc(5px + var(--safeBottom)); }
+            h1 { font-size: clamp(15px, 2.1vw, 22px); }
+            .sub { font-size: clamp(9px, 1.15vw, 12px); }
+            .hud { min-height: 30px; padding: 3px 6px; }
+            .key { font-size: 8px; }
+            #timeTxt { font-size: clamp(19px, 3vw, 32px); }
+            .chip { font-size: 9px; padding: 3px 6px; }
+            .stage { padding: 4px; }
+            .info { min-height: 32px; }
+            .action { font-size: clamp(18px, 3.8vw, 40px); }
+            .cue { font-size: clamp(11px, 1.75vw, 16px); min-height: 18px; }
+            .controls { min-height: 30px; padding: 3px 6px; }
+            .btn { min-height: 30px; padding: 4px 8px; }
+            #tkScorePanel { padding: 3px 5px; gap: 4px; }
+            #tkScorePanel .tkScoreBox { min-height: 26px; padding: 2px 4px; }
+            #tkScorePanel .tkScoreBox:nth-child(2),
+            #tkScorePanel .tkScoreBox:nth-child(3) { min-height: 42px; }
+            #tkScorePanel .tkScoreBox:nth-child(2) .v,
+            #tkScorePanel .tkScoreBox:nth-child(3) .v { font-size: clamp(32px, 7.4svh, 62px); }
+        }
+
+        @media(max-width:760px) {
+            #tkScorePanel {
+                grid-template-columns: .7fr 1.35fr 1.35fr;
+            }
+            #tkScorePanel .tkScoreBox:nth-child(4),
+            #tkScorePanel .tkScoreBox:nth-child(5) {
+                display: none;
+            }
+            .endStatsGrid {
+                grid-template-columns: 1fr;
+            }
+        }
+
     </style>
 </head>
 
@@ -1146,6 +1638,22 @@
                 <div class="stat"><span class="k">Respiro</span><span class="v" id="stBreath">0</span></div>
             </div>
 
+            <div class="card tkScorePanel" id="tkScorePanel">
+                <div class="tkScoreBox"><span class="k">TKStrike</span><span class="v" id="tkStatusTxt">OFF</span></div>
+                <div class="tkScoreBox"><span class="k" id="tkBlueNameSmall">Blu</span><span class="v tkBlue" id="tkBlueScoreTxt">0</span></div>
+                <div class="tkScoreBox"><span class="k" id="tkRedNameSmall">Rosso</span><span class="v tkRed" id="tkRedScoreTxt">0</span></div>
+                <div class="tkScoreBox"><span class="k">Validi</span><span class="v tkGood" id="tkValidTxt">0</span></div>
+                <div class="tkScoreBox"><span class="k">Scartati</span><span class="v tkBad" id="tkInvalidTxt">0</span></div>
+            </div>
+
+            <div class="card tkReactionPanel" id="tkReactionPanel">
+                <div class="tkScoreBox"><span class="k">Blu validi</span><span class="v tkBlue" id="tkBlueValidRtTxt">—</span></div>
+                <div class="tkScoreBox"><span class="k">Rosso validi</span><span class="v tkRed" id="tkRedValidRtTxt">—</span></div>
+                <div class="tkScoreBox"><span class="k">Blu fuori</span><span class="v tkBlue" id="tkBlueOutRtTxt">—</span></div>
+                <div class="tkScoreBox"><span class="k">Rosso fuori</span><span class="v tkRed" id="tkRedOutRtTxt">—</span></div>
+                <div class="tkScoreBox"><span class="k">Più veloce</span><span class="v tkGood" id="tkFastestTxt">—</span></div>
+            </div>
+
         </footer>
 
     </div>
@@ -1180,6 +1688,7 @@
                     <button class="btn tabBtn" data-tab="flow">Flow / Audio</button>
                     <button class="btn tabBtn" data-tab="preset">Preset</button>
                     <button class="btn tabBtn" data-tab="stats">Statistiche</button>
+                    <button class="btn tabBtn" data-tab="tkstrike">TKStrike</button>
                     <button class="btn tabBtn" data-tab="avanzate">Avanzate</button>
                 </nav>
 
@@ -1531,6 +2040,55 @@
                         <div class="infoBox">Le statistiche verranno registrate automaticamente durante l'allenamento.</div>
                     </div>
 
+                    <div class="panel" data-panel="tkstrike">
+                        <div class="sectionTitle">TKStrike / Daedo</div>
+                        <div class="infoBox">
+                            Attiva TKStrike insieme alle modalità esistenti. Quando uno stimolo è acceso, il primo colpo ricevuto da TKStrike assegna il punto: BODY_HIT = punti corpo, HEAD_HIT = punti testa. Se il colpo arriva dopo lo spegnimento dello stimolo, non assegna punti.
+                        </div>
+                        <div class="grid">
+                            <div class="box">
+                                <label class="toggle">
+                                    <input id="tkEnabled" type="checkbox">
+                                    <div><b>Abilita TKStrike</b><div class="tiny">Richiede server.js attivo e URL TKStrike http://127.0.0.1:3000</div></div>
+                                </label>
+                            </div>
+                            <div class="box">
+                                <div class="label">Stato collegamento</div>
+                                <div class="infoBox" id="tkBridgeInfo">Bridge non collegato</div>
+                            </div>
+                            <div class="box">
+                                <div class="label">Nome atleta Blu</div>
+                                <input id="tkBlueName" type="text" placeholder="Atleta Blu">
+                            </div>
+                            <div class="box">
+                                <div class="label">Nome atleta Rosso</div>
+                                <input id="tkRedName" type="text" placeholder="Atleta Rosso">
+                            </div>
+                            <div class="box">
+                                <div class="label">Punti colpo corpo BODY_HIT</div>
+                                <input id="tkBodyPoints" type="number" min="1" max="10" step="1">
+                            </div>
+                            <div class="box">
+                                <div class="label">Punti colpo testa HEAD_HIT</div>
+                                <input id="tkHeadPoints" type="number" min="1" max="10" step="1">
+                            </div>
+                            <div class="box">
+                                <div class="label">Finestra temporale TKStrike (sec)</div>
+                                <input id="tkWindowSec" type="number" min="0.1" max="5" step="0.05">
+                                <div class="tiny" style="margin-top:6px">Parte quando lo stimolo appare: il primo colpo entro questa finestra assegna il punto.</div>
+                            </div>
+                            <div class="box">
+                                <label class="toggle">
+                                    <input id="tkResetOnStart" type="checkbox">
+                                    <div><b>Reset punteggio a ogni avvio</b></div>
+                                </label>
+                            </div>
+                            <div class="box">
+                                <button class="btn btnDanger" id="tkResetScore" style="width:100%">RESET PUNTEGGIO TKSTRIKE</button>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="panel" data-panel="avanzate">
                         <div class="sectionTitle">Avanzate</div>
                         <div class="grid">
@@ -1546,6 +2104,21 @@
                 </div>
             </div>
 
+        </div>
+    </section>
+
+
+
+    <section class="endStatsOverlay" id="endStatsOverlay">
+        <div class="endStatsCard">
+            <div class="endStatsHead">
+                <div>
+                    <div class="endStatsTitle">Statistiche finali</div>
+                    <div class="tiny">Riepilogo completo visualizzato al termine dei round.</div>
+                </div>
+                <button class="btn btnPrimary" id="closeEndStats">CHIUDI</button>
+            </div>
+            <div id="endStatsBody"></div>
         </div>
     </section>
 
@@ -1609,6 +2182,26 @@
                 maxCombo: 1,
                 fakePct: 5,
                 showCoachPanel: false,
+
+                tkstrike: {
+                    enabled: false,
+                    blueName: "Atleta Blu",
+                    redName: "Atleta Rosso",
+                    bodyPoints: 2,
+                    headPoints: 3,
+                    windowSec: 1.0,
+                    resetOnStart: true,
+                    blueScore: 0,
+                    redScore: 0,
+                    validHits: 0,
+                    invalidHits: 0,
+                    blueValidReactions: [],
+                    redValidReactions: [],
+                    blueOutReactions: [],
+                    redOutReactions: [],
+                    connected: false,
+                    lastEvent: ""
+                },
 
                 advanced: {
                     lactatePro: { workBlockSec: 20, restBlockSec: 10, blockCount: 6, stimulusDensity: 1.5 },
@@ -1738,7 +2331,14 @@
                     pressureLevel: 0,
                     tempo: 1,
                     sameSide: 0
-                }
+                },
+                tkWindowOpen: false,
+                tkWindowUsed: false,
+                tkWindowId: 0,
+                tkCurrentStimulus: null,
+                tkStimulusStartedAt: 0,
+                tkWindowExpiresAt: 0,
+                tkLastHit: null
             };
 
             let wakeLock = null;
@@ -1902,7 +2502,27 @@
                 banner: $("banner"),
                 coachDiffDisplay: $("coachDiffDisplay"),
                 coachPanelCard: $("coachPanelCard"),
-                showCoachPanelCb: $("showCoachPanelCb")
+                showCoachPanelCb: $("showCoachPanelCb"),
+
+                tkScorePanel: $("tkScorePanel"),
+                tkStatusTxt: $("tkStatusTxt"),
+                tkBlueNameSmall: $("tkBlueNameSmall"),
+                tkRedNameSmall: $("tkRedNameSmall"),
+                tkBlueScoreTxt: $("tkBlueScoreTxt"),
+                tkRedScoreTxt: $("tkRedScoreTxt"),
+                tkValidTxt: $("tkValidTxt"),
+                tkInvalidTxt: $("tkInvalidTxt"),
+                tkReactionPanel: $("tkReactionPanel"),
+                tkBlueValidRtTxt: $("tkBlueValidRtTxt"),
+                tkRedValidRtTxt: $("tkRedValidRtTxt"),
+                tkBlueOutRtTxt: $("tkBlueOutRtTxt"),
+                tkRedOutRtTxt: $("tkRedOutRtTxt"),
+                tkFastestTxt: $("tkFastestTxt"),
+
+                // Statistiche finali: solo riferimenti UI, nessuna modifica a grafica/ottagono/stimoli
+                endStatsOverlay: $("endStatsOverlay"),
+                endStatsBody: $("endStatsBody"),
+                closeEndStats: $("closeEndStats")
             };
 
             function mergeDeep(t, s) {
@@ -1998,6 +2618,21 @@
                 cfg.ai.attacks = clamp(Number(cfg.ai.attacks) || 42, 0, 100);
                 cfg.ai.rhythm = clamp(Number(cfg.ai.rhythm) || 55, 0, 100);
                 cfg.ai.momentum = clamp(Number(cfg.ai.momentum) || 0, -30, 30);
+
+                if (!cfg.tkstrike) cfg.tkstrike = clone(DEFAULTS.tkstrike);
+                cfg.tkstrike.bodyPoints = clamp(Number(cfg.tkstrike.bodyPoints) || 2, 1, 10);
+                cfg.tkstrike.headPoints = clamp(Number(cfg.tkstrike.headPoints) || 3, 1, 10);
+                cfg.tkstrike.windowSec = clamp(Number(cfg.tkstrike.windowSec) || 1.0, 0.1, 5);
+                cfg.tkstrike.blueScore = Number(cfg.tkstrike.blueScore) || 0;
+                cfg.tkstrike.redScore = Number(cfg.tkstrike.redScore) || 0;
+                cfg.tkstrike.validHits = Number(cfg.tkstrike.validHits) || 0;
+                cfg.tkstrike.invalidHits = Number(cfg.tkstrike.invalidHits) || 0;
+                ["blueValidReactions", "redValidReactions", "blueOutReactions", "redOutReactions"].forEach(k => {
+                    if (!Array.isArray(cfg.tkstrike[k])) cfg.tkstrike[k] = [];
+                    cfg.tkstrike[k] = cfg.tkstrike[k].map(Number).filter(n => Number.isFinite(n) && n >= 0).slice(-500);
+                });
+                cfg.tkstrike.blueName = (cfg.tkstrike.blueName || "Atleta Blu").trim() || "Atleta Blu";
+                cfg.tkstrike.redName = (cfg.tkstrike.redName || "Atleta Rosso").trim() || "Atleta Rosso";
             }
 
             function modeObj() {
@@ -2027,8 +2662,11 @@
                 E.subtitle.textContent =
                     `Modalità: ${m.name} • Livello: ${labelLevel(cfg.level)} • IA: ${isAI() ? cfg.ai.style.toUpperCase() : "OFF"} • Preset: ${cfg.activePreset}`;
 
-                E.modeChip.textContent = isOctagon() ? "Ottagono" : "Classica";
-                E.aiChip.textContent = isAI() ? "IA " + cfg.ai.style : "IA OFF";
+                E.modeChip.textContent = (isOctagon() ? "Ottagono" : "Classica") + (cfg.tkstrike?.enabled ? " + TK" : "");
+                E.aiChip.textContent = cfg.tkstrike?.enabled
+                    ? `${cfg.tkstrike.blueScore}-${cfg.tkstrike.redScore} ${cfg.tkstrike.connected ? "TK ON" : "TK OFF"}`
+                    : (isAI() ? "IA " + cfg.ai.style : "IA OFF");
+                renderTkstrikeScore();
                 E.roundTxt.textContent = `R${state.round + 1}/${cfg.rounds}`;
                 E.timeTxt.textContent = fmt(state.remain);
 
@@ -2084,6 +2722,7 @@
                 E.stCombo.textContent = state.stats.combo;
                 E.stPressure.textContent = state.stats.pressure;
                 E.stBreath.textContent = state.stats.breath;
+                renderTkstrikeScore();
             }
 
             function clearTimers() {
@@ -2091,6 +2730,324 @@
                     clearTimeout(t);
                     state.timers.delete(t);
                 }
+            }
+
+            let tkWs = null;
+
+            function connectTkstrikeBridge() {
+                try {
+                    tkWs = new WebSocket("ws://127.0.0.1:3000");
+
+                    tkWs.onopen = () => {
+                        cfg.tkstrike.connected = true;
+                        renderTkstrikeScore();
+                        updateTkBridgeInfo();
+                    };
+
+                    tkWs.onclose = () => {
+                        cfg.tkstrike.connected = false;
+                        renderTkstrikeScore();
+                        updateTkBridgeInfo();
+                        setTimeout(connectTkstrikeBridge, 1500);
+                    };
+
+                    tkWs.onerror = () => {
+                        cfg.tkstrike.connected = false;
+                        renderTkstrikeScore();
+                        updateTkBridgeInfo();
+                    };
+
+                    tkWs.onmessage = e => {
+                        try {
+                            const msg = JSON.parse(e.data);
+                            if (msg.type === "tkstrike_event") handleTkstrikeHit(msg.data);
+                        } catch (err) {
+                            console.warn("Messaggio TKStrike non valido", err);
+                        }
+                    };
+                } catch (err) {
+                    console.warn("Bridge TKStrike non disponibile", err);
+                    setTimeout(connectTkstrikeBridge, 1500);
+                }
+            }
+
+            function updateTkBridgeInfo() {
+                const el = $("tkBridgeInfo");
+                if (!el || !cfg.tkstrike) return;
+                el.textContent = cfg.tkstrike.connected
+                    ? "Bridge collegato. TKStrike può inviare eventi."
+                    : "Bridge non collegato. Avvia server.js e configura TKStrike su http://127.0.0.1:3000";
+            }
+
+            function tkReactionStats(arr) {
+                arr = Array.isArray(arr) ? arr.filter(n => Number.isFinite(Number(n))).map(Number) : [];
+                if (!arr.length) return { count: 0, best: null, avg: null };
+                return {
+                    count: arr.length,
+                    best: Math.min(...arr),
+                    avg: Math.round(arr.reduce((a, b) => a + b, 0) / arr.length)
+                };
+            }
+
+            function tkReactionText(arr) {
+                const st = tkReactionStats(arr);
+                if (!st.count) return "—";
+                return `best ${st.best}ms • media ${st.avg}ms • ${st.count}`;
+            }
+
+            function tkFastestText() {
+                if (!cfg.tkstrike) return "—";
+                const blue = tkReactionStats(cfg.tkstrike.blueValidReactions);
+                const red = tkReactionStats(cfg.tkstrike.redValidReactions);
+                if (!blue.count && !red.count) return "—";
+                if (blue.count && (!red.count || blue.best <= red.best)) return `${cfg.tkstrike.blueName || "Blu"} ${blue.best}ms`;
+                return `${cfg.tkstrike.redName || "Rosso"} ${red.best}ms`;
+            }
+
+            function tkAddReaction(side, reactionMs, valid) {
+                if (!cfg.tkstrike || !Number.isFinite(Number(reactionMs))) return;
+                const key = side === "blue"
+                    ? (valid ? "blueValidReactions" : "blueOutReactions")
+                    : (valid ? "redValidReactions" : "redOutReactions");
+                if (!Array.isArray(cfg.tkstrike[key])) cfg.tkstrike[key] = [];
+                cfg.tkstrike[key].push(Math.max(0, Math.round(Number(reactionMs))));
+                if (cfg.tkstrike[key].length > 500) cfg.tkstrike[key] = cfg.tkstrike[key].slice(-500);
+            }
+
+            function renderTkstrikeScore() {
+                if (!E.tkScorePanel || !cfg.tkstrike) return;
+                E.tkScorePanel.style.display = cfg.tkstrike.enabled ? "grid" : "none";
+                if (E.tkReactionPanel) E.tkReactionPanel.style.display = cfg.tkstrike.enabled ? "grid" : "none";
+                E.tkStatusTxt.textContent = cfg.tkstrike.connected ? "ON" : "OFF";
+                E.tkStatusTxt.className = "v " + (cfg.tkstrike.connected ? "tkGood" : "tkBad");
+                E.tkBlueNameSmall.textContent = cfg.tkstrike.blueName || "Blu";
+                E.tkRedNameSmall.textContent = cfg.tkstrike.redName || "Rosso";
+                E.tkBlueScoreTxt.textContent = cfg.tkstrike.blueScore || 0;
+                E.tkRedScoreTxt.textContent = cfg.tkstrike.redScore || 0;
+                E.tkValidTxt.textContent = cfg.tkstrike.validHits || 0;
+                E.tkInvalidTxt.textContent = cfg.tkstrike.invalidHits || 0;
+                if (E.tkBlueValidRtTxt) E.tkBlueValidRtTxt.textContent = tkReactionText(cfg.tkstrike.blueValidReactions);
+                if (E.tkRedValidRtTxt) E.tkRedValidRtTxt.textContent = tkReactionText(cfg.tkstrike.redValidReactions);
+                if (E.tkBlueOutRtTxt) E.tkBlueOutRtTxt.textContent = tkReactionText(cfg.tkstrike.blueOutReactions);
+                if (E.tkRedOutRtTxt) E.tkRedOutRtTxt.textContent = tkReactionText(cfg.tkstrike.redOutReactions);
+                if (E.tkFastestTxt) E.tkFastestTxt.textContent = tkFastestText();
+                updateTkBridgeInfo();
+            }
+
+            function resetTkstrikeScore() {
+                if (!cfg.tkstrike) return;
+                cfg.tkstrike.blueScore = 0;
+                cfg.tkstrike.redScore = 0;
+                cfg.tkstrike.validHits = 0;
+                cfg.tkstrike.invalidHits = 0;
+                cfg.tkstrike.blueValidReactions = [];
+                cfg.tkstrike.redValidReactions = [];
+                cfg.tkstrike.blueOutReactions = [];
+                cfg.tkstrike.redOutReactions = [];
+                cfg.tkstrike.lastEvent = "";
+                state.tkWindowOpen = false;
+                state.tkWindowUsed = false;
+                state.tkWindowExpiresAt = 0;
+                state.tkCurrentStimulus = null;
+                state.tkLastHit = null;
+                renderTkstrikeScore();
+            }
+
+
+            function safeAvg(arr) {
+                arr = Array.isArray(arr) ? arr.map(Number).filter(n => Number.isFinite(n)) : [];
+                if (!arr.length) return null;
+                return Math.round(arr.reduce((a, b) => a + b, 0) / arr.length);
+            }
+
+            function safeBest(arr) {
+                arr = Array.isArray(arr) ? arr.map(Number).filter(n => Number.isFinite(n)) : [];
+                return arr.length ? Math.min(...arr) : null;
+            }
+
+            function msTxt(v) {
+                return Number.isFinite(v) ? `${v} ms` : "—";
+            }
+
+            function statLine(label, value) {
+                return `<div class="endStatsLine"><span>${escapeHtml(label)}</span><span>${escapeHtml(value)}</span></div>`;
+            }
+
+            function buildEndStatsHtml() {
+                const tk = cfg.tkstrike || {};
+                const blueValid = tk.blueValidReactions || [];
+                const redValid = tk.redValidReactions || [];
+                const blueOut = tk.blueOutReactions || [];
+                const redOut = tk.redOutReactions || [];
+                const blueBest = safeBest(blueValid);
+                const redBest = safeBest(redValid);
+                const blueAvg = safeAvg(blueValid);
+                const redAvg = safeAvg(redValid);
+                const fastest = tkFastestText();
+
+                return `
+                    <div class="endStatsGrid">
+                        <div class="endStatsBox">
+                            <h3>Allenamento</h3>
+                            ${statLine("Round completati", `${Math.min(state.round + 1, cfg.rounds)}/${cfg.rounds}`)}
+                            ${statLine("Stimoli", String(state.stats.stim || 0))}
+                            ${statLine("Finte", String(state.stats.fake || 0))}
+                            ${statLine("Movimenti", String(state.stats.move || 0))}
+                            ${statLine("Combo", String(state.stats.combo || 0))}
+                            ${statLine("Pressione", String(state.stats.pressure || 0))}
+                        </div>
+
+                        <div class="endStatsBox">
+                            <h3>TKStrike punteggio</h3>
+                            ${statLine(tk.blueName || "Atleta Blu", String(tk.blueScore || 0))}
+                            ${statLine(tk.redName || "Atleta Rosso", String(tk.redScore || 0))}
+                            ${statLine("Colpi validi", String(tk.validHits || 0))}
+                            ${statLine("Colpi fuori finestra / scartati", String(tk.invalidHits || 0))}
+                            ${statLine("Più veloce", fastest || "—")}
+                        </div>
+
+                        <div class="endStatsBox">
+                            <h3>Tempi dentro finestra</h3>
+                            ${statLine(`${tk.blueName || "Blu"} - miglior tempo`, msTxt(blueBest))}
+                            ${statLine(`${tk.blueName || "Blu"} - media`, msTxt(blueAvg))}
+                            ${statLine(`${tk.blueName || "Blu"} - colpi validi`, String(blueValid.length))}
+                            ${statLine(`${tk.redName || "Rosso"} - miglior tempo`, msTxt(redBest))}
+                            ${statLine(`${tk.redName || "Rosso"} - media`, msTxt(redAvg))}
+                            ${statLine(`${tk.redName || "Rosso"} - colpi validi`, String(redValid.length))}
+                        </div>
+
+                        <div class="endStatsBox">
+                            <h3>Tempi fuori finestra</h3>
+                            ${statLine(`${tk.blueName || "Blu"} - miglior fuori`, msTxt(safeBest(blueOut)))}
+                            ${statLine(`${tk.blueName || "Blu"} - media fuori`, msTxt(safeAvg(blueOut)))}
+                            ${statLine(`${tk.blueName || "Blu"} - colpi fuori`, String(blueOut.length))}
+                            ${statLine(`${tk.redName || "Rosso"} - miglior fuori`, msTxt(safeBest(redOut)))}
+                            ${statLine(`${tk.redName || "Rosso"} - media fuori`, msTxt(safeAvg(redOut)))}
+                            ${statLine(`${tk.redName || "Rosso"} - colpi fuori`, String(redOut.length))}
+                        </div>
+                    </div>
+                `;
+            }
+
+            function showEndStats() {
+                if (!E.endStatsOverlay || !E.endStatsBody) return;
+                E.endStatsBody.innerHTML = buildEndStatsHtml();
+                requestAnimationFrame(() => {
+                    E.endStatsOverlay.classList.add("show");
+                });
+            }
+
+            function hideEndStats() {
+                if (!E.endStatsOverlay) return;
+                E.endStatsOverlay.classList.remove("show");
+            }
+
+            function tkHitPoints(eventType) {
+                if (!eventType) return 0;
+                if (eventType.includes("BODY_HIT")) return cfg.tkstrike.bodyPoints || 2;
+                if (eventType.includes("HEAD_HIT")) return cfg.tkstrike.headPoints || 3;
+                return 0;
+            }
+
+            function tkHitSide(eventType) {
+                if (!eventType) return null;
+                if (eventType.includes("BLUE")) return "blue";
+                if (eventType.includes("RED")) return "red";
+                return null;
+            }
+
+            function openTkstrikeWindow(stimulus) {
+                if (!cfg.tkstrike?.enabled) return;
+                const now = performance.now();
+                const windowMs = Math.max(100, (Number(cfg.tkstrike.windowSec) || 1.0) * 1000);
+                const id = (state.tkWindowId || 0) + 1;
+
+                state.tkWindowId = id;
+                state.tkWindowOpen = true;
+                state.tkWindowUsed = false;
+                state.tkCurrentStimulus = stimulus;
+                state.tkStimulusStartedAt = now;
+                state.tkWindowExpiresAt = now + windowMs;
+                state.tkLastHit = null;
+
+                later(() => {
+                    if (state.tkWindowId === id && !state.tkWindowUsed && performance.now() >= state.tkWindowExpiresAt) {
+                        state.tkWindowOpen = false;
+                        state.tkCurrentStimulus = null;
+                    }
+                }, windowMs + 15);
+            }
+
+            function closeTkstrikeWindow(force = false) {
+                // Non chiudiamo automaticamente quando la grafica dello stimolo sparisce:
+                // la validazione TKStrike segue la finestra temporale configurata.
+                if (!force) return;
+                state.tkWindowOpen = false;
+                state.tkCurrentStimulus = null;
+                state.tkWindowExpiresAt = 0;
+            }
+
+            function showTkstrikeFeedback(side, points, valid, reactionMs, label) {
+                if (!cfg.tkstrike?.enabled) return;
+                const name = side === "blue" ? cfg.tkstrike.blueName : cfg.tkstrike.redName;
+                const text = valid
+                    ? `${name} +${points} • ${reactionMs} ms`
+                    : `${name} non valido • ${label}`;
+
+                if (isOctagon()) {
+                    E.octCue.textContent = text;
+                    E.octCue.className = valid ? "cue flow" : "cue";
+                } else {
+                    E.classicCue.textContent = text;
+                    E.classicCue.className = valid ? "cue flow" : "cue";
+                }
+            }
+
+            function handleTkstrikeHit(ev) {
+                if (!cfg.tkstrike?.enabled) return;
+                if (state.phase !== "live") return;
+
+                const eventType = ev.eventType || "";
+                const points = tkHitPoints(eventType);
+                const side = tkHitSide(eventType);
+                if (!points || !side) return;
+
+                const reactionMs = Math.max(0, Math.round(performance.now() - (state.tkStimulusStartedAt || performance.now())));
+
+                const now = performance.now();
+                const inWindow = state.tkWindowOpen && state.tkWindowExpiresAt && now <= state.tkWindowExpiresAt;
+
+                if (!inWindow) {
+                    cfg.tkstrike.invalidHits++;
+                    tkAddReaction(side, reactionMs, false);
+                    cfg.tkstrike.lastEvent = `${side.toUpperCase()} fuori finestra ${eventType}`;
+                    showTkstrikeFeedback(side, points, false, reactionMs, "FUORI FINESTRA");
+                    state.tkWindowOpen = false;
+                    renderTkstrikeScore();
+                    return;
+                }
+
+                if (state.tkWindowUsed) {
+                    cfg.tkstrike.invalidHits++;
+                    tkAddReaction(side, reactionMs, false);
+                    cfg.tkstrike.lastEvent = `${side.toUpperCase()} già assegnato ${eventType}`;
+                    showTkstrikeFeedback(side, points, false, reactionMs, "GIÀ ASSEGNATO");
+                    renderTkstrikeScore();
+                    return;
+                }
+
+                state.tkWindowUsed = true;
+                state.tkWindowOpen = false;
+
+                if (side === "blue") cfg.tkstrike.blueScore += points;
+                if (side === "red") cfg.tkstrike.redScore += points;
+                cfg.tkstrike.validHits++;
+                tkAddReaction(side, reactionMs, true);
+                cfg.tkstrike.lastEvent = `${side.toUpperCase()} +${points} ${eventType} ${reactionMs}ms`;
+                state.tkLastHit = { valid: true, side, points, eventType, reactionMs };
+
+                showTkstrikeFeedback(side, points, true, reactionMs, eventType);
+                renderTkstrikeScore();
             }
 
             function later(fn, ms) {
@@ -2356,6 +3313,7 @@
                 while (state.recent.length > 16) state.recent.shift();
 
                 renderStats();
+                openTkstrikeWindow(s);
             }
 
             function resetClassic() {
@@ -2388,6 +3346,7 @@
             }
 
             function blankClassic() {
+                closeTkstrikeWindow();
                 E.classicStimulus.innerHTML = '<div class="stimText"></div>';
                 E.classicStimulus.style.background = "rgba(0,0,0,.65)";
             }
@@ -2503,7 +3462,78 @@
                 return clamp(sec, .05, 3);
             }
 
-            function moveTo(p, kind = "normal") {
+            let movementPlanToken = 0;
+
+            function clampPoint(p) {
+                return [clamp(p[0], 8, 92), clamp(p[1], 8, 92)];
+            }
+
+            function polarPoint(radius, angle) {
+                return clampPoint([
+                    50 + Math.cos(angle) * radius,
+                    50 + Math.sin(angle) * radius
+                ]);
+            }
+
+            function angleFromCenter(p) {
+                return Math.atan2((p?.[1] ?? physics.y) - 50, (p?.[0] ?? physics.x) - 50);
+            }
+
+            function organicRouteTo(p, kind) {
+                if (!isOctagon() || state.phase !== "live") return [p];
+
+                const targetAngle = angleFromCenter(p);
+                const currentAngle = angleFromCenter([physics.x, physics.y]);
+                const dir = Math.random() < .5 ? -1 : 1;
+                const route = [];
+
+                if (kind === "attack") {
+                    // Piccolo giro/lettura attorno alla zona e poi ingresso improvviso.
+                    route.push(polarPoint(rand(23, 34), currentAngle + dir * rand(.35, .95)));
+                    if (Math.random() < .55) route.push(polarPoint(rand(20, 29), targetAngle - dir * rand(.25, .75)));
+                    route.push(p);
+                    return route;
+                }
+
+                if (kind === "feint") {
+                    // Avvicinamento non lineare, arresto/cambio direzione, senza entrare pienamente.
+                    route.push(polarPoint(rand(27, 40), currentAngle + dir * rand(.45, 1.15)));
+                    route.push(polarPoint(rand(22, 31), targetAngle + dir * rand(.25, .85)));
+                    route.push(p);
+                    return route;
+                }
+
+                if (kind === "escape") {
+                    // Uscita con cambio angolo, non diagonale secca.
+                    route.push(polarPoint(rand(30, 44), currentAngle + dir * rand(.55, 1.35)));
+                    route.push(p);
+                    return route;
+                }
+
+                if (kind === "pressure") {
+                    // Pressione laterale attorno alla zona tiro.
+                    route.push(polarPoint(rand(20, 31), currentAngle + dir * rand(.35, .9)));
+                    route.push(polarPoint(rand(20, 30), targetAngle + dir * rand(.25, .7)));
+                    route.push(p);
+                    return route;
+                }
+
+                if (kind === "drift" || kind === "normal") {
+                    // Movimento circolare/organico: passa da 2 o 3 micro-direzioni prima del target.
+                    const steps = Math.random() < .55 ? 2 : 3;
+                    for (let i = 1; i <= steps; i++) {
+                        const a = currentAngle + dir * rand(.35 * i, .85 * i);
+                        const r = rand(30, 44);
+                        route.push(polarPoint(r, a));
+                    }
+                    route.push(p);
+                    return route;
+                }
+
+                return [p];
+            }
+
+            function moveLinearTo(p, kind = "normal", countStat = true) {
                 state.at = p;
 
                 const sec = moveSpeed(kind);
@@ -2517,12 +3547,39 @@
                 physics.accel = physics.maxSpeed / (safeSec * 0.3);
                 physics.decel = physics.maxSpeed / (safeSec * 0.4);
 
-                state.stats.move++;
-                renderStats();
+                if (countStat) {
+                    state.stats.move++;
+                    renderStats();
+                }
 
                 if (cfg.movement.showTrace) addTrace(p);
 
                 return sec;
+            }
+
+            function moveTo(p, kind = "normal") {
+                if (!isOctagon() || state.phase !== "live") {
+                    return moveLinearTo(p, kind, true);
+                }
+
+                const route = organicRouteTo(p, kind);
+                const token = ++movementPlanToken;
+
+                // Conta il movimento una sola volta, anche se composto da più micro-direzioni.
+                state.stats.move++;
+                renderStats();
+
+                let total = 0;
+                route.forEach((pt, idx) => {
+                    const delay = Math.max(0, total * 1000 * (idx === 0 ? 0 : rand(.58, .88)));
+                    later(() => {
+                        if (token !== movementPlanToken || state.phase !== "live") return;
+                        moveLinearTo(pt, kind, false);
+                    }, delay);
+                    total += moveSpeed(kind) * rand(.55, .95);
+                });
+
+                return clamp(total, .05, 4.5);
             }
 
             function addTrace(p) {
@@ -2535,6 +3592,7 @@
             }
 
             function resetOctagon() {
+                closeTkstrikeWindow();
                 clearStimulus();
                 E.target.className = "target";
                 E.opponent.className = "opponent";
@@ -3253,6 +4311,7 @@
                 }
 
                 buttons();
+                showEndStats();
             }
 
             async function start() {
@@ -3267,6 +4326,7 @@
                 clearTimers();
                 stopTick();
                 Speech.cancel();
+                hideEndStats();
 
                 state.round = 0;
                 state.remain = cfg.roundSec;
@@ -3283,6 +4343,11 @@
                 state.currentDist = null;
                 state.lastDist = null;
                 state.anticipationTriggered = false;
+                state.tkWindowOpen = false;
+                state.tkWindowUsed = false;
+                state.tkCurrentStimulus = null;
+                state.tkLastHit = null;
+                if (cfg.tkstrike?.resetOnStart) resetTkstrikeScore();
 
                 renderStats();
                 countdown();
@@ -3306,6 +4371,7 @@
                     clearTimers();
                     stopTick();
                     Speech.cancel();
+                    closeTkstrikeWindow(true);
 
                     if (isOctagon()) {
                         E.octAction.textContent = "PAUSA";
@@ -3318,9 +4384,11 @@
             }
 
             function stop() {
+                hideEndStats();
                 clearTimers();
                 stopTick();
                 Speech.cancel();
+                closeTkstrikeWindow(true);
                 releaseWakeLock();
 
                 state.round = 0;
@@ -3419,6 +4487,17 @@
                 $("showTrace").checked = !!draft.movement.showTrace;
                 $("showCoachPanelCb").checked = !!draft.showCoachPanel;
 
+                if (draft.tkstrike) {
+                    $("tkEnabled").checked = !!draft.tkstrike.enabled;
+                    $("tkBlueName").value = draft.tkstrike.blueName || "Atleta Blu";
+                    $("tkRedName").value = draft.tkstrike.redName || "Atleta Rosso";
+                    $("tkBodyPoints").value = draft.tkstrike.bodyPoints || 2;
+                    $("tkHeadPoints").value = draft.tkstrike.headPoints || 3;
+                    $("tkWindowSec").value = draft.tkstrike.windowSec || 1.0;
+                    $("tkResetOnStart").checked = !!draft.tkstrike.resetOnStart;
+                }
+                updateTkBridgeInfo();
+
                 $("aiStyle").value = draft.ai.style;
                 $("aiPressure").value = draft.ai.pressure;
                 $("aiFeints").value = draft.ai.feints;
@@ -3461,6 +4540,15 @@
                 draft.movement.freeMove = $("freeMove").checked;
                 draft.movement.showTrace = $("showTrace").checked;
                 draft.showCoachPanel = $("showCoachPanelCb").checked;
+
+                if (!draft.tkstrike) draft.tkstrike = clone(DEFAULTS.tkstrike);
+                draft.tkstrike.enabled = $("tkEnabled").checked;
+                draft.tkstrike.blueName = ($("tkBlueName").value || "Atleta Blu").trim() || "Atleta Blu";
+                draft.tkstrike.redName = ($("tkRedName").value || "Atleta Rosso").trim() || "Atleta Rosso";
+                draft.tkstrike.bodyPoints = Number($("tkBodyPoints").value) || 2;
+                draft.tkstrike.headPoints = Number($("tkHeadPoints").value) || 3;
+                draft.tkstrike.windowSec = Number($("tkWindowSec").value) || 1.0;
+                draft.tkstrike.resetOnStart = $("tkResetOnStart").checked;
 
                 draft.ai.style = $("aiStyle").value;
                 draft.ai.pressure = Number($("aiPressure").value);
@@ -3695,6 +4783,21 @@
                     banner("Reset completo");
                 };
 
+                $("tkResetScore").onclick = () => {
+                    resetTkstrikeScore();
+                    if (draft?.tkstrike) {
+                        draft.tkstrike.blueScore = 0;
+                        draft.tkstrike.redScore = 0;
+                        draft.tkstrike.validHits = 0;
+                        draft.tkstrike.invalidHits = 0;
+                        draft.tkstrike.blueValidReactions = [];
+                        draft.tkstrike.redValidReactions = [];
+                        draft.tkstrike.blueOutReactions = [];
+                        draft.tkstrike.redOutReactions = [];
+                    }
+                    banner("Punteggio TKStrike azzerato");
+                };
+
                 $("addColor").onclick = () => {
                     draft.stimuli.colors.push({
                         id: "c_" + uid(),
@@ -3799,6 +4902,8 @@
                     banner("Lento: Complessità ridotta");
                 };
 
+                if (E.closeEndStats) E.closeEndStats.onclick = hideEndStats;
+
                 document.addEventListener("pointerdown", () => Audio.unlock(), { once: true, passive: true });
 
                 document.addEventListener("keydown", e => {
@@ -3808,6 +4913,7 @@
                         else pause();
                     } else if (e.code === "Escape") {
                         e.preventDefault();
+                        hideEndStats();
                         stop();
                         E.settings.style.display = "none";
                     }
@@ -3837,6 +4943,8 @@
             moveTo([50, 14], "drift");
             physics.x = 50; physics.y = 14; physics.tx = 50; physics.ty = 14;
             physics.raf = requestAnimationFrame(animLoop);
+            connectTkstrikeBridge();
+            renderTkstrikeScore();
             buttons();
 
         })();
