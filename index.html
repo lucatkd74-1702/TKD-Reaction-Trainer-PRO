@@ -1528,6 +1528,25 @@
             }
         }
 
+
+
+        /* Fix mirato iPad/Safari: garantisce che i comandi restino cliccabili/toccabili */
+        .bottom,
+        .controls,
+        .actions,
+        .settingsHead .btnRow {
+            position: relative;
+            z-index: 120;
+        }
+
+        .btn,
+        button,
+        .tabBtn {
+            pointer-events: auto;
+            touch-action: manipulation;
+            cursor: pointer;
+        }
+
     </style>
 </head>
 
@@ -4974,6 +4993,42 @@
                 };
 
                 if (E.closeEndStats) E.closeEndStats.onclick = hideEndStats;
+
+
+
+                // Fix mirato iPad/Safari: alcuni WebView/Safari non inviano sempre il click
+                // dopo fullscreen/audio/animazioni. Il touchend richiama lo stesso handler onclick.
+                const isIOSLike = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+                    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+                if (isIOSLike) {
+                    document.querySelectorAll("button").forEach(btn => {
+                        if (btn.dataset.iosTapFix === "1") return;
+                        btn.dataset.iosTapFix = "1";
+                        let lastTap = 0;
+
+                        btn.addEventListener("touchend", e => {
+                            if (btn.disabled) return;
+
+                            const now = Date.now();
+                            if (now - lastTap < 250) return;
+                            lastTap = now;
+
+                            e.preventDefault();
+                            e.stopPropagation();
+
+                            if (typeof btn.onclick === "function") {
+                                btn.onclick.call(btn, e);
+                            } else {
+                                btn.dispatchEvent(new MouseEvent("click", {
+                                    bubbles: true,
+                                    cancelable: true,
+                                    view: window
+                                }));
+                            }
+                        }, { passive: false });
+                    });
+                }
 
                 document.addEventListener("pointerdown", () => Audio.unlock(), { once: true, passive: true });
 
