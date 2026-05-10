@@ -2248,6 +2248,8 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 };
 (function () {
     "use strict";
+
+    var isAppleMobile = /iPad|iPhone|iPod/i.test(navigator.userAgent || "") || ((navigator.platform || "") === "MacIntel" && navigator.maxTouchPoints > 1);
     // Compatibilità iPad/Safari meno recenti
     if (!Number.isFinite) {
         Number.isFinite = function (value) { return typeof value === "number" && isFinite(value); };
@@ -2874,6 +2876,14 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     var tkWs = null;
     var tkReconnectTimer = null;
     var tkLastBridgeError = "";
+    function scheduleTkReconnect() {
+        if (tkReconnectTimer)
+            clearTimeout(tkReconnectTimer);
+        tkReconnectTimer = setTimeout(function () {
+            tkReconnectTimer = null;
+            connectTkstrikeBridge();
+        }, 1500);
+    }
     function tkBridgeHost() {
         var raw = String((cfg.tkstrike && cfg.tkstrike.serverHost) || "auto").trim();
         if (!raw || raw.toLowerCase() === "auto") {
