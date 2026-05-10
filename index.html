@@ -2158,6 +2158,23 @@
         (() => {
             "use strict";
 
+            // Compatibilità iPad/Safari meno recenti
+            if (!Number.isFinite) {
+                Number.isFinite = function(value) { return typeof value === "number" && isFinite(value); };
+            }
+            if (!String.prototype.padStart) {
+                String.prototype.padStart = function padStart(targetLength, padString) {
+                    targetLength = targetLength >> 0;
+                    padString = String(padString || " ");
+                    if (this.length >= targetLength) return String(this);
+                    targetLength = targetLength - this.length;
+                    if (targetLength > padString.length) {
+                        padString += padString.repeat(targetLength / padString.length);
+                    }
+                    return padString.slice(0, targetLength) + String(this);
+                };
+            }
+
             const $ = id => document.getElementById(id);
             const STORAGE = "tkd-reaction-trainer-pro-ai-complete";
 
@@ -2698,8 +2715,8 @@
                 E.subtitle.textContent =
                     `Modalità: ${m.name} • Livello: ${labelLevel(cfg.level)} • IA: ${isAI() ? cfg.ai.style.toUpperCase() : "OFF"} • Preset: ${cfg.activePreset}`;
 
-                E.modeChip.textContent = (isOctagon() ? "Ottagono" : "Classica") + (cfg.tkstrike?.enabled ? " + TK" : "");
-                E.aiChip.textContent = cfg.tkstrike?.enabled
+                E.modeChip.textContent = (isOctagon() ? "Ottagono" : "Classica") + ((cfg.tkstrike && cfg.tkstrike.enabled) ? " + TK" : "");
+                E.aiChip.textContent = (cfg.tkstrike && cfg.tkstrike.enabled)
                     ? `${cfg.tkstrike.blueScore}-${cfg.tkstrike.redScore} ${cfg.tkstrike.connected ? "TK ON" : "TK OFF"}`
                     : (isAI() ? "IA " + cfg.ai.style : "IA OFF");
                 renderTkstrikeScore();
@@ -2771,7 +2788,7 @@
             let tkWs = null;
 
             function tkBridgeHost() {
-                const raw = String(cfg.tkstrike?.serverHost || "auto").trim();
+                const raw = String((cfg.tkstrike && cfg.tkstrike.serverHost) || "auto").trim();
                 if (!raw || raw.toLowerCase() === "auto") {
                     return window.location.hostname || "127.0.0.1";
                 }
@@ -2779,7 +2796,7 @@
             }
 
             function tkBridgePort() {
-                return parseInt(cfg.tkstrike?.serverPort, 10) || 3000;
+                return parseInt((cfg.tkstrike && cfg.tkstrike.serverPort), 10) || 3000;
             }
 
             function tkBridgeHttpUrl() {
@@ -2836,7 +2853,7 @@
                     };
                 } catch (err) {
                     console.warn("Bridge TKStrike non disponibile", err);
-                    tkLastBridgeError = "Bridge non disponibile: " + (err?.message || err);
+                    tkLastBridgeError = "Bridge non disponibile: " + ((err && err.message) || err);
                     updateTkBridgeInfo();
                     scheduleTkReconnect();
                 }
@@ -2845,7 +2862,7 @@
             function updateTkBridgeInfo() {
                 const el = $("tkBridgeInfo");
                 if (!el || !cfg.tkstrike) return;
-                const hostRaw = String(cfg.tkstrike?.serverHost || "auto").trim() || "auto";
+                const hostRaw = String((cfg.tkstrike && cfg.tkstrike.serverHost) || "auto").trim() || "auto";
                 el.textContent = cfg.tkstrike.connected
                     ? `Bridge collegato: ${tkBridgeWsUrl()} • TKStrike deve inviare a ${tkBridgeHttpUrl()}`
                     : `Bridge NON collegato • host impostato: ${hostRaw} • provo: ${tkBridgeWsUrl()} • ${tkLastBridgeError || "Avvia server.js sul PC e controlla IP/firewall."}`;
@@ -3029,7 +3046,7 @@
             }
 
             function openTkstrikeWindow(stimulus) {
-                if (!cfg.tkstrike?.enabled) return;
+                if (!(cfg.tkstrike && cfg.tkstrike.enabled)) return;
                 const now = performance.now();
                 const windowMs = Math.max(100, (Number(cfg.tkstrike.windowSec) || 1.0) * 1000);
                 const id = (state.tkWindowId || 0) + 1;
@@ -3060,7 +3077,7 @@
             }
 
             function showTkstrikeFeedback(side, points, valid, reactionMs, label) {
-                if (!cfg.tkstrike?.enabled) return;
+                if (!(cfg.tkstrike && cfg.tkstrike.enabled)) return;
                 const name = side === "blue" ? cfg.tkstrike.blueName : cfg.tkstrike.redName;
                 const text = valid
                     ? `${name} +${points} • ${reactionMs} ms`
@@ -3076,7 +3093,7 @@
             }
 
             function handleTkstrikeHit(ev) {
-                if (!cfg.tkstrike?.enabled) return;
+                if (!(cfg.tkstrike && cfg.tkstrike.enabled)) return;
                 if (state.phase !== "live") return;
 
                 const eventType = ev.eventType || "";
@@ -3218,7 +3235,7 @@
                         const v = voices.find(x => (x.lang || "").toLowerCase().startsWith("it")) || voices[0];
 
                         if (v) u.voice = v;
-                        u.lang = v?.lang || "it-IT";
+                        u.lang = (v && v.lang) || "it-IT";
                         u.rate = Number(cfg.audio.rate) || 1;
                         u.pitch = Number(cfg.audio.pitch) || 1;
                         u.volume = Number(cfg.audio.vol) || 1;
@@ -3548,7 +3565,7 @@
             }
 
             function angleFromCenter(p) {
-                return Math.atan2((p?.[1] ?? physics.y) - 50, (p?.[0] ?? physics.x) - 50);
+                return Math.atan2(((p && p[1] != null) ? p[1] : physics.y) - 50, ((p && p[0] != null) ? p[0] : physics.x) - 50);
             }
 
             function organicRouteTo(p, kind) {
@@ -4421,7 +4438,7 @@
                 state.tkWindowUsed = false;
                 state.tkCurrentStimulus = null;
                 state.tkLastHit = null;
-                if (cfg.tkstrike?.resetOnStart) resetTkstrikeScore();
+                if ((cfg.tkstrike && cfg.tkstrike.resetOnStart)) resetTkstrikeScore();
 
                 renderStats();
                 countdown();
@@ -4484,7 +4501,8 @@
 
                 try {
                     if (isFs) {
-                        (document.exitFullscreen || document.webkitExitFullscreen)?.call(document);
+                        const exitFs = document.exitFullscreen || document.webkitExitFullscreen;
+                        if (exitFs) exitFs.call(document);
                         return;
                     }
 
@@ -4789,7 +4807,7 @@
                 let p = PRESETS[k];
 
                 $("presetInfo").textContent = p
-                    ? `${k}: ${MODES[p.mode]?.desc || ""} Round ${p.rounds} x ${p.roundSec}s, finte ${p.fakePct}%, combo max ${p.maxCombo}.`
+                    ? `${k}: ${(MODES[p.mode] && MODES[p.mode].desc) || ""} Round ${p.rounds} x ${p.roundSec}s, finte ${p.fakePct}%, combo max ${p.maxCombo}.`
                     : "";
             }
 
@@ -4863,7 +4881,7 @@
 
                 $("tkResetScore").onclick = () => {
                     resetTkstrikeScore();
-                    if (draft?.tkstrike) {
+                    if ((draft && draft.tkstrike)) {
                         draft.tkstrike.blueScore = 0;
                         draft.tkstrike.redScore = 0;
                         draft.tkstrike.validHits = 0;
@@ -4879,8 +4897,8 @@
                 $("tkReconnect").onclick = () => {
                     if (draft) {
                         if (!draft.tkstrike) draft.tkstrike = clone(DEFAULTS.tkstrike);
-                        draft.tkstrike.serverHost = ($("tkServerHost")?.value || "auto").trim() || "auto";
-                        draft.tkstrike.serverPort = Number($("tkServerPort")?.value) || 3000;
+                        draft.tkstrike.serverHost = (($("tkServerHost") && $("tkServerHost").value) || "auto").trim() || "auto";
+                        draft.tkstrike.serverPort = Number(($("tkServerPort") && $("tkServerPort").value)) || 3000;
                     }
                     if (applyForm()) {
                         connectTkstrikeBridge();
@@ -4996,38 +5014,37 @@
 
 
 
-                // Fix mirato iPad/Safari: alcuni WebView/Safari non inviano sempre il click
-                // dopo fullscreen/audio/animazioni. Il touchend richiama lo stesso handler onclick.
-                const isIOSLike = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+                // Fix iPad/Safari: gestione tap senza rompere scroll/input.
+                // Usa touchend solo sui pulsanti e richiama direttamente il relativo handler.
+                var isIOSLike = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
                     (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
                 if (isIOSLike) {
-                    document.querySelectorAll("button").forEach(btn => {
-                        if (btn.dataset.iosTapFix === "1") return;
-                        btn.dataset.iosTapFix = "1";
-                        let lastTap = 0;
+                    var lastIosTapAt = 0;
+                    document.addEventListener("touchend", function(e) {
+                        var t = e.target;
+                        while (t && t !== document && t.tagName !== "BUTTON") t = t.parentNode;
+                        if (!t || t === document || t.disabled) return;
 
-                        btn.addEventListener("touchend", e => {
-                            if (btn.disabled) return;
+                        var now = Date.now();
+                        if (now - lastIosTapAt < 180) return;
+                        lastIosTapAt = now;
 
-                            const now = Date.now();
-                            if (now - lastTap < 250) return;
-                            lastTap = now;
+                        e.preventDefault();
 
-                            e.preventDefault();
-                            e.stopPropagation();
-
-                            if (typeof btn.onclick === "function") {
-                                btn.onclick.call(btn, e);
+                        if (typeof t.onclick === "function") {
+                            t.onclick.call(t, e);
+                        } else {
+                            var ev;
+                            if (typeof MouseEvent === "function") {
+                                ev = new MouseEvent("click", { bubbles: true, cancelable: true, view: window });
                             } else {
-                                btn.dispatchEvent(new MouseEvent("click", {
-                                    bubbles: true,
-                                    cancelable: true,
-                                    view: window
-                                }));
+                                ev = document.createEvent("MouseEvents");
+                                ev.initMouseEvent("click", true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
                             }
-                        }, { passive: false });
-                    });
+                            t.dispatchEvent(ev);
+                        }
+                    }, false);
                 }
 
                 document.addEventListener("pointerdown", () => Audio.unlock(), { once: true, passive: true });
@@ -5067,7 +5084,7 @@
 
             window.addEventListener("unhandledrejection", e => {
                 try {
-                    tkLastBridgeError = "Errore promise: " + (e.reason?.message || e.reason || "sconosciuto");
+                    tkLastBridgeError = "Errore promise: " + ((e.reason && e.reason.message) || e.reason || "sconosciuto");
                     updateTkBridgeInfo();
                     console.error(e.reason);
                 } catch (_) {}
