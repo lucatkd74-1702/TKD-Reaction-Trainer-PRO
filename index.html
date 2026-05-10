@@ -1,4 +1,4 @@
-        <!doctype html>
+<!doctype html>
 <html lang="it">
 
 <head>
@@ -2049,12 +2049,25 @@
                             <div class="box">
                                 <label class="toggle">
                                     <input id="tkEnabled" type="checkbox">
-                                    <div><b>Abilita TKStrike</b><div class="tiny">Richiede server.js attivo e URL TKStrike http://127.0.0.1:3000</div></div>
+                                    <div><b>Abilita TKStrike</b><div class="tiny">Richiede server.js attivo sul PC indicato sotto. Da tablet usa IP del PC, es. 192.168.1.50</div></div>
                                 </label>
                             </div>
                             <div class="box">
                                 <div class="label">Stato collegamento</div>
                                 <div class="infoBox" id="tkBridgeInfo">Bridge non collegato</div>
+                            </div>
+                            <div class="box">
+                                <div class="label">IP / host PC server Node</div>
+                                <input id="tkServerHost" type="text" placeholder="127.0.0.1 oppure 192.168.1.50">
+                                <div class="tiny" style="margin-top:6px">Se usi tablet nella stessa rete, inserisci l’IP del PC dove è avviato node server.js.</div>
+                            </div>
+                            <div class="box">
+                                <div class="label">Porta server Node</div>
+                                <input id="tkServerPort" type="number" min="1" max="65535" step="1" placeholder="3000">
+                            </div>
+                            <div class="box">
+                                <button class="btn btnPrimary" id="tkReconnect" style="width:100%">CONNETTI / RICONNETTI TKSTRIKE</button>
+                                <div class="tiny" style="margin-top:6px">Nel software TKStrike inserisci come listener: http://IP_PC:PORTA</div>
                             </div>
                             <div class="box">
                                 <div class="label">Nome atleta Blu</div>
@@ -2190,6 +2203,8 @@
                     bodyPoints: 2,
                     headPoints: 3,
                     windowSec: 1.0,
+                    serverHost: "127.0.0.1",
+                    serverPort: 3000,
                     resetOnStart: true,
                     blueScore: 0,
                     redScore: 0,
@@ -2623,6 +2638,8 @@
                 cfg.tkstrike.bodyPoints = clamp(Number(cfg.tkstrike.bodyPoints) || 2, 1, 10);
                 cfg.tkstrike.headPoints = clamp(Number(cfg.tkstrike.headPoints) || 3, 1, 10);
                 cfg.tkstrike.windowSec = clamp(Number(cfg.tkstrike.windowSec) || 1.0, 0.1, 5);
+                cfg.tkstrike.serverHost = String(cfg.tkstrike.serverHost || "127.0.0.1").trim() || "127.0.0.1";
+                cfg.tkstrike.serverPort = clamp(parseInt(cfg.tkstrike.serverPort, 10) || 3000, 1, 65535);
                 cfg.tkstrike.blueScore = Number(cfg.tkstrike.blueScore) || 0;
                 cfg.tkstrike.redScore = Number(cfg.tkstrike.redScore) || 0;
                 cfg.tkstrike.validHits = Number(cfg.tkstrike.validHits) || 0;
@@ -2734,9 +2751,24 @@
 
             let tkWs = null;
 
+            function tkBridgeHttpUrl() {
+                const host = String(cfg.tkstrike?.serverHost || "127.0.0.1").trim() || "127.0.0.1";
+                const port = parseInt(cfg.tkstrike?.serverPort, 10) || 3000;
+                return `http://${host}:${port}`;
+            }
+
+            function tkBridgeWsUrl() {
+                const host = String(cfg.tkstrike?.serverHost || "127.0.0.1").trim() || "127.0.0.1";
+                const port = parseInt(cfg.tkstrike?.serverPort, 10) || 3000;
+                return `ws://${host}:${port}`;
+            }
+
             function connectTkstrikeBridge() {
                 try {
-                    tkWs = new WebSocket("ws://127.0.0.1:3000");
+                    if (tkWs) {
+                        try { tkWs.onclose = null; tkWs.close(); } catch (e) {}
+                    }
+                    tkWs = new WebSocket(tkBridgeWsUrl());
 
                     tkWs.onopen = () => {
                         cfg.tkstrike.connected = true;
@@ -2775,8 +2807,8 @@
                 const el = $("tkBridgeInfo");
                 if (!el || !cfg.tkstrike) return;
                 el.textContent = cfg.tkstrike.connected
-                    ? "Bridge collegato. TKStrike può inviare eventi."
-                    : "Bridge non collegato. Avvia server.js e configura TKStrike su http://127.0.0.1:3000";
+                    ? `Bridge collegato a ${tkBridgeHttpUrl()}. TKStrike può inviare eventi.`
+                    : `Bridge non collegato. Avvia server.js sul PC e configura TKStrike su ${tkBridgeHttpUrl()}`;
             }
 
             function tkReactionStats(arr) {
@@ -4494,6 +4526,8 @@
                     $("tkBodyPoints").value = draft.tkstrike.bodyPoints || 2;
                     $("tkHeadPoints").value = draft.tkstrike.headPoints || 3;
                     $("tkWindowSec").value = draft.tkstrike.windowSec || 1.0;
+                    if ($("tkServerHost")) $("tkServerHost").value = draft.tkstrike.serverHost || "127.0.0.1";
+                    if ($("tkServerPort")) $("tkServerPort").value = draft.tkstrike.serverPort || 3000;
                     $("tkResetOnStart").checked = !!draft.tkstrike.resetOnStart;
                 }
                 updateTkBridgeInfo();
@@ -4548,6 +4582,8 @@
                 draft.tkstrike.bodyPoints = Number($("tkBodyPoints").value) || 2;
                 draft.tkstrike.headPoints = Number($("tkHeadPoints").value) || 3;
                 draft.tkstrike.windowSec = Number($("tkWindowSec").value) || 1.0;
+                if ($("tkServerHost")) draft.tkstrike.serverHost = ($("tkServerHost").value || "127.0.0.1").trim() || "127.0.0.1";
+                if ($("tkServerPort")) draft.tkstrike.serverPort = Number($("tkServerPort").value) || 3000;
                 draft.tkstrike.resetOnStart = $("tkResetOnStart").checked;
 
                 draft.ai.style = $("aiStyle").value;
