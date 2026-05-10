@@ -2058,8 +2058,8 @@
                             </div>
                             <div class="box">
                                 <div class="label">IP / host PC server Node</div>
-                                <input id="tkServerHost" type="text" placeholder="auto oppure IP PC, es. 192.168.1.50">
-                                <div class="tiny" style="margin-top:6px">Usa auto se apri l’app da http://IP_PC:PORTA. Da tablet puoi anche inserire manualmente l’IP del PC.</div>
+                                <input id="tkServerHost" type="text" placeholder="127.0.0.1 oppure 192.168.1.50">
+                                <div class="tiny" style="margin-top:6px">Se usi tablet nella stessa rete, inserisci l’IP del PC dove è avviato node server.js.</div>
                             </div>
                             <div class="box">
                                 <div class="label">Porta server Node</div>
@@ -2638,7 +2638,7 @@
                 cfg.tkstrike.bodyPoints = clamp(Number(cfg.tkstrike.bodyPoints) || 2, 1, 10);
                 cfg.tkstrike.headPoints = clamp(Number(cfg.tkstrike.headPoints) || 3, 1, 10);
                 cfg.tkstrike.windowSec = clamp(Number(cfg.tkstrike.windowSec) || 1.0, 0.1, 5);
-                cfg.tkstrike.serverHost = normalizeTkBridgeHost(cfg.tkstrike.serverHost || "auto");
+                cfg.tkstrike.serverHost = String(cfg.tkstrike.serverHost || "auto").trim() || "auto";
                 cfg.tkstrike.serverPort = clamp(parseInt(cfg.tkstrike.serverPort, 10) || 3000, 1, 65535);
                 cfg.tkstrike.blueScore = Number(cfg.tkstrike.blueScore) || 0;
                 cfg.tkstrike.redScore = Number(cfg.tkstrike.redScore) || 0;
@@ -2751,62 +2751,58 @@
 
             let tkWs = null;
 
-            function normalizeTkBridgeHost(raw) {
-                let host = String(raw || "auto").trim();
-                if (!host || host.toLowerCase() === "auto") return "auto";
-                host = host.replace(/^https?:\/\//i, "").replace(/^wss?:\/\//i, "").split("/")[0];
-                if (host.includes(":")) host = host.split(":")[0];
-                return host || "auto";
+            function tkBridgeHost() {
+                const raw = String(cfg.tkstrike?.serverHost || "auto").trim();
+                if (!raw || raw.toLowerCase() === "auto") {
+                    return window.location.hostname || "127.0.0.1";
+                }
+                return raw.replace(/^https?:\/\//i, "").replace(/^wss?:\/\//i, "").split(":")[0];
             }
 
-            function effectiveTkBridgeHost() {
-                let host = normalizeTkBridgeHost(cfg.tkstrike?.serverHost);
-                if (host === "auto" || host === "0.0.0.0") {
-                    host = window.location.hostname || "127.0.0.1";
-                }
-                // Se l'app viene aperta da tablet tramite http://IP_PC:3000,
-                // non deve provare a collegarsi a 127.0.0.1 del tablet.
-                if ((host === "127.0.0.1" || host === "localhost") && window.location.hostname && !["127.0.0.1", "localhost"].includes(window.location.hostname)) {
-                    host = window.location.hostname;
-                }
-                return host;
+            function tkBridgePort() {
+                return parseInt(cfg.tkstrike?.serverPort, 10) || 3000;
             }
 
             function tkBridgeHttpUrl() {
-                const host = effectiveTkBridgeHost();
-                const port = parseInt(cfg.tkstrike?.serverPort, 10) || 3000;
-                return `http://${host}:${port}`;
+                return `http://${tkBridgeHost()}:${tkBridgePort()}`;
             }
 
             function tkBridgeWsUrl() {
-                const host = effectiveTkBridgeHost();
-                const port = parseInt(cfg.tkstrike?.serverPort, 10) || 3000;
                 const proto = window.location.protocol === "https:" ? "wss" : "ws";
-                return `${proto}://${host}:${port}`;
+                return `${proto}://${tkBridgeHost()}:${tkBridgePort()}`;
             }
 
             function connectTkstrikeBridge() {
                 try {
-                    if (tkWs) {
-                        try { tkWs.onclose = null; tkWs.close(); } catch (e) {}
+                    if (tkReconnectTimer) {
+                        clearTimeout(tkReconnectTimer);
+                        tkReconnectTimer = null;
                     }
+                    if (tkWs) {
+                        try { tkWs.onclose = null; tkWs.onerror = null; tkWs.close(); } catch (e) {}
+                    }
+                    tkLastBridgeError = "Connessione in corso: " + tkBridgeWsUrl();
+                    updateTkBridgeInfo();
                     tkWs = new WebSocket(tkBridgeWsUrl());
 
                     tkWs.onopen = () => {
                         cfg.tkstrike.connected = true;
+                        tkLastBridgeError = "";
                         renderTkstrikeScore();
                         updateTkBridgeInfo();
                     };
 
                     tkWs.onclose = () => {
                         cfg.tkstrike.connected = false;
+                        tkLastBridgeError = "Connessione chiusa. Riprovo automaticamente...";
                         renderTkstrikeScore();
                         updateTkBridgeInfo();
-                        setTimeout(connectTkstrikeBridge, 1500);
+                        scheduleTkReconnect();
                     };
 
                     tkWs.onerror = () => {
                         cfg.tkstrike.connected = false;
+                        tkLastBridgeError = "Errore WebSocket. Verifica IP, porta, firewall e che server.js sia avviato.";
                         renderTkstrikeScore();
                         updateTkBridgeInfo();
                     };
@@ -2821,16 +2817,19 @@
                     };
                 } catch (err) {
                     console.warn("Bridge TKStrike non disponibile", err);
-                    setTimeout(connectTkstrikeBridge, 1500);
+                    tkLastBridgeError = "Bridge non disponibile: " + (err?.message || err);
+                    updateTkBridgeInfo();
+                    scheduleTkReconnect();
                 }
             }
 
             function updateTkBridgeInfo() {
                 const el = $("tkBridgeInfo");
                 if (!el || !cfg.tkstrike) return;
+                const hostRaw = String(cfg.tkstrike?.serverHost || "auto").trim() || "auto";
                 el.textContent = cfg.tkstrike.connected
-                    ? `Bridge collegato a ${tkBridgeHttpUrl()} (WebSocket: ${tkBridgeWsUrl()}). TKStrike può inviare eventi.`
-                    : `Bridge non collegato. Avvia server.js sul PC e configura TKStrike su ${tkBridgeHttpUrl()}`;
+                    ? `Bridge collegato: ${tkBridgeWsUrl()} • TKStrike deve inviare a ${tkBridgeHttpUrl()}`
+                    : `Bridge NON collegato • host impostato: ${hostRaw} • provo: ${tkBridgeWsUrl()} • ${tkLastBridgeError || "Avvia server.js sul PC e controlla IP/firewall."}`;
             }
 
             function tkReactionStats(arr) {
@@ -3574,7 +3573,7 @@
 
                 if (kind === "drift" || kind === "normal") {
                     // Movimento circolare/organico: passa da 2 o 3 micro-direzioni prima del target.
-                    const steps = Math.random() < .55 ? 2 : 3;
+                    const steps = isAppleMobile ? 1 : (Math.random() < .55 ? 2 : 3);
                     for (let i = 1; i <= steps; i++) {
                         const a = currentAngle + dir * rand(.35 * i, .85 * i);
                         const r = rand(30, 44);
@@ -3616,7 +3615,8 @@
                     return moveLinearTo(p, kind, true);
                 }
 
-                const route = organicRouteTo(p, kind);
+                let route = organicRouteTo(p, kind);
+                if (isAppleMobile && route.length > 2) route = [route[0], route[route.length - 1]];
                 const token = ++movementPlanToken;
 
                 // Conta il movimento una sola volta, anche se composto da più micro-direzioni.
@@ -3646,6 +3646,7 @@
             }
 
             function resetOctagon() {
+                movementPlanToken++;
                 closeTkstrikeWindow();
                 clearStimulus();
                 E.target.className = "target";
@@ -4604,7 +4605,7 @@
                 draft.tkstrike.bodyPoints = Number($("tkBodyPoints").value) || 2;
                 draft.tkstrike.headPoints = Number($("tkHeadPoints").value) || 3;
                 draft.tkstrike.windowSec = Number($("tkWindowSec").value) || 1.0;
-                if ($("tkServerHost")) draft.tkstrike.serverHost = normalizeTkBridgeHost($("tkServerHost").value || "auto");
+                if ($("tkServerHost")) draft.tkstrike.serverHost = ($("tkServerHost").value || "auto").trim() || "auto";
                 if ($("tkServerPort")) draft.tkstrike.serverPort = Number($("tkServerPort").value) || 3000;
                 draft.tkstrike.resetOnStart = $("tkResetOnStart").checked;
 
@@ -4659,9 +4660,6 @@
                     return false;
                 }
 
-                const oldTkHost = cfg.tkstrike?.serverHost;
-                const oldTkPort = cfg.tkstrike?.serverPort;
-
                 cfg = clone(draft);
                 normalize();
                 save();
@@ -4671,12 +4669,6 @@
                 updateHeader();
                 buttons();
                 updateCoachPanelVisibility();
-                renderTkstrikeScore();
-                updateTkBridgeInfo();
-
-                if (oldTkHost !== cfg.tkstrike?.serverHost || oldTkPort !== cfg.tkstrike?.serverPort) {
-                    connectTkstrikeBridge();
-                }
 
                 return true;
             }
@@ -4865,27 +4857,16 @@
                     banner("Punteggio TKStrike azzerato");
                 };
 
-                function applyTkServerFieldsToDraft() {
-                    if (!draft) draft = clone(cfg);
-                    if (!draft.tkstrike) draft.tkstrike = clone(DEFAULTS.tkstrike);
-                    const hostEl = $("tkServerHost");
-                    const portEl = $("tkServerPort");
-                    if (hostEl) draft.tkstrike.serverHost = normalizeTkBridgeHost(hostEl.value || "auto");
-                    if (portEl) draft.tkstrike.serverPort = Number(portEl.value) || 3000;
-                }
-
-                if ($("tkReconnect")) $("tkReconnect").onclick = () => {
-                    applyTkServerFieldsToDraft();
-                    cfg.tkstrike.serverHost = draft.tkstrike.serverHost;
-                    cfg.tkstrike.serverPort = draft.tkstrike.serverPort;
-                    normalize();
-                    save();
-                    updateHeader();
-                    renderTkstrikeScore();
-                    updateTkBridgeInfo();
-                    connectTkstrikeBridge();
-                    banner("Connessione TKStrike aggiornata: " + tkBridgeHttpUrl());
-                    later(() => banner(""), 1600);
+                $("tkReconnect").onclick = () => {
+                    if (draft) {
+                        if (!draft.tkstrike) draft.tkstrike = clone(DEFAULTS.tkstrike);
+                        draft.tkstrike.serverHost = ($("tkServerHost")?.value || "auto").trim() || "auto";
+                        draft.tkstrike.serverPort = Number($("tkServerPort")?.value) || 3000;
+                    }
+                    if (applyForm()) {
+                        connectTkstrikeBridge();
+                        banner("Riconnessione TKStrike avviata");
+                    }
                 };
 
                 $("addColor").onclick = () => {
@@ -5020,6 +5001,22 @@
                     }
                 });
             }
+
+            window.addEventListener("error", e => {
+                try {
+                    tkLastBridgeError = "Errore JS: " + (e.message || "sconosciuto");
+                    updateTkBridgeInfo();
+                    console.error(e.error || e.message);
+                } catch (_) {}
+            });
+
+            window.addEventListener("unhandledrejection", e => {
+                try {
+                    tkLastBridgeError = "Errore promise: " + (e.reason?.message || e.reason || "sconosciuto");
+                    updateTkBridgeInfo();
+                    console.error(e.reason);
+                } catch (_) {}
+            });
 
             load();
             bind();
